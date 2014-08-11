@@ -46,7 +46,35 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Assets\Scripts\ScriptBlock\ScriptBlock.cs" />
+     <Compile Include="Assets\Assets\Scripts\AudioPlayer\AudioCoroutineHolder.cs" />
+     <Compile Include="Assets\Assets\Scripts\AudioPlayer\AudioGainManager.cs" />
+     <Compile Include="Assets\Assets\Scripts\AudioPlayer\AudioInfo.cs" />
+     <Compile Include="Assets\Assets\Scripts\AudioPlayer\AudioPlayer.cs" />
+     <Compile Include="Assets\Assets\Scripts\AudioPlayer\AudioPlayerExample.cs" />
+     <Compile Include="Assets\Assets\Scripts\AudioPlayer\DSPModules\DSPModule.cs" />
+     <Compile Include="Assets\Assets\Scripts\AudioPlayer\DSPModules\MidiPlayer.cs" />
+     <Compile Include="Assets\Assets\Scripts\AudioPlayer\Garbage\AudioBridge.cs" />
+     <Compile Include="Assets\Assets\Scripts\AudioPlayer\Garbage\DSPPropertyDrawer.cs" />
+     <Compile Include="Assets\Assets\Scripts\AudioPlayer\Garbage\Sinus.cs" />
+     <Compile Include="Assets\Assets\Scripts\AudioPlayer\Garbage\Sinuses.cs" />
+     <Compile Include="Assets\Assets\Scripts\AudioPlayer\Garbage\Source.cs" />
+     <Compile Include="Assets\Assets\Scripts\AudioPlayer\Garbage\SourcePropertyDrawer.cs" />
+     <Compile Include="Assets\Assets\Scripts\AudioPlayer\Sampler.cs" />
+     <Compile Include="Assets\Assets\Scripts\AudioPlayer\SamplerExample.cs" />
+     <Compile Include="Assets\Assets\Scripts\Statement\DataType.cs" />
+     <Compile Include="Assets\Assets\Scripts\Statement\Statement.cs" />
+     <Compile Include="Assets\Assets\Scripts\TheGame\GameConstantes.cs" />
+     <Compile Include="Assets\Assets\Scripts\TheGame\GameMenager.cs" />
+     <Compile Include="Assets\Assets\Scripts\Utils\CustomAttributes\ButtonAttribute.cs" />
+     <Compile Include="Assets\Assets\Scripts\Utils\CustomAttributes\CustomAttributeBase.cs" />
+     <Compile Include="Assets\Assets\Scripts\Utils\CustomAttributes\MinMaxSliderAttribute.cs" />
+     <Compile Include="Assets\Assets\Scripts\Utils\CustomAttributes\SeparatorAttribute.cs" />
+     <Compile Include="Assets\Assets\Scripts\Utils\CustomAttributes\SingleLineVectorAttribute.cs" />
+     <Compile Include="Assets\Assets\Scripts\Utils\Extensions.cs" />
+     <Compile Include="Assets\Assets\Scripts\Utils\GameObjectFactory.cs" />
+     <Compile Include="Assets\Assets\Scripts\Utils\HelperFunctions.cs" />
+     <Compile Include="Assets\Assets\Scripts\Utils\Logger.cs" />
+     <None Include="Assets\Assets\Scripts\AudioPlayer\Features.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
