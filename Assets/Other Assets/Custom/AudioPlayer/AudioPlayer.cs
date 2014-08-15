@@ -53,6 +53,7 @@ public class AudioPlayer : MonoBehaviour {
 	static Dictionary<string, List<AudioSource>> RTPCAudioDict;
 	static List<ArrayList> ToPlayOnNextBeat;
 	static List<ArrayList> ToPlayOnNextMeasure;
+	static int ToPlayCounter = 0;
 	
 	void Awake(){
 		if (Application.isPlaying){
@@ -106,6 +107,7 @@ public class AudioPlayer : MonoBehaviour {
 		if (!Application.isPlaying){
 			SetReferences();
 		}
+		else ToPlayCounter = 0;
 	}
 	
 	void UpdateTempoSettings(){
@@ -393,46 +395,53 @@ public class AudioPlayer : MonoBehaviour {
 				}
 			}
 		}
-		
+		ToPlayCounter += 1;
 		return audioSource;
 	}
 	
 	static public AudioSource Play(AudioClip audioClip, AudioInfo audioInfo, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None){
-		AudioSource audioSource = GetAudioSource(audioInfo, sourceObject, audioClip);
-		
-		if (audioInfo.syncMode == AudioPlayer.SyncMode.Beat){
-			ToPlayOnNextBeat.Add(new ArrayList(3){audioSource, delay, syncMode});
-			return audioSource;
+		if (ToPlayCounter < Instance.maxVoices){
+			AudioSource audioSource = GetAudioSource(audioInfo, sourceObject, audioClip);
+			
+			if (audioInfo.syncMode == AudioPlayer.SyncMode.Beat){
+				ToPlayOnNextBeat.Add(new ArrayList(3){audioSource, delay, syncMode});
+				return audioSource;
+			}
+			else if (audioInfo.syncMode == AudioPlayer.SyncMode.Measure){
+				ToPlayOnNextMeasure.Add(new ArrayList(3){audioSource, delay, syncMode});
+				return audioSource;
+			}
+			else {
+				return Play(audioSource, delay, syncMode);
+			}
 		}
-		else if (audioInfo.syncMode == AudioPlayer.SyncMode.Measure){
-			ToPlayOnNextMeasure.Add(new ArrayList(3){audioSource, delay, syncMode});
-			return audioSource;
-		}
-		else {
-			return Play(audioSource, delay, syncMode);
-		}
+		else return null;
 	}
 	
 	static public AudioSource Play(AudioInfo audioInfo, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None){
-		AudioSource audioSource = GetAudioSource(audioInfo, sourceObject);
-		
-		if (audioInfo.syncMode == AudioPlayer.SyncMode.Beat){
-			ToPlayOnNextBeat.Add(new ArrayList(3){audioSource, delay, syncMode});
-			return audioSource;
+		if (ToPlayCounter < Instance.maxVoices){
+			AudioSource audioSource = GetAudioSource(audioInfo, sourceObject);
+			
+			if (audioInfo.syncMode == AudioPlayer.SyncMode.Beat){
+				ToPlayOnNextBeat.Add(new ArrayList(3){audioSource, delay, syncMode});
+				return audioSource;
+			}
+			else if (audioInfo.syncMode == AudioPlayer.SyncMode.Measure){
+				ToPlayOnNextMeasure.Add(new ArrayList(3){audioSource, delay, syncMode});
+				return audioSource;
+			}
+			else {
+				return Play(audioSource, delay, syncMode);
+			}
 		}
-		else if (audioInfo.syncMode == AudioPlayer.SyncMode.Measure){
-			ToPlayOnNextMeasure.Add(new ArrayList(3){audioSource, delay, syncMode});
-			return audioSource;
-		}
-		else {
-			return Play(audioSource, delay, syncMode);
-		}
+		else return null;
 	}		
 	
 	static public List<AudioSource> Play(AudioInfo[] audioInfos, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None){
 		List<AudioSource> audioSources = new List<AudioSource>();
 		for (int i = 0; i < audioInfos.Length; i++){
-			audioSources.Add(Play(audioInfos[i], sourceObject, delay, syncMode));
+			AudioSource audioSource = Play(audioInfos[i], sourceObject, delay, syncMode);
+			if (audioSource != null) audioSources.Add(audioSource);
 		}
 		return audioSources;
 	}
@@ -448,7 +457,8 @@ public class AudioPlayer : MonoBehaviour {
 	static public List<AudioSource> Play(string[] soundNames, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None){
 		List<AudioSource> audioSources = new List<AudioSource>();
 		for (int i = 0; i < soundNames.Length; i++){
-			audioSources.Add(Play(soundNames[i], sourceObject, delay, syncMode));
+			AudioSource audioSource = Play(soundNames[i], sourceObject, delay, syncMode);
+			if (audioSource != null) audioSources.Add(audioSource);
 		}
 		return audioSources;
 	}
@@ -684,10 +694,12 @@ public class AudioPlayer : MonoBehaviour {
 		delay = (float) (GetDelayToSync(syncMode) + GetAdjustedDelay(delay, syncMode));
 		
 		if (subContainer.sourceType == SubContainer.ContainerTypes.AudioSource){
-			audioSources.Add(Play(subContainer.audioInfo, sourceObject, subContainer.delay + delay, subContainer.syncMode));
+			AudioSource audioSource = Play(subContainer.audioInfo, sourceObject, subContainer.delay + delay, subContainer.syncMode);
+			if (audioSource != null) audioSources.Add(audioSource);
 		}
 		else if (subContainer.sourceType == SubContainer.ContainerTypes.Sampler){
-			audioSources.Add(Sampler.Play(subContainer.instrumentName, subContainer.midiNote, subContainer.velocity, sourceObject, subContainer.delay + delay, subContainer.syncMode));
+			AudioSource audioSource = Sampler.Play(subContainer.instrumentName, subContainer.midiNote, subContainer.velocity, sourceObject, subContainer.delay + delay, subContainer.syncMode);
+			if (audioSource != null) audioSources.Add(audioSource);
 		}
 		else if (subContainer.sourceType == SubContainer.ContainerTypes.MixContainer){
 			for (int i = 0; i < subContainer.childrenLink.Count; i++){
