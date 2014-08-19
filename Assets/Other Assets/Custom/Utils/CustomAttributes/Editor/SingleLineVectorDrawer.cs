@@ -32,29 +32,41 @@ public class SingleLineVectorDrawer : CustomPropertyDrawerBase {
 		position = AttributeUtility.BeginIndentation(position);
 		
 		float width = position.width;
+		float maxLabelWidth = width / (nbOfFields * 2);
 		
 		position.width /= nbOfFields;
-		EditorGUIUtility.labelWidth = width / (nbOfFields * 2);
 		
 		if (noFieldLabel) x = EditorGUI.FloatField(position, x);
-		else x = EditorGUI.FloatField(position, xName, x);
+		else{
+			EditorGUIUtility.labelWidth = Mathf.Min(xName.GetWidth(EditorStyles.standardFont) + 8, maxLabelWidth);
+			x = EditorGUI.FloatField(position, xName, x);
+		}
 		property.FindPropertyRelative("x").floatValue = x;
 		
 		position.x += position.width;
 		if (noFieldLabel) y = EditorGUI.FloatField(position, y);
-		else y = EditorGUI.FloatField(position, yName, y);
+		else{
+			EditorGUIUtility.labelWidth = Mathf.Min(yName.GetWidth(EditorStyles.standardFont) + 8, maxLabelWidth);
+			y = EditorGUI.FloatField(position, yName, y);
+		}
 		property.FindPropertyRelative("y").floatValue = y;
 		
 		if (property.FindPropertyRelative("z") != null){
 			position.x += position.width;
 			if (noFieldLabel) z = EditorGUI.FloatField(position, z);
-			else z = EditorGUI.FloatField(position, zName, z);
+			else{
+				EditorGUIUtility.labelWidth = Mathf.Min(zName.GetWidth(EditorStyles.standardFont) + 8, maxLabelWidth);
+				z = EditorGUI.FloatField(position, zName, z);
+			}
 			property.FindPropertyRelative("z").floatValue = z;
 		}
 		if (property.FindPropertyRelative("w") != null){
 			position.x += position.width;
 			if (noFieldLabel) w = EditorGUI.FloatField(position, w);
-			else w = EditorGUI.FloatField(position, wName, w);
+			else{
+				EditorGUIUtility.labelWidth = Mathf.Min(wName.GetWidth(EditorStyles.standardFont) + 8, maxLabelWidth);
+				w = EditorGUI.FloatField(position, wName, w);
+			}
 			property.FindPropertyRelative("w").floatValue = w;
 		}
 		AttributeUtility.EndIndentation();

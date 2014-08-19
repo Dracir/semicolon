@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{17533FA3-357A-CEC6-ED1C-9FA92629C572}</ProjectGuid>
+	<ProjectGuid>{3895E049-BDB7-E4B5-40D7-CD92D9C19B18}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -19,7 +19,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_4_6_0;UNITY_4_6;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_4_6_FEATURES;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_4_5_3;UNITY_4_5;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -46,33 +46,111 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\AudioPlayer\AudioCoroutineHolder.cs" />
-     <Compile Include="Assets\Scripts\AudioPlayer\AudioGainManager.cs" />
-     <Compile Include="Assets\Scripts\AudioPlayer\AudioInfo.cs" />
-     <Compile Include="Assets\Scripts\AudioPlayer\AudioPlayer.cs" />
-     <Compile Include="Assets\Scripts\AudioPlayer\AudioPlayerExample.cs" />
-     <Compile Include="Assets\Scripts\AudioPlayer\DSPModules\DSPModule.cs" />
-     <Compile Include="Assets\Scripts\AudioPlayer\DSPModules\MidiPlayer.cs" />
-     <Compile Include="Assets\Scripts\AudioPlayer\Garbage\AudioBridge.cs" />
-     <Compile Include="Assets\Scripts\AudioPlayer\Garbage\DSPPropertyDrawer.cs" />
-     <Compile Include="Assets\Scripts\AudioPlayer\Garbage\Sinus.cs" />
-     <Compile Include="Assets\Scripts\AudioPlayer\Garbage\Sinuses.cs" />
-     <Compile Include="Assets\Scripts\AudioPlayer\Garbage\Source.cs" />
-     <Compile Include="Assets\Scripts\AudioPlayer\Garbage\SourcePropertyDrawer.cs" />
-     <Compile Include="Assets\Scripts\AudioPlayer\Sampler.cs" />
-     <Compile Include="Assets\Scripts\AudioPlayer\SamplerExample.cs" />
-     <Compile Include="Assets\Scripts\Utils\CustomAttributes\ButtonAttribute.cs" />
-     <Compile Include="Assets\Scripts\Utils\CustomAttributes\CustomAttributeBase.cs" />
-     <Compile Include="Assets\Scripts\Utils\CustomAttributes\MinMaxSliderAttribute.cs" />
-     <Compile Include="Assets\Scripts\Utils\CustomAttributes\SeparatorAttribute.cs" />
-     <Compile Include="Assets\Scripts\Utils\CustomAttributes\SingleLineVectorAttribute.cs" />
-     <Compile Include="Assets\Scripts\Utils\Extensions.cs" />
-     <Compile Include="Assets\Scripts\Utils\HelperFunctions.cs" />
-     <Compile Include="Assets\Scripts\Utils\Logger.cs" />
-     <Compile Include="Assets\Scripts\test.cs" />
-     <None Include="Assets\Scripts\AudioPlayer\Features.txt" />
- <Reference Include="UnityEngine.UI">
- <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.0/UnityEngine.UI.dll</HintPath>
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\AudioCoroutineHolder.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\AudioGainManager.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\AudioInfo.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\AudioPlayer.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\AudioPlayerExample.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\DSPModules\DSPModule.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\DSPModules\MidiPlayer.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\Garbage\AudioBridge.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\Garbage\DSPPropertyDrawer.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\Garbage\Sinus.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\Garbage\Sinuses.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\Garbage\Source.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\Garbage\SourcePropertyDrawer.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\Sampler.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\SamplerExample.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\ButtonAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\CustomAttributeBase.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\MinMaxSliderAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\SeparatorAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\SingleLineVectorAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\Extensions.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\FollowMouse2D.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\Grid.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\HelperFunctions.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\Logger.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\SmoothFollow2D.cs" />
+     <Compile Include="Assets\Other Assets\HOTween\HOTween Extensions\HOTweenManager\Core\ABSHOTweenEditorElement.cs" />
+     <Compile Include="Assets\Other Assets\HOTween\HOTween Extensions\HOTweenManager\HOTweenComponent.cs" />
+     <Compile Include="Assets\Other Assets\HOTween\HOTween Extensions\HOTweenManager\HOTweenManager.cs" />
+     <Compile Include="Assets\Other Assets\HOTween\_Demo\HOTweenDemoBrain.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Components\Hydrogen.Core\hAudioStack.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Components\Hydrogen.Core\hDebug.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Components\Hydrogen.Core\hObjectPool.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Components\Hydrogen.Core\hObjectPoolItem.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Components\Hydrogen.Core\hWebPool.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Components\Hydrogen.Peripherals\hInput.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Components\Hydrogen.Plugins\hTestFlight.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Components\Hydrogen.Threading.Jobs\hMeshCombiner.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Core\AudioStack.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Core\AudioStackItem.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Core\ObjectPool.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Core\ObjectPoolCollection.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Core\ObjectPoolItemBase.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Core\WebPool.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Core\WebPoolWorker.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Peripherals\Input.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Peripherals\InputAxisControl.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Peripherals\InputControlBase.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Peripherals\InputDeltaAxisControl.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Peripherals\InputKeyboardButtonControl.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Peripherals\InputMouseButtonControl.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Plugins\TestFlight.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Serialization\INI.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Serialization\JSON.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Serialization\JSONObject.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Threading.Jobs\MeshCombiner.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Threading\Forker.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Threading\JobBase.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Threading\ThreadPoolJob.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen.Threading\ThreadedJob.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen\Array.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen\Components.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen\Layers.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen\Material.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen\Math.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen\Memory.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen\Mesh.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen\NavMesh.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen\Regex.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen\Resources.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen\Texture.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen\Validate.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen\XML.cs" />
+     <Compile Include="Assets\Other Assets\MTRandom\Scripts\lib\ExponentialDistribution.cs" />
+     <Compile Include="Assets\Other Assets\MTRandom\Scripts\lib\GammaDistribution.cs" />
+     <Compile Include="Assets\Other Assets\MTRandom\Scripts\lib\MTRandom.cs" />
+     <Compile Include="Assets\Other Assets\MTRandom\Scripts\lib\MersenneTwister.cs" />
+     <Compile Include="Assets\Other Assets\MTRandom\Scripts\lib\NormalDistribution.cs" />
+     <Compile Include="Assets\Other Assets\MTRandom\Scripts\lib\PoissonDistribution.cs" />
+     <Compile Include="Assets\Other Assets\MTRandom\Scripts\lib\PowerLaw.cs" />
+     <Compile Include="Assets\Other Assets\MTRandom\Scripts\lib\RandomCube.cs" />
+     <Compile Include="Assets\Other Assets\MTRandom\Scripts\lib\RandomDisk.cs" />
+     <Compile Include="Assets\Other Assets\MTRandom\Scripts\lib\RandomSphere.cs" />
+     <Compile Include="Assets\Other Assets\MTRandom\Scripts\lib\RandomSquare.cs" />
+     <Compile Include="Assets\Other Assets\MTRandom\Scripts\lib\WaveToRgb.cs" />
+     <Compile Include="Assets\Other Assets\MTRandom\Scripts\test\DebugStreamer.cs" />
+     <Compile Include="Assets\Other Assets\MTRandom\Scripts\test\MTRandomExample.cs" />
+     <Compile Include="Assets\Other Assets\PolyMesh\Scripts\PolyMesh.cs" />
+     <Compile Include="Assets\Scripts\Player.cs" />
+     <Compile Include="Assets\Scripts\References.cs" />
+     <Compile Include="Assets\Scripts\TextCollider2D.cs" />
+     <None Include="Assets\Other Assets\Custom\AudioPlayer\Features.txt" />
+     <None Include="Assets\Other Assets\HOTween\readme.txt" />
+     <None Include="Assets\Other Assets\Hydrogen\Shaders\Texture-Unlit.shader" />
+     <None Include="Assets\Other Assets\Hydrogen\Shaders\Texture-UnlitAlpha.shader" />
+     <None Include="Assets\Other Assets\Hydrogen\Shaders\Color-Color.shader" />
+     <None Include="Assets\Other Assets\HOTween\Editor\HOEditorGUIFramework.xml" />
+     <None Include="Assets\Other Assets\Hydrogen\Shaders\Color-Specular.shader" />
+     <None Include="Assets\Other Assets\Hydrogen\README.txt" />
+     <None Include="Assets\Other Assets\Hydrogen\Shaders\Color-Unlit.shader" />
+     <None Include="Assets\Other Assets\HOTween\Editor\HOEditorUtils.xml" />
+     <None Include="Assets\Other Assets\Hydrogen\Shaders\Color-SpecularEmissive.shader" />
+     <None Include="Assets\Other Assets\Hydrogen\Shaders\Texture-UnlitAlphaTinted.shader" />
+ <Reference Include="HOTween">
+ <HintPath>E:/Projects/Unity/Semi Colon/semicolon/Assets/Other Assets/HOTween/Plugins/HOTween.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

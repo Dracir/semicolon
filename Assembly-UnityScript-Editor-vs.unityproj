@@ -5,11 +5,11 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{98D9469C-C948-0D9F-289B-C3747E854A4E}</ProjectGuid>
+	<ProjectGuid>{E7CB0CCB-709F-95B9-9847-B618EF1DE4B6}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
-	<AssemblyName>Assembly-CSharp-Editor</AssemblyName>
+	<AssemblyName>Assembly-UnityScript-Editor</AssemblyName>
 	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
 	<FileAlignment>512</FileAlignment>
 	<BaseDirectory>Assets</BaseDirectory>
@@ -46,34 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\DSPModules\Editor\DSPModuleEditor.cs" />
-     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\DSPModules\Editor\MidiPlayerEditor.cs" />
-     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\Editor\AudioInfoEditor.cs" />
-     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\Editor\AudioPlayerEditor.cs" />
-     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\Editor\SamplerEditor.cs" />
-     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\Editor\AttributeUtility.cs" />
-     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\Editor\ButtonDrawer.cs" />
-     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\Editor\CustomPropertyDrawerBase.cs" />
-     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\Editor\MinMaxSliderDrawer.cs" />
-     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\Editor\SeparatorDrawer.cs" />
-     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\Editor\SingleLineVectorDrawer.cs" />
-     <Compile Include="Assets\Other Assets\Custom\Utils\Editor\SettingsUtility.cs" />
-     <Compile Include="Assets\Other Assets\Custom\Utils\Editor\SnapSettings.cs" />
-     <Compile Include="Assets\Other Assets\Custom\Utils\Editor\TextMeshEditor.cs" />
-     <Compile Include="Assets\Other Assets\Custom\Utils\Editor\TransformEditor.cs" />
-     <Compile Include="Assets\Other Assets\HOTween\HOTween Extensions\HOTweenManager\Editor\Core\HOTweenEditorGUI.cs" />
-     <Compile Include="Assets\Other Assets\HOTween\HOTween Extensions\HOTweenManager\Editor\Core\HOTweenEditorVars.cs" />
-     <Compile Include="Assets\Other Assets\HOTween\HOTween Extensions\HOTweenManager\Editor\Core\HOTweenPanelMode.cs" />
-     <Compile Include="Assets\Other Assets\HOTween\HOTween Extensions\HOTweenManager\Editor\Core\IHOTweenPanel.cs" />
-     <Compile Include="Assets\Other Assets\HOTween\HOTween Extensions\HOTweenManager\Editor\HOTweenComponentInspector.cs" />
-     <Compile Include="Assets\Other Assets\HOTween\HOTween Extensions\HOTweenManager\Editor\HOTweenEditor.cs" />
-     <Compile Include="Assets\Other Assets\HOTween\HOTween Extensions\HOTweenManager\Editor\HOTweenManagerInspector.cs" />
-     <Compile Include="Assets\Other Assets\Hydrogen\Editor\HydrogenUtility.cs" />
-     <Compile Include="Assets\Other Assets\Hydrogen\Editor\MenuItems\Assets\TestFlight.cs" />
-     <Compile Include="Assets\Other Assets\Hydrogen\Editor\MenuItems\Edit\HailMaryPlay.cs" />
-     <Compile Include="Assets\Other Assets\Hydrogen\Editor\MenuItems\File\AutomaticBuild.cs" />
-     <Compile Include="Assets\Other Assets\Hydrogen\Editor\MenuItems\Help\LibraryDocumentation.cs" />
-     <Compile Include="Assets\Other Assets\PolyMesh\Scripts\Editor\PolyMeshEditor.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\Editor\TextMeshEditor.js" />
      <None Include="Assets\Other Assets\Custom\AudioPlayer\Features.txt" />
      <None Include="Assets\Other Assets\HOTween\readme.txt" />
      <None Include="Assets\Other Assets\Hydrogen\Shaders\Texture-Unlit.shader" />

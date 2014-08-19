@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{3FFFDFFD-9AFD-A570-AB81-38B3247584F0}</ProjectGuid>
+	<ProjectGuid>{98D9469C-C948-0D9F-289B-C3747E854A4E}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -19,7 +19,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_4_6_0;UNITY_4_6;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_4_6_FEATURES;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_4_5_3;UNITY_4_5;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -46,23 +46,57 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\AudioPlayer\DSPModules\Editor\DSPModuleEditor.cs" />
-     <Compile Include="Assets\Scripts\AudioPlayer\DSPModules\Editor\MidiPlayerEditor.cs" />
-     <Compile Include="Assets\Scripts\AudioPlayer\Editor\AudioInfoEditor.cs" />
-     <Compile Include="Assets\Scripts\AudioPlayer\Editor\AudioPlayerEditor.cs" />
-     <Compile Include="Assets\Scripts\AudioPlayer\Editor\SamplerEditor.cs" />
-     <Compile Include="Assets\Scripts\Utils\CustomAttributes\Editor\AttributeUtility.cs" />
-     <Compile Include="Assets\Scripts\Utils\CustomAttributes\Editor\ButtonDrawer.cs" />
-     <Compile Include="Assets\Scripts\Utils\CustomAttributes\Editor\CustomPropertyDrawerBase.cs" />
-     <Compile Include="Assets\Scripts\Utils\CustomAttributes\Editor\MinMaxSliderDrawer.cs" />
-     <Compile Include="Assets\Scripts\Utils\CustomAttributes\Editor\SeparatorDrawer.cs" />
-     <Compile Include="Assets\Scripts\Utils\CustomAttributes\Editor\SingleLineVectorDrawer.cs" />
-     <None Include="Assets\Scripts\AudioPlayer\Features.txt" />
- <Reference Include="UnityEngine.UI">
- <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.0/UnityEngine.UI.dll</HintPath>
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\DSPModules\Editor\DSPModuleEditor.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\DSPModules\Editor\MidiPlayerEditor.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\Editor\AudioInfoEditor.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\Editor\AudioPlayerEditor.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\Editor\SamplerEditor.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\Editor\AttributeUtility.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\Editor\ButtonDrawer.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\Editor\CustomPropertyDrawerBase.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\Editor\MinMaxSliderDrawer.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\Editor\SeparatorDrawer.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\Editor\SingleLineVectorDrawer.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\Editor\SettingsUtility.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\Editor\SnapSettings.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\Editor\TextMeshEditor.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\Editor\TransformEditor.cs" />
+     <Compile Include="Assets\Other Assets\HOTween\HOTween Extensions\HOTweenManager\Editor\Core\HOTweenEditorGUI.cs" />
+     <Compile Include="Assets\Other Assets\HOTween\HOTween Extensions\HOTweenManager\Editor\Core\HOTweenEditorVars.cs" />
+     <Compile Include="Assets\Other Assets\HOTween\HOTween Extensions\HOTweenManager\Editor\Core\HOTweenPanelMode.cs" />
+     <Compile Include="Assets\Other Assets\HOTween\HOTween Extensions\HOTweenManager\Editor\Core\IHOTweenPanel.cs" />
+     <Compile Include="Assets\Other Assets\HOTween\HOTween Extensions\HOTweenManager\Editor\HOTweenComponentInspector.cs" />
+     <Compile Include="Assets\Other Assets\HOTween\HOTween Extensions\HOTweenManager\Editor\HOTweenEditor.cs" />
+     <Compile Include="Assets\Other Assets\HOTween\HOTween Extensions\HOTweenManager\Editor\HOTweenManagerInspector.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Editor\HydrogenUtility.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Editor\MenuItems\Assets\TestFlight.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Editor\MenuItems\Edit\HailMaryPlay.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Editor\MenuItems\File\AutomaticBuild.cs" />
+     <Compile Include="Assets\Other Assets\Hydrogen\Editor\MenuItems\Help\LibraryDocumentation.cs" />
+     <Compile Include="Assets\Other Assets\PolyMesh\Scripts\Editor\PolyMeshEditor.cs" />
+     <None Include="Assets\Other Assets\Custom\AudioPlayer\Features.txt" />
+     <None Include="Assets\Other Assets\HOTween\readme.txt" />
+     <None Include="Assets\Other Assets\Hydrogen\Shaders\Texture-Unlit.shader" />
+     <None Include="Assets\Other Assets\Hydrogen\Shaders\Texture-UnlitAlpha.shader" />
+     <None Include="Assets\Other Assets\Hydrogen\Shaders\Color-Color.shader" />
+     <None Include="Assets\Other Assets\HOTween\Editor\HOEditorGUIFramework.xml" />
+     <None Include="Assets\Other Assets\Hydrogen\Shaders\Color-Specular.shader" />
+     <None Include="Assets\Other Assets\Hydrogen\README.txt" />
+     <None Include="Assets\Other Assets\Hydrogen\Shaders\Color-Unlit.shader" />
+     <None Include="Assets\Other Assets\HOTween\Editor\HOEditorUtils.xml" />
+     <None Include="Assets\Other Assets\Hydrogen\Shaders\Color-SpecularEmissive.shader" />
+     <None Include="Assets\Other Assets\Hydrogen\Shaders\Texture-UnlitAlphaTinted.shader" />
+ <Reference Include="HOEditorGUIFramework">
+ <HintPath>E:/Projects/Unity/Semi Colon/semicolon/Assets/Other Assets/HOTween/Editor/HOEditorGUIFramework.dll</HintPath>
  </Reference>
- <Reference Include="UnityEditor.UI">
- <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.0/Editor/UnityEditor.UI.dll</HintPath>
+ <Reference Include="HOEditorUtils">
+ <HintPath>E:/Projects/Unity/Semi Colon/semicolon/Assets/Other Assets/HOTween/Editor/HOEditorUtils.dll</HintPath>
+ </Reference>
+ <Reference Include="HOTween">
+ <HintPath>E:/Projects/Unity/Semi Colon/semicolon/Assets/Other Assets/HOTween/Plugins/HOTween.dll</HintPath>
+ </Reference>
+ <Reference Include="HOTweenV1_Editor">
+ <HintPath>E:/Projects/Unity/Semi Colon/semicolon/Assets/Other Assets/HOTween/Plugins/Editor/HOTweenV1_Editor.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Graphs">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
@@ -70,9 +104,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{17533FA3-357A-CEC6-ED1C-9FA92629C572}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
+      <Project>{3895E049-BDB7-E4B5-40D7-CD92D9C19B18}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
     <ProjectReference Include="Assembly-Boo.booproj">
-      <Project>{37FEEBDF-0D0B-E072-6F80-3D338C9D990C}</Project>      <Name>Assembly-Boo</Name>    </ProjectReference>
+      <Project>{225944F2-0D61-17A9-CD53-3FCA286BB421}</Project>      <Name>Assembly-Boo</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

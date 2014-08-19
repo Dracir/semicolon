@@ -3,6 +3,8 @@ using System.Collections;
 
 static public class Logger {
 
+	static public double RoundPrecision = 0.001;
+	
 	static public void Log(params object[] toLog){
 		string log = "";
 		foreach (object item in toLog){
@@ -55,7 +57,7 @@ static public class Logger {
 			str += "}";
 		}
 		else if (obj is IEnumerator) str += ObjectToString(((IEnumerator) obj).Current);
-		else if (obj is Vector2 || obj is Vector3 || obj is Vector4) str += VectorToString(obj);
+		else if (obj is Vector2 || obj is Vector3 || obj is Vector4 || obj is Color || obj is Quaternion || obj is Rect) str += VectorToString(obj);
 		else if (obj is LayerMask) str += ((LayerMask) obj).value.ToString();
 		else if (obj != null) str += obj.ToString();
 		else str += "null";
@@ -64,20 +66,36 @@ static public class Logger {
 		
 	static public string VectorToString(object v){
 		string str = "";
+		
 		if (v is Vector2){
 			Vector2 v2 = (Vector2) v;
-			v2 = v2.Round(0.001);
+			v2 = v2.Round(RoundPrecision);
 			str += "Vector2(" + v2.x + ", " + v2.y;
 		}
 		else if (v is Vector3){
 			Vector3 v3 = (Vector3) v;
-			v3 = v3.Round(0.001);
+			v3 = v3.Round(RoundPrecision);
 			str += "Vector3(" + v3.x + ", " + v3.y + ", " + v3.z;
 		}
 		else if (v is Vector4){
 			Vector4 v4 = (Vector4) v;
-			v4 = v4.Round(0.001);
+			v4 = v4.Round(RoundPrecision);
 			str += "Vector4(" + v4.x + ", " + v4.y + ", " + v4.z + ", " + v4.w;
+		}
+		else if (v is Quaternion){
+			Quaternion q = (Quaternion) v;
+			q = q.Round(RoundPrecision);
+			str += "Quaternion(" + q.x + ", " + q.y + ", " + q.z + ", " + q.w;
+		}
+		else if (v is Color){
+			Color c = (Color) v;
+			c = c.Round(RoundPrecision);
+			str += "Color(" + c.r + ", " + c.g + ", " + c.b + ", " + c.a;
+		}
+		else if (v is Rect){
+			Rect r = (Rect) v;
+			r = r.Round(RoundPrecision);
+			str += "Rect(" + r.x + ", " + r.y + ", " + r.width + ", " + r.height;
 		}
 		return str + ")";
 	}

@@ -20,14 +20,13 @@ public class CustomPropertyDrawerBase : PropertyDrawer {
 		
 		if (fieldInfo.FieldType.IsArray){
  			index = AttributeUtility.GetIndexFromLabel(label);
- 			if (!noIndex && !string.IsNullOrEmpty(prefixLabel)) prefixLabel += " " + index;
- 			else if (noIndex && string.IsNullOrEmpty(prefixLabel)) prefixLabel = "Element";
 		}
-		
-		if (!noPrefixLabel){
-			if (!string.IsNullOrEmpty(prefixLabel)) position = EditorGUI.PrefixLabel(position, new GUIContent(prefixLabel));
-			else position = EditorGUI.PrefixLabel(position, label);
-			EditorGUI.indentLevel = 0;
+		else{
+			if (!noPrefixLabel){
+				if (!string.IsNullOrEmpty(prefixLabel)) position = EditorGUI.PrefixLabel(position, new GUIContent(prefixLabel));
+				else position = EditorGUI.PrefixLabel(position, label);
+				EditorGUI.indentLevel = 0;
+			}
 		}
 		return position;
 	}

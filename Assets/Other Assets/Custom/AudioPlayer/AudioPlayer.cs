@@ -277,16 +277,16 @@ public class AudioPlayer : MonoBehaviour {
 	void DestroyHierarchy(){
 		if (pAudioClips != null && audioClips != null){
 			if (pAudioClips.Length != audioClips.Length){
-				transform.DestroyImmediateChildren();
+				transform.DestroyChildrenImmediate();
 			}
 			else {
 				for (int i = 0; i < pAudioClips.Length; i++){
 					if (pAudioClips[i] == null || audioClips[i] == null){
-						transform.DestroyImmediateChildren();
+						transform.DestroyChildrenImmediate();
 						break;
 					}
 					else if (pAudioClips[i].name != audioClips[i].name){
-						transform.DestroyImmediateChildren();
+						transform.DestroyChildrenImmediate();
 						break;
 					}
 				}
