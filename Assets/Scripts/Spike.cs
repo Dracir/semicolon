@@ -2,7 +2,7 @@
 
 public class Spike : MonoBehaviour
 {
-
+	[Header("BOba")]
 	[Min] public float fallSpeed = 3;
 	[Min] public float lifeTime = 3;
 	[HideInInspector] public int index;
@@ -57,7 +57,7 @@ public class Spike : MonoBehaviour
 	{
 		if (References.SpikeManager.spikes[index] != this)
 		{
-			Invoke("Fall", 3);
+			Invoke("Fall", 2.5F);
 			CurrentState = WaitingToFall;
 		}
 	}

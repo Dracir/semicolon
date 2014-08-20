@@ -9,8 +9,9 @@ public class MinDrawer : CustomPropertyDrawerBase {
 		float min = ((MinAttribute) attribute).min;
 		
 		noPrefixLabel = ((CustomAttributeBase) attribute).NoPrefixLabel;
+		noFieldLabel = ((CustomAttributeBase) attribute).NoFieldLabel;
 		
-		if (noPrefixLabel) label = GUIContent.none;
+		if (noPrefixLabel || noFieldLabel) label = GUIContent.none;
 		
 		EditorGUI.BeginChangeCheck();
 		EditorGUI.PropertyField(position, property, label, true);
