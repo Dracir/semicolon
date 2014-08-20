@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 
-[CustomEditor(typeof(Transform)), CanEditMultipleObjects]
+[CustomEditor(typeof(Transform), true), CanEditMultipleObjects]
 public class TransformEditor : Editor {
 
 	Transform transform;
@@ -25,23 +25,23 @@ public class TransformEditor : Editor {
 	bool showLines;
 	bool fadeWithDistance;
 	
-	void Awake(){
+	void OnEnable(){
+		transform = (Transform) target;
 		SnapSettings.CleanUp();
 	}
 	
 	public override void OnInspectorGUI(){
-		transform = (Transform) target;
 		resetBreak = false;
-		
 		GetSnapSettings();
 		
+		serializedObject.Update();
 		if (!resetBreak) DrawUtilityButtons();
 		if (!resetBreak) DrawVectors();
 		if (!resetBreak) DrawGrid();
+		serializedObject.ApplyModifiedProperties();
 	}
 	
 	void OnSceneGUI(){
-		transform = (Transform) target;
 		GetSnapSettings();
 		DrawGrid();
 		
@@ -103,8 +103,8 @@ public class TransformEditor : Editor {
 		
 		// Reset Button
 		if (GUILayout.Button(new GUIContent(". Reset  .", "Resets the transform to it's original state."), EditorStyles.miniButton, GUILayout.Width("Reset".GetWidth(EditorStyles.miniFont) + 12))){
-			Undo.RegisterCompleteObjectUndo(Selection.GetTransforms(SelectionMode.Editable), "Transform Reset");
-			foreach (var t in Selection.GetTransforms(SelectionMode.Editable)){
+			Undo.RegisterCompleteObjectUndo(targets, "Transform Reset");
+			foreach (Transform t in targets){
 				t.Reset();
 				SnapSettings.DeleteKey("Toggle" + "Snap" + t.GetInstanceID());
 				SnapSettings.DeleteKey("Toggle" + "Grid" + t.GetInstanceID());
@@ -124,7 +124,7 @@ public class TransformEditor : Editor {
 		
 		// Add Button
 		if (GUILayout.Button(new GUIContent(". Add  .", "Adds a child to the transform."), EditorStyles.miniButtonLeft, GUILayout.Width("Add".GetWidth(EditorStyles.miniFont) + 12))){
-			foreach (var t in Selection.GetTransforms(SelectionMode.Editable | SelectionMode.ExcludePrefab)){
+			foreach (Transform t in targets){
 				Undo.RegisterCreatedObjectUndo(t.AddChild().gameObject, "New Child");
 				EditorUtility.SetDirty(t);
 			}
@@ -132,8 +132,8 @@ public class TransformEditor : Editor {
 		
 		// Sort Button
 		if (GUILayout.Button(new GUIContent(". Sort  .", "Sorts the immediate children of the transform alphabetically."), EditorStyles.miniButtonRight, GUILayout.Width("Sort".GetWidth(EditorStyles.miniFont) + 12))){
-			Undo.RegisterCompleteObjectUndo(Selection.GetTransforms(SelectionMode.Editable | SelectionMode.ExcludePrefab), "Transform Sort");
-			foreach (var t in Selection.GetTransforms(SelectionMode.Editable | SelectionMode.ExcludePrefab)){
+			Undo.RegisterCompleteObjectUndo(targets, "Transform Sort");
+			foreach (Transform t in targets){
 				t.SortChildren();
 				EditorUtility.SetDirty(t);
 			}
@@ -143,150 +143,147 @@ public class TransformEditor : Editor {
 	}
 	
 	void DrawVectors(){
-		bool changedX = false;
-		bool changedY = false;
-		bool changedZ = false;
+		const float sensibility = 0.15F;
 		
-		// Local Position
-		Vector3 localPosition = DrawVectorWithButton(transform.localPosition, ". P  .", "Resets the transform's local position to it's initial state.", Vector3.zero, ref changedX, ref changedY, ref changedZ);
 		Vector3 parentScale = Vector3.one;
 		if (transform.parent != null) parentScale = transform.parent.lossyScale;
-		if (changedX){
-			Undo.RegisterCompleteObjectUndo(Selection.GetTransforms(SelectionMode.Editable), "Transform Move X");
-			if (snap && !resetBreak && !Application.isPlaying) localPosition.x = (transform.localPosition.x + (localPosition.x - transform.localPosition.x) * (moveX / parentScale.x) * 10).Round(moveX / parentScale.x);
-			transform.SetLocalPosition(localPosition, "X");
-			foreach (var t in Selection.GetTransforms(SelectionMode.Editable)){
-				t.SetLocalPosition(transform.localPosition, "X");
-				EditorUtility.SetDirty(t);
-			}
-		}
-		if (changedY){
-			Undo.RegisterCompleteObjectUndo(Selection.GetTransforms(SelectionMode.Editable), "Transform Move Y");
-			if (snap && !resetBreak && !Application.isPlaying) localPosition.y = (transform.localPosition.y + (localPosition.y - transform.localPosition.y) * (moveY / parentScale.y) * 10).Round(moveY / parentScale.y);
-			transform.SetLocalPosition(localPosition, "Y");
-			foreach (var t in Selection.GetTransforms(SelectionMode.Editable)){
-				t.SetLocalPosition(transform.localPosition, "Y");
-				EditorUtility.SetDirty(t);
-			}
-		}
-		if (changedZ){
-			Undo.RegisterCompleteObjectUndo(Selection.GetTransforms(SelectionMode.Editable), "Transform Move Z");
-			if (snap && !resetBreak && !Application.isPlaying) localPosition.z = (transform.localPosition.z + (localPosition.z - transform.localPosition.z) * (moveZ / parentScale.z) * 10).Round(moveZ / parentScale.z);
-			transform.SetLocalPosition(localPosition, "Z");
-			foreach (var t in Selection.GetTransforms(SelectionMode.Editable)){
-				t.SetLocalPosition(transform.localPosition, "Z");
-				EditorUtility.SetDirty(t);
-			}
-		}
-		
-		// Local Rotation
-		Vector3 localEulerAngles = DrawVectorWithButton(transform.localEulerAngles, ". R  .", "Resets the transform's local rotation to it's initial state.", Vector3.zero, ref changedX, ref changedY, ref changedZ);
-		if (changedX){
-			Undo.RegisterCompleteObjectUndo(Selection.GetTransforms(SelectionMode.Editable), "Transform Rotate X");
-			if (snap && !resetBreak && !Application.isPlaying) localEulerAngles.x = (transform.localEulerAngles.x + (localEulerAngles.x - transform.localEulerAngles.x) * rotation * 10).Round(rotation) % 360;
-			transform.SetLocalEulerAngles(localEulerAngles, "X");
-			foreach (var t in Selection.GetTransforms(SelectionMode.Editable)){
-				t.SetLocalEulerAngles(transform.localEulerAngles, "X");
-				EditorUtility.SetDirty(t);
-			}
-		}
-		if (changedY){
-			Undo.RegisterCompleteObjectUndo(Selection.GetTransforms(SelectionMode.Editable), "Transform Rotate Y");
-			if (snap && !resetBreak && !Application.isPlaying) localEulerAngles.y = (transform.localEulerAngles.y + (localEulerAngles.y - transform.localEulerAngles.y) * rotation * 10).Round(rotation) % 360;
-			transform.SetLocalEulerAngles(localEulerAngles, "Y");
-			foreach (var t in Selection.GetTransforms(SelectionMode.Editable)){
-				t.SetLocalEulerAngles(transform.localEulerAngles, "Y");
-				EditorUtility.SetDirty(t);
-			}
-		}
-		if (changedZ){
-			Undo.RegisterCompleteObjectUndo(Selection.GetTransforms(SelectionMode.Editable), "Transform Rotate Z");
-			if (snap && !resetBreak && !Application.isPlaying) localEulerAngles.z = (transform.localEulerAngles.z + (localEulerAngles.z - transform.localEulerAngles.z) * rotation * 10).Round(rotation) % 360;
-			transform.SetLocalEulerAngles(localEulerAngles, "Z");
-			foreach (var t in Selection.GetTransforms(SelectionMode.Editable)){
-				t.SetLocalEulerAngles(transform.localEulerAngles, "Z");
-				EditorUtility.SetDirty(t);
-			}
-		}
-		
-		// Local Scale
-		EditorGUI.BeginChangeCheck();
-		Vector3 localScale = DrawVectorWithButton(transform.localScale, ". S  .", "Resets the transform's local scale to it's initial state.", Vector3.one, ref changedX, ref changedY, ref changedZ);
-		if (changedX){
-			Undo.RegisterCompleteObjectUndo(Selection.GetTransforms(SelectionMode.Editable), "Transform Scale X");
-			if (snap && !resetBreak && !Application.isPlaying) localScale.x = (transform.localScale.x + (localScale.x - transform.localScale.x) * scale * 10).Round(scale);
-			transform.SetLocalScale(localScale, "X");
-			foreach (var t in Selection.GetTransforms(SelectionMode.Editable)){
-				t.SetLocalScale(transform.localScale, "X");
-				EditorUtility.SetDirty(t);
-			}
-		}
-		if (changedY){
-			Undo.RegisterCompleteObjectUndo(Selection.GetTransforms(SelectionMode.Editable), "Transform Scale Y");
-			if (snap && !resetBreak && !Application.isPlaying) localScale.y = (transform.localScale.y + (localScale.y - transform.localScale.y) * scale * 10).Round(scale);
-			transform.SetLocalScale(localScale, "Y");
-			foreach (var t in Selection.GetTransforms(SelectionMode.Editable)){
-				t.SetLocalScale(transform.localScale, "Y");
-				EditorUtility.SetDirty(t);
-			}
-		}
-		if (changedZ){
-			Undo.RegisterCompleteObjectUndo(Selection.GetTransforms(SelectionMode.Editable), "Transform Scale Z");
-			if (snap && !resetBreak && !Application.isPlaying) localScale.z = (transform.localScale.z + (localScale.z - transform.localScale.z) * scale * 10).Round(scale);
-			transform.SetLocalScale(localScale, "Z");
-			foreach (var t in Selection.GetTransforms(SelectionMode.Editable)){
-				t.SetLocalScale(transform.localScale, "Z");
-				EditorUtility.SetDirty(t);
-			}
-		}
+		DrawVectorWithButton(serializedObject.FindProperty("m_LocalPosition"), ". P  .", "Resets the transform's local position to it's initial state.", Vector3.zero, new Vector3(moveX / parentScale.x, moveY / parentScale.y, moveZ / parentScale.z), sensibility);
+		DrawQuaternionWithButton(serializedObject.FindProperty("m_LocalRotation"), ". R  .", "Resets the transform's local rotation to it's initial state.", Quaternion.identity, new Vector3(rotation, rotation, rotation), sensibility);
+		DrawVectorWithButton(serializedObject.FindProperty("m_LocalScale"), ". S  .", "Resets the transform's local scale to it's initial state.", Vector3.one, new Vector3(scale, scale, scale), sensibility);
 	}
 	
-	Vector3 DrawVectorWithButton(Vector3 vector, string buttonLabel, string tooltip, Vector3 resetValue, ref bool changedX, ref bool changedY, ref bool changedZ) {
+	void DrawVectorWithButton(SerializedProperty vectorProperty, string buttonLabel, string tooltip, Vector3 resetValue, Vector3 roundValue, float sensibility) {
 		float labelWidth = EditorGUIUtility.labelWidth;
 		EditorGUIUtility.labelWidth = 15;
 		
 		EditorGUILayout.BeginHorizontal();
 		
 		if (GUILayout.Button(new GUIContent(buttonLabel, tooltip), EditorStyles.miniButton, GUILayout.Width(20))){
-			changedX = true;
-			changedY = true;
-			changedZ = true;
+			vectorProperty.vector3Value = resetValue;
+			serializedObject.ApplyModifiedProperties();
 			resetBreak = true;
-			return resetValue;
+			return;
+		}
+		
+		Vector3 previousValue = vectorProperty.vector3Value;
+		
+		EditorGUI.BeginChangeCheck();
+		EditorGUILayout.PropertyField(vectorProperty.FindPropertyRelative("x"));
+		if (EditorGUI.EndChangeCheck()){
+			if (snap && !resetBreak && !Application.isPlaying) {
+				if (Event.current.delta.x != 0) vectorProperty.FindPropertyRelative("x").floatValue = (previousValue.x + Event.current.delta.x * roundValue.x * sensibility);
+				vectorProperty.FindPropertyRelative("x").floatValue = vectorProperty.FindPropertyRelative("x").floatValue.Round(roundValue.x);
+				serializedObject.ApplyModifiedProperties();
+			}
 		}
 		
 		EditorGUI.BeginChangeCheck();
-		vector.x = EditorGUILayout.FloatField("X", vector.x, GUILayout.Height(EditorGUIUtility.singleLineHeight));
-		if (EditorGUI.EndChangeCheck()) changedX = true;
-		else changedX = false;
+		EditorGUILayout.PropertyField(vectorProperty.FindPropertyRelative("y"));
+		if (EditorGUI.EndChangeCheck()){
+			if (snap && !resetBreak && !Application.isPlaying) {
+				if (Event.current.delta.x != 0) vectorProperty.FindPropertyRelative("y").floatValue = (previousValue.y + Event.current.delta.x * roundValue.y * sensibility);
+				vectorProperty.FindPropertyRelative("y").floatValue = vectorProperty.FindPropertyRelative("y").floatValue.Round(roundValue.y);
+				serializedObject.ApplyModifiedProperties();
+			}
+		}
+		
 		EditorGUI.BeginChangeCheck();
-		vector.y = EditorGUILayout.FloatField("Y", vector.y, GUILayout.Height(EditorGUIUtility.singleLineHeight));
-		if (EditorGUI.EndChangeCheck()) changedY = true;
-		else changedY = false;
-		EditorGUI.BeginChangeCheck();
-		vector.z = EditorGUILayout.FloatField("Z", vector.z, GUILayout.Height(EditorGUIUtility.singleLineHeight));
-		if (EditorGUI.EndChangeCheck()) changedZ = true;
-		else changedZ = false;
+		EditorGUILayout.PropertyField(vectorProperty.FindPropertyRelative("z"));
+		if (EditorGUI.EndChangeCheck()){
+			if (snap && !resetBreak && !Application.isPlaying) {
+				if (Event.current.delta.x != 0) vectorProperty.FindPropertyRelative("z").floatValue = (previousValue.z + Event.current.delta.x * roundValue.z * sensibility);
+				vectorProperty.FindPropertyRelative("z").floatValue = vectorProperty.FindPropertyRelative("z").floatValue.Round(roundValue.z);
+				serializedObject.ApplyModifiedProperties();
+			}
+		}
 		
 		EditorGUILayout.EndHorizontal();
 		
-		if (float.IsNaN(vector.x)) vector.x = 0;
-		if (float.IsNaN(vector.y)) vector.y = 0;
-		if (float.IsNaN(vector.z)) vector.z = 0;
+		EditorGUIUtility.labelWidth = labelWidth;
+	}
+	
+	void DrawQuaternionWithButton(SerializedProperty quaternionProperty, string buttonLabel, string tooltip, Quaternion resetValue, Vector3 roundValue, float sensibility){
+		float labelWidth = EditorGUIUtility.labelWidth;
+		EditorGUIUtility.labelWidth = 15;
+		bool changed = false;
+		
+		EditorGUILayout.BeginHorizontal();
+		
+		if (GUILayout.Button(new GUIContent(buttonLabel, tooltip), EditorStyles.miniButton, GUILayout.Width(20))){
+			quaternionProperty.quaternionValue = resetValue;
+			serializedObject.ApplyModifiedProperties();
+			resetBreak = true;
+			return;
+		}
+		
+		Vector3 localEulerAngles = transform.localEulerAngles;
+		
+		EditorGUI.BeginChangeCheck();
+		localEulerAngles.x = EditorGUILayout.FloatField("X", localEulerAngles.x % 360) % 360;
+		if (EditorGUI.EndChangeCheck()){
+			changed = true;
+			Undo.RegisterCompleteObjectUndo(targets, "Transform Rotate X");
+			if (snap && !resetBreak && !Application.isPlaying) {
+				if (Event.current.delta.x != 0) localEulerAngles.x = (transform.localEulerAngles.x + Event.current.delta.x * roundValue.x * sensibility);
+				localEulerAngles.x = localEulerAngles.x.Round(roundValue.x) % 360;
+			}
+			transform.SetLocalEulerAngles(localEulerAngles, "X");
+			foreach (Transform t in targets){
+				t.SetLocalEulerAngles(transform.localEulerAngles, "X");
+				EditorUtility.SetDirty(t);
+			}
+		}
+		
+		EditorGUI.BeginChangeCheck();
+		localEulerAngles.y = EditorGUILayout.FloatField("Y", localEulerAngles.y % 360) % 360;
+		if (EditorGUI.EndChangeCheck()){
+			changed = true;
+			Undo.RegisterCompleteObjectUndo(targets, "Transform Rotate Y");
+			if (snap && !resetBreak && !Application.isPlaying) {
+				if (Event.current.delta.x != 0) localEulerAngles.y = (transform.localEulerAngles.y + Event.current.delta.x * roundValue.y * sensibility);
+				localEulerAngles.y = localEulerAngles.y.Round(roundValue.y) % 360;
+			}
+			transform.SetLocalEulerAngles(localEulerAngles, "Y");
+			foreach (Transform t in targets){
+				t.SetLocalEulerAngles(transform.localEulerAngles, "Y");
+				EditorUtility.SetDirty(t);
+			}
+		}
+		
+		EditorGUI.BeginChangeCheck();
+		localEulerAngles.z = EditorGUILayout.FloatField("Z", localEulerAngles.z % 360) % 360;
+		if (EditorGUI.EndChangeCheck()){
+			changed = true;
+			Undo.RegisterCompleteObjectUndo(targets, "Transform Rotate Z");
+			if (snap && !resetBreak && !Application.isPlaying) {
+				if (Event.current.delta.x != 0) localEulerAngles.z = (transform.localEulerAngles.z + Event.current.delta.x * roundValue.z * sensibility);
+				localEulerAngles.z = localEulerAngles.z.Round(roundValue.z) % 360;
+			}
+			transform.SetLocalEulerAngles(localEulerAngles, "Z");
+			foreach (Transform t in targets){
+				t.SetLocalEulerAngles(transform.localEulerAngles, "Z");
+				EditorUtility.SetDirty(t);
+			}
+		}
+		
+		if (changed) {
+			quaternionProperty.quaternionValue = Quaternion.Euler(localEulerAngles);
+			serializedObject.ApplyModifiedProperties();
+		}
+		
+		EditorGUILayout.EndHorizontal();
 		
 		EditorGUIUtility.labelWidth = labelWidth;
-		return vector;
 	}
 	
 	void DrawGrid(){
 		if (grid && !Application.isPlaying){
 			if (Selection.activeTransform == transform){
-				bool squares = true;
 				bool is3D = true;
 				if (SceneView.currentDrawingSceneView != null) is3D = !SceneView.currentDrawingSceneView.in2DMode;
 				float size = 0.1F * ((moveX + moveY + moveZ) / 3);
-				float alphaFactor = 1.25F;
-				float alphaFade = 2;
+				const float alphaFactor = 1.25F;
+				const float alphaFade = 2;
 				float alpha;
 				float xAlpha = 0.5F;
 				float yAlpha = 0.5F;
@@ -302,7 +299,7 @@ public class TransformEditor : Editor {
 							// X Squares
 							Handles.lighting = false;
 							Handles.color = new Color(0.1F, 0.25F, 0.75F, alpha);
-							Vector3 offset = new Vector3(x * moveX, y * moveY, 0);
+							var offset = new Vector3(x * moveX, y * moveY, 0);
 							Vector3 position = transform.position + offset;
 							position.x = position.x.Round(moveX);
 							position.y = position.y.Round(moveY);
@@ -311,10 +308,10 @@ public class TransformEditor : Editor {
 							if (showCubes){
 								if (SceneView.currentDrawingSceneView != null){
 									if (SceneView.currentDrawingSceneView.camera.WorldPointInView(position)){
-										if (squares) Handles.CubeCap(0, position, Quaternion.identity, size);
+										Handles.CubeCap(0, position, Quaternion.identity, size);
 									}
 								}
-								else if (squares) Handles.CubeCap(0, position, Quaternion.identity, size);
+								else Handles.CubeCap(0, position, Quaternion.identity, size);
 							}
 							
 							// X Lines
@@ -333,14 +330,14 @@ public class TransformEditor : Editor {
 								position.x = position.x.Round(moveX);
 								position.y = position.y.Round(moveY);
 								position.z = position.z.Round(moveZ);
-							
+								
 								if (showCubes){
 									if (SceneView.currentDrawingSceneView != null){
 										if (SceneView.currentDrawingSceneView.camera.WorldPointInView(position)){
-											if (squares) Handles.CubeCap(0, position, Quaternion.identity, size);
+											Handles.CubeCap(0, position, Quaternion.identity, size);
 										}
 									}
-									else if (squares) Handles.CubeCap(0, position, Quaternion.identity, size);
+									else Handles.CubeCap(0, position, Quaternion.identity, size);
 								}
 								
 								// Y Lines
@@ -363,10 +360,10 @@ public class TransformEditor : Editor {
 								if (showCubes){
 									if (SceneView.currentDrawingSceneView != null){
 										if (SceneView.currentDrawingSceneView.camera.WorldPointInView(position)){
-											if (squares) Handles.CubeCap(0, position, Quaternion.identity, size);
+											Handles.CubeCap(0, position, Quaternion.identity, size);
 										}
 									}
-									else if (squares) Handles.CubeCap(0, position, Quaternion.identity, size);
+									else Handles.CubeCap(0, position, Quaternion.identity, size);
 								}
 								
 								// Z Lines
@@ -404,7 +401,7 @@ public class TransformEditor : Editor {
 		if (pressed) EditorGUI.LabelField(new Rect(position.x + 8, position.y + 1, width, position.height - 1), new GUIContent(buttonLabel, tooltip), EditorStyles.whiteMiniLabel);
 		else EditorGUI.LabelField(new Rect(position.x + 8, position.y + 1, width, position.height - 1), new GUIContent(buttonLabel, tooltip), EditorStyles.miniLabel);
 		if (pressed != SnapSettings.GetValue<bool>("Toggle" + buttonLabel + transform.GetInstanceID())){
-			foreach (var t in Selection.GetTransforms(SelectionMode.Editable)){
+			foreach (Transform t in targets){
 				SnapSettings.SetValue("Toggle" + buttonLabel + t.GetInstanceID(), pressed);
 				EditorUtility.SetDirty(t);
 			}
@@ -413,6 +410,6 @@ public class TransformEditor : Editor {
 		
 		return SnapSettings.GetValue<bool>("Toggle" + buttonLabel + transform.GetInstanceID());
 	}
-	
 }
+
 #endif

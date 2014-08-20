@@ -63,6 +63,8 @@
      <Compile Include="Assets\Other Assets\Custom\AudioPlayer\SamplerExample.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\ButtonAttribute.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\CustomAttributeBase.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\MaxAttrinbute.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\MinAttribute.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\MinMaxSliderAttribute.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\SeparatorAttribute.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\SingleLineVectorAttribute.cs" />
@@ -136,6 +138,8 @@
      <Compile Include="Assets\Other Assets\PolyMesh\Scripts\PolyMesh.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\References.cs" />
+     <Compile Include="Assets\Scripts\Spike.cs" />
+     <Compile Include="Assets\Scripts\SpikeManager.cs" />
      <Compile Include="Assets\Scripts\TextCollider2D.cs" />
      <None Include="Assets\Other Assets\Custom\AudioPlayer\Features.txt" />
      <None Include="Assets\Other Assets\HOTween\readme.txt" />
