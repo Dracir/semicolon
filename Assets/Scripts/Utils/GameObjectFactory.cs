@@ -3,6 +3,11 @@ using System.Collections;
 
 public class GameObjectFactory  {
 
+
+	public static GameObject createGameObject(string name, GameObject parent) {
+		return createGameObject (name, parent.transform);
+	}
+
     public static GameObject createGameObject(string name, Transform parent = null) {
         GameObject newObject = new GameObject();
         newObject.name = name;

@@ -34,7 +34,7 @@ public class Statement : MonoBehaviour {
 
 
 
-	protected void setText(string text){
+	public void setText(string text){
 		deleteAllChild ();
 		GameObject.DestroyImmediate (this.GetComponent<BoxCollider2D>());
 
@@ -57,7 +57,7 @@ public class Statement : MonoBehaviour {
 		
 		BoxCollider2D box = this.gameObject.AddComponent<BoxCollider2D>();		
 		box.size 		= new Vector2(text.Length,1) ;
-		box.center 		= new Vector2 (0, 1);
+		box.center 		= new Vector2(text.Length/2, 1);
 		box.isTrigger 	= false;
 		//obj.layer = LayerMask.NameToLayer("NormalCollisions");
 	}
@@ -70,7 +70,7 @@ public class Statement : MonoBehaviour {
 
 		TextMesh textMesh = obj.AddComponent<TextMesh> ();
 		textMesh.text 		= text;
-		textMesh.anchor 	= TextAnchor.MiddleCenter;
+		textMesh.anchor 	= TextAnchor.MiddleLeft;
 		textMesh.font	 	= GameConstantes.instance.statementFont;
 
 		MeshRenderer mr = obj.GetComponent<MeshRenderer> ();
