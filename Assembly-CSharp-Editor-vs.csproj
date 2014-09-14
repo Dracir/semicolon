@@ -54,6 +54,8 @@
      <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\Editor\AttributeUtility.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\Editor\ButtonDrawer.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\Editor\CustomPropertyDrawerBase.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\Editor\MaxDrawer.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\Editor\MinDrawer.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\Editor\MinMaxSliderDrawer.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\Editor\SeparatorDrawer.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\Editor\SingleLineVectorDrawer.cs" />

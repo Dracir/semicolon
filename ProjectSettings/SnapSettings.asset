@@ -7,4 +7,5 @@ GridSize:Int32:10
 ShowCubes:Boolean:True
 ShowLines:Boolean:True
 FadeWithDistance:Boolean:False
-ToggleSnap7054:Boolean:True
+ToggleSnap6926:Boolean:True
+ToggleGrid6926:Boolean:True
