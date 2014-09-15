@@ -6,6 +6,9 @@ public class GameConstantes : MonoBehaviour {
 	public Font statementFont;
 	public Material statementMaterial;
 
+	public Color statementColor;
+	public Color booleanValueColor;
+
 	public static GameConstantes instance;
 
 	public GameConstantes(){

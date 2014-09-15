@@ -24,45 +24,38 @@ public class LevelLoader {
 				}
 
 			}
-
-			/*
-
-			//string nextStatement = "";
-			float startingX = 0 ;
-			for (int x = 0; x < line.Length; x++) {
-				char nextChar = line[x];
-
-				if(nextChar == ' '){
-					if(nextStatement.Length > 0){
-						createStatement(nextStatement,startingX,y);
-					}else{
-						//Nothing
-					}
-				}
-
-			}
-			char nextChar;
-
-			while( (nextChar = line[x]) != ' '){
-				nextStatement += nextChar;
-				x++;
-			}
-
-			string[] statementsInText = line.Split(new char[]{' '});
-			foreach (var statement in statementsInText) {
-				createStatement(statement,x,y);
-			}*/
-
 			y--;
 		}
 
 	}
 
 	private void createStatement(string line, float x, float y){
+		line = line.Replace('_',' ');
+		GameObject obj;
+		int indexOfArgument = line.IndexOf ('%');
+		if (indexOfArgument == -1) {
+			obj = createCommentStatement (line);
+		} else {
+			line = line.Substring(0,indexOfArgument) + "%v"; 
+			obj = createBooleanStatement (line);		
+		}
+		
+		obj.transform.Translate (x, y, 0);
+	}
+
+	private GameObject createCommentStatement(string line){
 		GameObject obj = GameObjectFactory.createGameObject (line, statements);
 		Statement statement = obj.AddComponent<Statement> ();
 		statement.setText(line);
-		obj.transform.Translate (x, y, 0);
+		return obj;
+	}
+
+	private GameObject createBooleanStatement(string line){
+		GameObject obj = GameObjectFactory.createGameObject (line, statements);
+		BooleanStatement statement = obj.AddComponent<BooleanStatement> ();
+		statement.booleanValue = BooleanValues.TRUE;
+		statement.setText(line);
+		return obj;
 	}
 
 

@@ -141,6 +141,7 @@
      <Compile Include="Assets\Scripts\Spike.cs" />
      <Compile Include="Assets\Scripts\SpikeManager.cs" />
      <Compile Include="Assets\Scripts\Statement\BooleanStatement.cs" />
+     <Compile Include="Assets\Scripts\Statement\Data\BooleanValues.cs" />
      <Compile Include="Assets\Scripts\Statement\DataType.cs" />
      <Compile Include="Assets\Scripts\Statement\DataTypeDictionnary.cs" />
      <Compile Include="Assets\Scripts\Statement\DataTypeEnum.cs" />

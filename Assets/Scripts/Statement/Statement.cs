@@ -5,88 +5,68 @@ using System.Collections.Generic;
 public class Statement : MonoBehaviour {
 
 	public string statementText;
-	//public DataTypeEnum datatypeEnum;
-
-	public DataType datatype;
-	
-	private GameObject beforeArgumentChild;
-	//private GameObject argumentChild;
-	//private GameObject afterArgumentChild;
-
+	private bool isReset;
 
 
 	[Button(label:"Reset",methodName:"resetText", NoPrefixLabel=true)]
 	public bool resetBtn;
 	protected virtual void resetText(){
+		isReset = true;
 		setText (statementText);
 	}
 
 
-
-
-	void Start () {
-	}
-
-
-	void Update () {
-	
-	}
-
-
-
-	public void setText(string text){
+	public virtual void setText(string text){
+		statementText = text;
 		deleteAllChild ();
-		GameObject.DestroyImmediate (this.GetComponent<BoxCollider2D>());
-
-		if (text.Contains ("%v")) {
-			int indexOfValueTag = text.IndexOf("%v");
-			
-			string textBefore = text.Substring(0,indexOfValueTag);
-			string textAfter = text.Substring(indexOfValueTag+2, text.Length - indexOfValueTag -2);
-			
-			this.beforeArgumentChild = createText (Vector2.zero,textBefore);
-			
-			Vector2 translate = new Vector2(indexOfValueTag, 0);
-			this.beforeArgumentChild = createText (translate, "");
-			
-			Vector2 translate2 = new Vector2(indexOfValueTag, 0);
-			this.beforeArgumentChild = createText (translate2, textAfter);
-		} else {
-			this.beforeArgumentChild = createText (Vector2.zero, text);		
-		}
-		
-		BoxCollider2D box = this.gameObject.AddComponent<BoxCollider2D>();		
-		box.size 		= new Vector2(text.Length,1) ;
-		box.center 		= new Vector2(text.Length/2, 1);
-		box.isTrigger 	= false;
-		//obj.layer = LayerMask.NameToLayer("NormalCollisions");
+		createTextChild (text);
+		createCollider ();
 	}
-
-
-
-	GameObject createText(Vector2 translate, string text){
-		GameObject obj = GameObjectFactory.createGameObject ("Text", this.transform);
-		obj.transform.Translate (translate);
-
-		TextMesh textMesh = obj.AddComponent<TextMesh> ();
-		textMesh.text 		= text;
-		textMesh.anchor 	= TextAnchor.MiddleLeft;
-		textMesh.font	 	= GameConstantes.instance.statementFont;
-
-		MeshRenderer mr = obj.GetComponent<MeshRenderer> ();
-		mr.material 		= GameConstantes.instance.statementMaterial;
-
-		return obj;
-	}
-
+	
 	void deleteAllChild(){
 		var children = new List<GameObject>();
 		foreach (Transform child in transform) children.Add(child.gameObject);
 		children.ForEach(child => DestroyImmediate(child));
 	}
 
+	protected virtual void createTextChild(string text){
+		GameObject beforeArgumentChild = createText (Vector2.zero, text);
+
+	}
+
+	protected virtual void createCollider(){
+		GameObject.DestroyImmediate (this.GetComponent<BoxCollider2D>());
+		BoxCollider2D box = this.gameObject.AddComponent<BoxCollider2D>();		
+		box.size 		= new Vector2(statementText.Length  ,1) ;
+		box.center 		= new Vector2(statementText.Length/2, 1);
+		box.isTrigger 	= false;
+		//obj.layer = LayerMask.NameToLayer("NormalCollisions");
+	}
+
+
+	protected GameObject createText(Vector2 translate, string text){
+		return createText (translate, text, GameConstantes.instance.statementColor);
+	}
+
+	protected GameObject createText(Vector2 translate, string text, Color color){
+		Debug.Log (translate);
+		GameObject obj = GameObjectFactory.createGameObject ("Text", this.transform);
+
+		TextMesh textMesh = obj.AddComponent<TextMesh> ();
+		textMesh.text 		= text;
+		textMesh.anchor 	= TextAnchor.MiddleLeft;
+		textMesh.font	 	= GameConstantes.instance.statementFont;
+		textMesh.color = color;
+
+		MeshRenderer mr = obj.GetComponent<MeshRenderer> ();
+		mr.material 		= GameConstantes.instance.statementMaterial;
+		
+		obj.transform.Translate (translate);
+		if (isReset) {
+			obj.transform.Translate(this.transform.position);		
+		}
+		return obj;
+	}
 
 
 }
-
-

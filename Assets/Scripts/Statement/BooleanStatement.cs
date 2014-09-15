@@ -3,23 +3,31 @@ using System.Collections;
 
 public class BooleanStatement : Statement {
 
-	public bool value;
+	public BooleanValues booleanValue;
 
+	protected override void createTextChild(string text){
+		int indexOfValueTag = statementText.IndexOf("%v");
+		
+		string textBefore = statementText.Substring(0,indexOfValueTag);
+		string textAfter  = booleanValue.ToString();
+		
+		GameObject beforeArgumentChild = createText (Vector2.zero,textBefore);
+		
+		Vector2 translate = new Vector2(indexOfValueTag, 0);
+		beforeArgumentChild = createText (translate, textAfter, GameConstantes.instance.booleanValueColor);
 
-	protected override void resetText(){
-		string text = this.statementText.Replace ("%v", value ? "true" : "false"); 
-		setText (text);
+		/*int indexOfValueTag = statementText.IndexOf("%v");
+		
+		string textBefore = statementText.Substring(0,indexOfValueTag);
+		string textAfter  = statementText.Substring(indexOfValueTag+2, statementText.Length - indexOfValueTag -2);
+		
+		GameObject beforeArgumentChild = createText (Vector2.zero,textBefore);
+		
+		Vector2 translate = new Vector2(indexOfValueTag, 0);
+		beforeArgumentChild = createText (translate, "");
+		
+		Vector2 translate2 = new Vector2(indexOfValueTag, 0);
+		beforeArgumentChild = createText (translate2, textAfter);*/
 	}
 
-
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }
