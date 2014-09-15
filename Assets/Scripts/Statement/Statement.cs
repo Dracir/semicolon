@@ -49,7 +49,6 @@ public class Statement : MonoBehaviour {
 	}
 
 	protected GameObject createText(Vector2 translate, string text, Color color){
-		Debug.Log (translate);
 		GameObject obj = GameObjectFactory.createGameObject ("Text", this.transform);
 
 		TextMesh textMesh = obj.AddComponent<TextMesh> ();

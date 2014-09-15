@@ -5,6 +5,9 @@ public class BooleanStatement : Statement {
 
 	public BooleanValues booleanValue;
 
+	//public delegate void MyDelegate(int num);
+	//public MyDelegate myDelegate;
+
 	protected override void createTextChild(string text){
 		int indexOfValueTag = statementText.IndexOf("%v");
 		
