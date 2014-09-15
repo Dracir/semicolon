@@ -7,7 +7,7 @@ public class Statement : MonoBehaviour {
 	public string statementText;
 	private bool isReset;
 
-	public Observer[] observers;
+	public Observer[] observers = new Observer[]{};
 
 
 	[Button(label:"Reset",methodName:"resetText", NoPrefixLabel=true)]

@@ -1,47 +1,94 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+
+public enum ReadingMod{ PARAM, LEVEL}
 
 public class LevelLoader {
-	
+
+	private ReadingMod readingMod;
 	private GameObject statements;
 
+	private float levelY;
+
+	private Dictionary<string,string> parameters;
+
 	public void load(string mapText, GameObject world){	
+		this.parameters = new Dictionary<string, string>();
 		this.statements = GameObjectFactory.createGameObject ("Statements", world);
 
 		string[] lines = mapText.Split (new char[]{'\n'});
-		float y = lines.Length;
 		foreach (var line in lines) {
-			int indexOfNextSpace;
-			int x = 0;
-			while( (indexOfNextSpace = line.IndexOf(' ',x)) != -1){
-				int lenght = indexOfNextSpace - x;
-				if(lenght > 0){
-					string nextStatement = line.Substring(x,lenght);
-					createStatement(nextStatement,x,y);
-					x += lenght;
-				}else{
-					x += 1;
+			if(line.StartsWith("<")){
+				changeReadingMod(line);
+			}else{
+				switch(readingMod){
+					case ReadingMod.PARAM: readParam(line); 
+						break;
+					case ReadingMod.LEVEL : readLevelLine(line);
+						break;
 				}
-
 			}
-			y--;
+
 		}
 
 	}
 
+	private void changeReadingMod(string line){
+		if (line.Contains("<Params>")) {
+			readingMod = ReadingMod.PARAM;
+		} else if (line.Contains("<Level>")) {
+			readingMod = ReadingMod.LEVEL;
+		}
+	}
+
+	private void readParam(string line){
+		int indexOfFirstSpace = line.IndexOf (' ');
+		string key = line.Substring (0, indexOfFirstSpace);
+		string param = line.Substring (indexOfFirstSpace + 1);
+		this.parameters.Add (key, param);
+	}
+
+	private void readLevelLine(string line){
+		int x = 0;
+		int indexOfNextSpace;
+		while( (indexOfNextSpace = line.IndexOf(' ',x)) != -1){
+			int lenght = indexOfNextSpace - x;
+			if(lenght > 0){
+				string nextStatement = line.Substring(x,lenght);
+				createStatement(nextStatement,x,levelY);
+				x += lenght;
+			}else{
+				x += 1;
+			}
+			
+		}
+		levelY--;
+	}
+	
 	private void createStatement(string line, float x, float y){
 		line = line.Replace('_',' ');
-		GameObject obj;
+		GameObject obj = null;
 		int indexOfArgument = line.IndexOf ('%');
 		if (indexOfArgument == -1) {
 			obj = createCommentStatement (line);
 		} else {
-			line = line.Substring(0,indexOfArgument) + "%v"; 
-			obj = createBooleanStatement (line);		
+			string key = line.Substring(indexOfArgument).TrimEnd(';');
+			string[] param = parameters[key].Split(' ');
+			string type = param[0].ToLower();
+			if(type.Equals("boolean")){
+				line = line.Substring(0,indexOfArgument) + "%v"; 
+				obj = createBooleanStatement (line,param);
+			}else{
+
+			}
+
 		}
 		
 		obj.transform.Translate (x, y, 0);
 	}
+
+
 
 	private GameObject createCommentStatement(string line){
 		GameObject obj = GameObjectFactory.createGameObject (line, statements);
@@ -50,10 +97,15 @@ public class LevelLoader {
 		return obj;
 	}
 
-	private GameObject createBooleanStatement(string line){
+	private GameObject createBooleanStatement(string line,string[] param ){
 		GameObject obj = GameObjectFactory.createGameObject (line, statements);
 		BooleanStatement statement = obj.AddComponent<BooleanStatement> ();
-		statement.BooleanValue = BooleanValues.TRUE;
+		if (param [1].ToLower ().Equals ("false")) {
+			statement.BooleanValue = BooleanValues.FALSE;
+		} else {
+			statement.BooleanValue = BooleanValues.TRUE;
+		}
+
 		statement.setText(line);
 		return obj;
 	}

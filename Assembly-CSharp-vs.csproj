@@ -136,6 +136,86 @@
      <Compile Include="Assets\Other Assets\MTRandom\Scripts\test\DebugStreamer.cs" />
      <Compile Include="Assets\Other Assets\MTRandom\Scripts\test\MTRandomExample.cs" />
      <Compile Include="Assets\Other Assets\PolyMesh\Scripts\PolyMesh.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\BetterUndo.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\Operations\BasicOperation.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\Operations\IOperation.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\Operations\List Ops\AddToList.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\Operations\List Ops\ClearList.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\Operations\List Ops\ClearRange.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\Operations\List Ops\InsertToList.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\Operations\List Ops\ListOperation.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\Operations\List Ops\RemoveFromList.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\Operations\List Ops\SetVariable.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\Tests\DevbusTestTarget.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\BetterBehaviour Exclusive\BetterCollectionAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\BetterBehaviour Exclusive\Categories\CategoryMemberAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\BetterBehaviour Exclusive\Categories\DefineCategoryAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\BetterBehaviour Exclusive\Categories\IgnoreCategoriesAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\BetterBehaviour Exclusive\Categories\UncategorizedViewAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\BetterBehaviour Exclusive\InlineAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\BetterBehaviour Exclusive\ShowMethodAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\BetterBehaviour Exclusive\ShowPropertyAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Constraints\ConstrainValueAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Constraints\IPAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Constraints\MaxAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Constraints\MinAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Constraints\NumericClampAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Constraints\RegexAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Constraints\StringClampAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Decorates\CommentAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Decorates\IndentAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Decorates\SpaceAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Enums\EnumMaskAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Enums\FriendlyEnumAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Injections\InjectSingleAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Others\DraggableAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Others\InstantiateAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Others\ObjectStringAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Others\ReadonlyAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Others\SelectionAttributes.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Others\ShowAsAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Others\ShowTypeAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Popups\AnimatorVariableAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Popups\PopupAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Popups\TagsPopupAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Randoms\RandomAttributes.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Requirements\RequiredAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Requirements\RequiredFromChildrenAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Requirements\RequiredFromParentsAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Requirements\RequiredFromRelativeAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Requirements\RequiredFromThisAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Vectors\AdvancedV2Attribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Vectors\AdvancedV3Attribute.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\BetterBehaviour\BetterBehaviour.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\BetterBehaviour\Serialization\BetterSerializationLogic.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\BetterBehaviour\Serialization\SerializationData.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\BetterBehaviour\Serialization\SerializationHandlers.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\BetterBehaviour\Serialization\SerializationSurrogates.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\BetterBehaviour\Serialization\UnitySerializationLogic.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Others\ComponentsHolder.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Others\GOInliner.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Others\UnityDateTime.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\BetterBehaviour-Exclusive\CategoriesTest.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\BetterBehaviour-Exclusive\CollectionsTest.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\BetterBehaviour-Exclusive\InlineTest.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\BetterBehaviour-Exclusive\ShowMethodTest.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\BetterBehaviour-Exclusive\ShowPropertyTest.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\AdvancedVTest.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\ConstraintsTest.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\EnumsTest.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\MiscTest.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\PopupsTest.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\RandomsTest.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\RequirementsTest.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\SelectionsTest.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\ShowTypeTest1.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\ShowTypeTest2.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\UnityDateTimeTest.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Serialization\Abstracts.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Serialization\AutoProperties.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Serialization\Generics.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Serialization\Interfaces.cs" />
+     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Serialization\UnityImplementor.cs" />
      <Compile Include="Assets\Scripts\GameObjects\ChangeColorObject.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\References.cs" />
@@ -166,6 +246,15 @@
      <None Include="Assets\Other Assets\Hydrogen\Shaders\Texture-UnlitAlphaTinted.shader" />
  <Reference Include="HOTween">
  <HintPath>G:/Workspaces/unity/semicolon/Assets/Other Assets/HOTween/Plugins/HOTween.dll</HintPath>
+ </Reference>
+ <Reference Include="Fasterflect">
+ <HintPath>G:/Workspaces/unity/semicolon/Assets/Other Assets/Vexe/DLLs/Fasterflect/Fasterflect.dll</HintPath>
+ </Reference>
+ <Reference Include="RuntimeExtensions">
+ <HintPath>G:/Workspaces/unity/semicolon/Assets/Other Assets/Vexe/DLLs/Runtime/RuntimeExtensions/RuntimeExtensions.dll</HintPath>
+ </Reference>
+ <Reference Include="RuntimeHelpers">
+ <HintPath>G:/Workspaces/unity/semicolon/Assets/Other Assets/Vexe/DLLs/Runtime/RuntimeHelpers/RuntimeHelpers.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

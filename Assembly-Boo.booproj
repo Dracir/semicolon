@@ -62,6 +62,15 @@
  <Reference Include="HOTween">
  <HintPath>G:/Workspaces/unity/semicolon/Assets/Other Assets/HOTween/Plugins/HOTween.dll</HintPath>
  </Reference>
+ <Reference Include="Fasterflect">
+ <HintPath>G:/Workspaces/unity/semicolon/Assets/Other Assets/Vexe/DLLs/Fasterflect/Fasterflect.dll</HintPath>
+ </Reference>
+ <Reference Include="RuntimeExtensions">
+ <HintPath>G:/Workspaces/unity/semicolon/Assets/Other Assets/Vexe/DLLs/Runtime/RuntimeExtensions/RuntimeExtensions.dll</HintPath>
+ </Reference>
+ <Reference Include="RuntimeHelpers">
+ <HintPath>G:/Workspaces/unity/semicolon/Assets/Other Assets/Vexe/DLLs/Runtime/RuntimeHelpers/RuntimeHelpers.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

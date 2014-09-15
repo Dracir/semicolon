@@ -2,10 +2,10 @@
 using System.Collections;
 
 [System.Serializable]
-public class BooleanStatement : Statement {
+public class BooleanStatement : Statement{
 
 	public BooleanValues booleanValue;
-
+	
 	public BooleanValues BooleanValue{
 		get{
 			return booleanValue;
