@@ -136,6 +136,7 @@
      <Compile Include="Assets\Other Assets\MTRandom\Scripts\test\DebugStreamer.cs" />
      <Compile Include="Assets\Other Assets\MTRandom\Scripts\test\MTRandomExample.cs" />
      <Compile Include="Assets\Other Assets\PolyMesh\Scripts\PolyMesh.cs" />
+     <Compile Include="Assets\Scripts\GameObjects\ChangeColorObject.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\References.cs" />
      <Compile Include="Assets\Scripts\Spike.cs" />
@@ -150,6 +151,7 @@
      <Compile Include="Assets\Scripts\TheGame\GameConstantes.cs" />
      <Compile Include="Assets\Scripts\TheGame\GameMenager.cs" />
      <Compile Include="Assets\Scripts\Utils\GameObjectFactory.cs" />
+     <Compile Include="Assets\Scripts\Utils\Observer.cs" />
      <None Include="Assets\Other Assets\Custom\AudioPlayer\Features.txt" />
      <None Include="Assets\Other Assets\HOTween\readme.txt" />
      <None Include="Assets\Other Assets\Hydrogen\Shaders\Texture-Unlit.shader" />

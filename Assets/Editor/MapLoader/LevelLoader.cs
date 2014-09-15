@@ -53,7 +53,7 @@ public class LevelLoader {
 	private GameObject createBooleanStatement(string line){
 		GameObject obj = GameObjectFactory.createGameObject (line, statements);
 		BooleanStatement statement = obj.AddComponent<BooleanStatement> ();
-		statement.booleanValue = BooleanValues.TRUE;
+		statement.BooleanValue = BooleanValues.TRUE;
 		statement.setText(line);
 		return obj;
 	}

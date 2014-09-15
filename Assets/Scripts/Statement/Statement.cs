@@ -7,12 +7,21 @@ public class Statement : MonoBehaviour {
 	public string statementText;
 	private bool isReset;
 
+	public Observer[] observers;
+
 
 	[Button(label:"Reset",methodName:"resetText", NoPrefixLabel=true)]
 	public bool resetBtn;
 	protected virtual void resetText(){
 		isReset = true;
 		setText (statementText);
+		notifyObservers ();
+	}
+
+	protected void notifyObservers(){
+		foreach (var observer in observers) {
+			observer.update();	
+		}
 	}
 
 

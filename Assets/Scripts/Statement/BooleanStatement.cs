@@ -1,12 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[System.Serializable]
 public class BooleanStatement : Statement {
 
 	public BooleanValues booleanValue;
 
-	//public delegate void MyDelegate(int num);
-	//public MyDelegate myDelegate;
+	public BooleanValues BooleanValue{
+		get{
+			return booleanValue;
+		}
+		set{
+			booleanValue = value;
+			notifyObservers();
+		}
+	}
+
 
 	protected override void createTextChild(string text){
 		int indexOfValueTag = statementText.IndexOf("%v");
