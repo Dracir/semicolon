@@ -256,9 +256,6 @@
  <Reference Include="HOTweenV1_Editor">
  <HintPath>G:/Workspaces/unity/semicolon/Assets/Other Assets/HOTween/Plugins/Editor/HOTweenV1_Editor.dll</HintPath>
  </Reference>
- <Reference Include="UnityEditor.Graphs">
- <HintPath>D:/Programs/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
- </Reference>
  <Reference Include="EditorExtensions">
  <HintPath>G:/Workspaces/unity/semicolon/Assets/Other Assets/Vexe/DLLs/Editor/EditorExtensions/EditorExtensions.dll</HintPath>
  </Reference>
@@ -273,6 +270,9 @@
  </Reference>
  <Reference Include="RuntimeHelpers">
  <HintPath>G:/Workspaces/unity/semicolon/Assets/Other Assets/Vexe/DLLs/Runtime/RuntimeHelpers/RuntimeHelpers.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.Graphs">
+ <HintPath>D:/Programs/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>

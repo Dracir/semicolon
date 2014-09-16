@@ -58,4 +58,11 @@ public class BooleanStatement : Statement{
 
 	}
 
+	void OnDrawGizmos (){
+		foreach (var observer in observers) {
+			Gizmos.color = GameConstantes.instance.booleanValueColor;
+			Gizmos.DrawLine (this.transform.GetChild(1).transform.position, observer.transform.position);
+		}
+	}
+
 }
