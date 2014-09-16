@@ -12,11 +12,11 @@ public class AudioPlayerExample : MonoBehaviour {
 	
 	void OnGUI(){
 		
-		GUILayout.BeginHorizontal();
-		GUILayout.Space(5);
-		AudioPlayer.Buses["Piano"] = GUILayout.VerticalSlider(AudioPlayer.Buses["Piano"], 100, 0);
-		GUILayout.Space(5);
-		GUILayout.BeginVertical();
+//		GUILayout.BeginHorizontal();
+//		GUILayout.Space(5);
+//		AudioPlayer.Buses["Piano"] = GUILayout.VerticalSlider(AudioPlayer.Buses["Piano"], 100, 0);
+//		GUILayout.Space(5);
+//		GUILayout.BeginVertical();
 		
 		// Plays a sound at position (0, 0, 0); returns the AudioSource
 		if (GUILayout.Button(" Play Simple ")){
@@ -100,7 +100,7 @@ public class AudioPlayerExample : MonoBehaviour {
 			AudioPlayer.StopAllImmediate();
 		}
 		
-		GUILayout.EndVertical();
-		GUILayout.EndHorizontal();
+//		GUILayout.EndVertical();
+//		GUILayout.EndHorizontal();
 	}
 }

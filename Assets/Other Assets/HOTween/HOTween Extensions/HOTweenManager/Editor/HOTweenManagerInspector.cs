@@ -56,7 +56,7 @@ public class HOTweenManagerInspector : Editor
 #if (UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6)
 		isActive = srcGO.activeInHierarchy;
 #else
-		isActive = ( srcGO.active == true );
+		isActive = ( srcGO.activeSelf == true );
 #endif
 		enabled = IsSingleManager();
 	}
@@ -67,7 +67,7 @@ public class HOTweenManagerInspector : Editor
 #if (UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6)
 		if (srcGO.activeInHierarchy) {
 #else
-		if ( srcGO.active != isActive ) {
+		if ( srcGO.activeSelf != isActive ) {
 #endif
 			isActive = !isActive;
 			enabled = IsSingleManager();

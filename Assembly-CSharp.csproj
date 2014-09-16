@@ -19,7 +19,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_4_5_4;UNITY_4_5;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_4_6_0;UNITY_4_6;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_4_6_FEATURES;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -39,18 +39,18 @@
 	<Reference Include="System.Core" />
 	<Reference Include="System.Xml.Linq" />
 	<Reference Include="UnityEngine">
-	  <HintPath>D:/Programs/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>D:/Programs/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\AudioCoroutineHolder.cs" />
      <Compile Include="Assets\Other Assets\Custom\AudioPlayer\AudioGainManager.cs" />
      <Compile Include="Assets\Other Assets\Custom\AudioPlayer\AudioInfo.cs" />
      <Compile Include="Assets\Other Assets\Custom\AudioPlayer\AudioPlayer.cs" />
      <Compile Include="Assets\Other Assets\Custom\AudioPlayer\AudioPlayerExample.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\CoroutineHolder.cs" />
      <Compile Include="Assets\Other Assets\Custom\AudioPlayer\DSPModules\DSPModule.cs" />
      <Compile Include="Assets\Other Assets\Custom\AudioPlayer\DSPModules\MidiPlayer.cs" />
      <Compile Include="Assets\Other Assets\Custom\AudioPlayer\Garbage\AudioBridge.cs" />
@@ -59,21 +59,29 @@
      <Compile Include="Assets\Other Assets\Custom\AudioPlayer\Garbage\Sinuses.cs" />
      <Compile Include="Assets\Other Assets\Custom\AudioPlayer\Garbage\Source.cs" />
      <Compile Include="Assets\Other Assets\Custom\AudioPlayer\Garbage\SourcePropertyDrawer.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\PDPlayer.cs" />
+     <Compile Include="Assets\Other Assets\Custom\AudioPlayer\PDPlayerExample.cs" />
      <Compile Include="Assets\Other Assets\Custom\AudioPlayer\Sampler.cs" />
      <Compile Include="Assets\Other Assets\Custom\AudioPlayer\SamplerExample.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\ArrayAttribute.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\ButtonAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\ClampAttribute.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\CustomAttributeBase.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\MaxAttrinbute.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\MinAttribute.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\MinMaxSliderAttribute.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\PopupSelectorAttribute.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\SeparatorAttribute.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\CustomAttributes\SingleLineVectorAttribute.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\Extensions.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\FollowMouse2D.cs" />
-     <Compile Include="Assets\Other Assets\Custom\Utils\Grid.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\HelperFunctions.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\Logger.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\PooledObject.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\SaveSystem.cs" />
      <Compile Include="Assets\Other Assets\Custom\Utils\SmoothFollow2D.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\Spawner.cs" />
+     <Compile Include="Assets\Other Assets\Custom\Utils\StateMachine.cs" />
      <Compile Include="Assets\Other Assets\HOTween\HOTween Extensions\HOTweenManager\Core\ABSHOTweenEditorElement.cs" />
      <Compile Include="Assets\Other Assets\HOTween\HOTween Extensions\HOTweenManager\HOTweenComponent.cs" />
      <Compile Include="Assets\Other Assets\HOTween\HOTween Extensions\HOTweenManager\HOTweenManager.cs" />
@@ -121,6 +129,12 @@
      <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen\Texture.cs" />
      <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen\Validate.cs" />
      <Compile Include="Assets\Other Assets\Hydrogen\Plugins\Hydrogen\XML.cs" />
+     <Compile Include="Assets\Other Assets\LibPD\LibPdFilterRead.cs" />
+     <Compile Include="Assets\Other Assets\LibPD\Scripts\LibPDNativeMessaging.cs" />
+     <Compile Include="Assets\Other Assets\LibPD\Scripts\LibPDNativeMethods.cs" />
+     <Compile Include="Assets\Other Assets\LibPD\Scripts\LibPDNativeMidi.cs" />
+     <Compile Include="Assets\Other Assets\LibPD\Scripts\LibPdNativeUnity.cs" />
+     <Compile Include="Assets\Other Assets\LibPD\Scripts\PluginUtils.cs" />
      <Compile Include="Assets\Other Assets\MTRandom\Scripts\lib\ExponentialDistribution.cs" />
      <Compile Include="Assets\Other Assets\MTRandom\Scripts\lib\GammaDistribution.cs" />
      <Compile Include="Assets\Other Assets\MTRandom\Scripts\lib\MTRandom.cs" />
@@ -136,86 +150,31 @@
      <Compile Include="Assets\Other Assets\MTRandom\Scripts\test\DebugStreamer.cs" />
      <Compile Include="Assets\Other Assets\MTRandom\Scripts\test\MTRandomExample.cs" />
      <Compile Include="Assets\Other Assets\PolyMesh\Scripts\PolyMesh.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\BetterUndo.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\Operations\BasicOperation.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\Operations\IOperation.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\Operations\List Ops\AddToList.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\Operations\List Ops\ClearList.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\Operations\List Ops\ClearRange.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\Operations\List Ops\InsertToList.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\Operations\List Ops\ListOperation.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\Operations\List Ops\RemoveFromList.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\Operations\List Ops\SetVariable.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\DEVBUS\Tests\DevbusTestTarget.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\BetterBehaviour Exclusive\BetterCollectionAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\BetterBehaviour Exclusive\Categories\CategoryMemberAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\BetterBehaviour Exclusive\Categories\DefineCategoryAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\BetterBehaviour Exclusive\Categories\IgnoreCategoriesAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\BetterBehaviour Exclusive\Categories\UncategorizedViewAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\BetterBehaviour Exclusive\InlineAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\BetterBehaviour Exclusive\ShowMethodAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\BetterBehaviour Exclusive\ShowPropertyAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Constraints\ConstrainValueAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Constraints\IPAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Constraints\MaxAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Constraints\MinAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Constraints\NumericClampAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Constraints\RegexAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Constraints\StringClampAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Decorates\CommentAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Decorates\IndentAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Decorates\SpaceAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Enums\EnumMaskAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Enums\FriendlyEnumAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Injections\InjectSingleAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Others\DraggableAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Others\InstantiateAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Others\ObjectStringAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Others\ReadonlyAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Others\SelectionAttributes.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Others\ShowAsAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Others\ShowTypeAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Popups\AnimatorVariableAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Popups\PopupAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Popups\TagsPopupAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Randoms\RandomAttributes.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Requirements\RequiredAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Requirements\RequiredFromChildrenAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Requirements\RequiredFromParentsAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Requirements\RequiredFromRelativeAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Requirements\RequiredFromThisAttribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Vectors\AdvancedV2Attribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\Attributes\Non-Exclusive\Vectors\AdvancedV3Attribute.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\BetterBehaviour\BetterBehaviour.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\BetterBehaviour\Serialization\BetterSerializationLogic.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\BetterBehaviour\Serialization\SerializationData.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\BetterBehaviour\Serialization\SerializationHandlers.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\BetterBehaviour\Serialization\SerializationSurrogates.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Core\BetterBehaviour\Serialization\UnitySerializationLogic.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Others\ComponentsHolder.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Others\GOInliner.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Others\UnityDateTime.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\BetterBehaviour-Exclusive\CategoriesTest.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\BetterBehaviour-Exclusive\CollectionsTest.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\BetterBehaviour-Exclusive\InlineTest.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\BetterBehaviour-Exclusive\ShowMethodTest.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\BetterBehaviour-Exclusive\ShowPropertyTest.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\AdvancedVTest.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\ConstraintsTest.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\EnumsTest.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\MiscTest.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\PopupsTest.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\RandomsTest.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\RequirementsTest.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\SelectionsTest.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\ShowTypeTest1.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\ShowTypeTest2.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Non-Exclusive\UnityDateTimeTest.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Serialization\Abstracts.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Serialization\AutoProperties.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Serialization\Generics.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Serialization\Interfaces.cs" />
-     <Compile Include="Assets\Other Assets\Vexe\ShowEmAll\Tests\Scripts\Serialization\UnityImplementor.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\AddSomeForce.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\AdditionalData.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\AdditionalDataStorage.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\ArrayOfPrefabs.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\CentreAndPointMe.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\ChangeColor.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\ColorMe.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\CreateChildSphere.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\CreateTexture.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\DeleteComponent.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\DeletedComponent.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\IsDeserializing.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\KeepAReference.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\OpenDoor.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\RenameObject.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\SaveAndLoad.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\SaveAndLoadToServer.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\SaveAndReload.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\ScaleObject.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\SwitchMesh.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\TestCoroutines.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\TestJSON.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\TestLoading.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\TestSerialization.cs" />
+     <Compile Include="Assets\Other Assets\UnitySerializer\Scripts\VariablesToSave.cs" />
      <Compile Include="Assets\Scripts\GameObjects\ChangeColorObject.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\References.cs" />
@@ -244,21 +203,21 @@
      <None Include="Assets\Other Assets\Hydrogen\Shaders\Color-Specular.shader" />
      <None Include="Assets\Other Assets\Hydrogen\README.txt" />
      <None Include="Assets\Other Assets\Hydrogen\Shaders\Color-Unlit.shader" />
+     <None Include="Assets\Plugins\UnitySerializer\license.txt" />
      <None Include="Assets\Other Assets\HOTween\Editor\HOEditorUtils.xml" />
+     <None Include="Assets\Other Assets\UnitySerializer\readme.txt" />
      <None Include="Assets\Other Assets\Hydrogen\Shaders\Color-SpecularEmissive.shader" />
      <None Include="Assets\Other Assets\Hydrogen\Shaders\Texture-UnlitAlphaTinted.shader" />
+ <Reference Include="UnityEngine.UI">
+ <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.0/UnityEngine.UI.dll</HintPath>
+ </Reference>
  <Reference Include="HOTween">
- <HintPath>G:/Workspaces/unity/semicolon/Assets/Other Assets/HOTween/Plugins/HOTween.dll</HintPath>
+ <HintPath>E:/Projects/Unity/Semi Colon/semicolon/Assets/Other Assets/HOTween/Plugins/HOTween.dll</HintPath>
  </Reference>
- <Reference Include="Fasterflect">
- <HintPath>G:/Workspaces/unity/semicolon/Assets/Other Assets/Vexe/DLLs/Fasterflect/Fasterflect.dll</HintPath>
- </Reference>
- <Reference Include="RuntimeExtensions">
- <HintPath>G:/Workspaces/unity/semicolon/Assets/Other Assets/Vexe/DLLs/Runtime/RuntimeExtensions/RuntimeExtensions.dll</HintPath>
- </Reference>
- <Reference Include="RuntimeHelpers">
- <HintPath>G:/Workspaces/unity/semicolon/Assets/Other Assets/Vexe/DLLs/Runtime/RuntimeHelpers/RuntimeHelpers.dll</HintPath>
- </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{E7C50747-FEBE-3483-17BE-B3DA2F7DE0C0}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

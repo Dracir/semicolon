@@ -38,6 +38,7 @@ public sealed class hObjectPool : Hydrogen.Core.ObjectPool
 		/// <summary>
 		/// Should this object pool survive scene switches?
 		/// </summary>
+		[Tooltip("Should this object pool survive scene switches?")]
 		public bool Persistent = true;
 		/// <summary>
 		/// Internal fail safe to maintain instance across threads.

@@ -1,125 +1,143 @@
 ﻿#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
-using System.Collections;
 using System.Collections.Generic;
 
 [CustomEditor(typeof(AudioPlayer))]
-public class AudioPlayerEditor : Editor {
+public class AudioPlayerEditor : CustomEditorBase {
 
 	AudioPlayer audioPlayer;
-	bool x;
+	AudioPlayer.Container currentContainer;
+	AudioPlayer.SubContainer currentSource;
+	
+	[MenuItem("GameObject/Audio/Audio Player")]
+	static void CreateAudioPlayer() {
+		GameObject gameObject;
+		AudioPlayer existingAudioPlayer = FindObjectOfType<AudioPlayer>();
+		
+		if (existingAudioPlayer == null) {
+			gameObject = new GameObject();
+			gameObject.name = "AudioPlayer";
+			gameObject.AddComponent<AudioPlayer>();
+		}
+		else {
+			gameObject = existingAudioPlayer.gameObject;
+		}
+		Selection.activeGameObject = gameObject;
+	}
 	
 	public override void OnInspectorGUI(){
 		audioPlayer = (AudioPlayer) target;
+		if (!audioPlayer.initialized) return;
+			
+		Begin();
 		
-		EditorGUI.BeginChangeCheck();
-		
-		serializedObject.Update();
-		EditorGUILayout.Space();
 		EditorGUILayout.PropertyField(serializedObject.FindProperty("audioClipsPath"));
 		EditorGUILayout.PropertyField(serializedObject.FindProperty("masterVolume"));
 		EditorGUILayout.PropertyField(serializedObject.FindProperty("maxVoices"));
-		ShowTempoSettings();
-		ShowSeparator();
+		EditorGUILayout.PropertyField(serializedObject.FindProperty("tempoSettings"), new GUIContent(string.Format("Tempo Settings: {0} | {1}", audioPlayer.tempoSettings.beatsPerMinute, audioPlayer.tempoSettings.beatsPerMeasure)), true);
+		Separator();
 		ShowContainers();
 		ShowRTPCs();
 		ShowBuses();
-		serializedObject.ApplyModifiedProperties();
 		
-		if (EditorGUI.EndChangeCheck()) EditorUtility.SetDirty(target);
-	}
-	
-	void ShowTempoSettings(){
-		audioPlayer.showTempoSettings = EditorGUILayout.Foldout(audioPlayer.showTempoSettings, "Tempo Settings: " + audioPlayer.tempoSettings.beatsPerMinute + " | " + audioPlayer.tempoSettings.beatsPerMeasure);
-		
-		if (audioPlayer.showTempoSettings){
-			EditorGUI.indentLevel += 1;
-			audioPlayer.tempoSettings.beatsPerMinute = EditorGUILayout.Slider("Beats Per Minute", audioPlayer.tempoSettings.beatsPerMinute, 0.01F, 1000);
-			audioPlayer.tempoSettings.beatsPerMeasure = Mathf.Max(EditorGUILayout.IntField("Beats Per Measure", audioPlayer.tempoSettings.beatsPerMeasure), 1);
-			EditorGUI.indentLevel -= 1;
-			
-			if (audioPlayer.tempoSettings.pBeatsPerMinute != audioPlayer.tempoSettings.beatsPerMinute || audioPlayer.tempoSettings.pBeatsPerMeasure != audioPlayer.tempoSettings.beatsPerMeasure){
-				audioPlayer.tempoSettings.changed = true;
-				audioPlayer.tempoSettings.pBeatsPerMinute = audioPlayer.tempoSettings.beatsPerMinute;
-				audioPlayer.tempoSettings.pBeatsPerMeasure = audioPlayer.tempoSettings.beatsPerMeasure;
+		if (Sampler.Instance == null || PDPlayer.Instance == null){
+			Separator();
+			if (Sampler.Instance == null){
+				if (LargeAddElementButton("Add Sampler"))
+					audioPlayer.gameObject.AddComponent<Sampler>();
+			}
+			if (PDPlayer.Instance == null){
+				if (LargeAddElementButton("Add PDPlayer"))
+					audioPlayer.gameObject.AddComponent<PDPlayer>();
 			}
 		}
+		
+		End();
 	}
 	
 	void ShowRTPCs(){
-		EditorGUILayout.BeginHorizontal();
-		audioPlayer.showRTPCs = EditorGUILayout.Foldout(audioPlayer.showRTPCs, "RTPCs (" + audioPlayer.rTPCs.Length + ")");
+		if (audioPlayer.rTPCs == null) return;
 		
-		EditorGUI.BeginDisabledGroup(Application.isPlaying);
-		if (ShowAddElementButton(serializedObject.FindProperty("rTPCs"))){
-			audioPlayer.rTPCs[audioPlayer.rTPCs.Length - 1] = new AudioPlayer.RTPC();
-			audioPlayer.rTPCs[audioPlayer.rTPCs.Length - 1].name = AudioPlayer.GetUniqueName(audioPlayer.rTPCs, "default");
-		}
-		EditorGUI.EndDisabledGroup();
-		EditorGUILayout.EndHorizontal();
+		audioPlayer.showRTPCs = AddElementFoldOut(serializedObject.FindProperty("rTPCs"), audioPlayer.showRTPCs, "RTPCs", OnRTPCAdded);
 		
 		if (audioPlayer.showRTPCs){
 			EditorGUI.indentLevel += 1;
 			
 			for (int i = 0; i < audioPlayer.rTPCs.Length; i++){
 				AudioPlayer.RTPC rtpc = audioPlayer.rTPCs[i];
+				SerializedProperty rtpcProperty = serializedObject.FindProperty("rTPCs").GetArrayElementAtIndex(i);
 				
 				EditorGUILayout.BeginHorizontal();
 				rtpc.showing = EditorGUILayout.Foldout(rtpc.showing, rtpc.name);
-				GUILayout.Space(40);
+				GUILayout.Space(30);
 				if (!rtpc.showing) rtpc.defaultValue = EditorGUILayout.Slider(rtpc.defaultValue, rtpc.minValue, rtpc.maxValue);
-				if (ShowDeleteElementButton(serializedObject.FindProperty("rTPCs"), i)) break;
+				GUILayout.Space(10);
+				DeleteElementButtonWithArrows(serializedObject.FindProperty("rTPCs"), i);
+				if (deleteBreak) break;
 				EditorGUILayout.EndHorizontal();
 				
 				if (rtpc.showing){
 					EditorGUI.indentLevel += 1;
+					
+					EditorGUI.BeginChangeCheck();
+					EditorGUI.BeginDisabledGroup(Application.isPlaying);
 					rtpc.name = EditorGUILayout.TextField(rtpc.name);
+					EditorGUI.EndDisabledGroup();
 					rtpc.defaultValue = EditorGUILayout.Slider("Value", rtpc.defaultValue, rtpc.minValue, rtpc.maxValue);
-					rtpc.minValue = Mathf.Min(EditorGUILayout.FloatField("Min Value", rtpc.minValue), rtpc.maxValue);
-					rtpc.maxValue = Mathf.Max(EditorGUILayout.FloatField("Max Value", rtpc.maxValue), rtpc.minValue);
-					ShowSeparator(false);
+					EditorGUI.BeginChangeCheck();
+					EditorGUILayout.PropertyField(rtpcProperty.FindPropertyRelative("minValue"));
+					if (EditorGUI.EndChangeCheck())	rtpcProperty.FindPropertyRelative("maxValue").floatValue = Mathf.Max(rtpcProperty.FindPropertyRelative("maxValue").floatValue, rtpcProperty.FindPropertyRelative("minValue").floatValue);
+					EditorGUI.BeginChangeCheck();
+					EditorGUILayout.PropertyField(rtpcProperty.FindPropertyRelative("maxValue"));
+					if (EditorGUI.EndChangeCheck())	rtpcProperty.FindPropertyRelative("minValue").floatValue = Mathf.Clamp(rtpcProperty.FindPropertyRelative("minValue").floatValue, 0, rtpcProperty.FindPropertyRelative("maxValue").floatValue);
+					rtpcProperty.FindPropertyRelative("minValue").floatValue = Mathf.Max(rtpcProperty.FindPropertyRelative("minValue").floatValue, 0);
+					rtpcProperty.FindPropertyRelative("maxValue").floatValue = Mathf.Max(rtpcProperty.FindPropertyRelative("maxValue").floatValue, 0);
+					if (EditorGUI.EndChangeCheck())	rtpcProperty.FindPropertyRelative("changed").boolValue = true;
+					Separator();
+					
 					EditorGUI.indentLevel -= 1;
-				}
-				if (rtpc.pDefaultValue != rtpc.defaultValue){
-					rtpc.changed = true;
-					rtpc.pDefaultValue = rtpc.defaultValue;
 				}
 			}
 			EditorGUI.indentLevel -= 1;
 		}
 	}
 	
+	void OnRTPCAdded(SerializedProperty newRTPC){
+		audioPlayer.rTPCs[audioPlayer.rTPCs.Length - 1] = new AudioPlayer.RTPC();
+		audioPlayer.rTPCs[audioPlayer.rTPCs.Length - 1].name = AudioPlayer.GetUniqueName(audioPlayer.rTPCs, "default");	
+	}
+	
 	void ShowBuses(){
-		EditorGUILayout.BeginHorizontal();
-		audioPlayer.showBuses = EditorGUILayout.Foldout(audioPlayer.showBuses, "Buses (" + audioPlayer.buses.Length + ")");
+		if (audioPlayer.buses == null) return;
 		
-		EditorGUI.BeginDisabledGroup(Application.isPlaying);
-		if (ShowAddElementButton(serializedObject.FindProperty("buses"))){
-			audioPlayer.buses[audioPlayer.buses.Length - 1] = new AudioPlayer.AudioBus();
-			audioPlayer.buses[audioPlayer.buses.Length - 1].name = AudioPlayer.GetUniqueName(audioPlayer.buses, "default");
-		}
-		EditorGUI.EndDisabledGroup();
-		EditorGUILayout.EndHorizontal();
+		audioPlayer.showBuses = AddElementFoldOut(serializedObject.FindProperty("buses"), audioPlayer.showBuses, "Buses", OnBusAdded);
 		
 		if (audioPlayer.showBuses){
 			EditorGUI.indentLevel += 1;
 			
 			for (int i = 0; i < audioPlayer.buses.Length; i++){
 				AudioPlayer.AudioBus bus = audioPlayer.buses[i];
+				SerializedProperty busProperty = serializedObject.FindProperty("buses").GetArrayElementAtIndex(i);
 				
 				EditorGUILayout.BeginHorizontal();
 				bus.showing = EditorGUILayout.Foldout(bus.showing, bus.name);
-				GUILayout.Space(40);
+				GUILayout.Space(30);
 				if (!bus.showing) bus.volume = EditorGUILayout.Slider(bus.volume, 0, 100);
-				if (ShowDeleteElementButton(serializedObject.FindProperty("buses"), i)) break;
+				GUILayout.Space(10);
+				DeleteElementButtonWithArrows(serializedObject.FindProperty("buses"), i);
+				if (deleteBreak) break;
 				EditorGUILayout.EndHorizontal();
 				
 				if (bus.showing){
 					EditorGUI.indentLevel += 1;
+					
+					EditorGUI.BeginDisabledGroup(Application.isPlaying);
 					bus.name = EditorGUILayout.TextField(bus.name);
-					bus.volume = EditorGUILayout.Slider("Volume", bus.volume, 0, 100);
-					ShowSeparator(false);
+					EditorGUI.EndDisabledGroup();
+					EditorGUILayout.PropertyField(busProperty.FindPropertyRelative("volume"));
+					Separator();
+					
 					EditorGUI.indentLevel -= 1;
 				}
 				
@@ -132,155 +150,138 @@ public class AudioPlayerEditor : Editor {
 		}
 	}
 	
+	void OnBusAdded(SerializedProperty newBus){
+		audioPlayer.buses[audioPlayer.buses.Length - 1] = new AudioPlayer.AudioBus();
+		audioPlayer.buses[audioPlayer.buses.Length - 1].name = AudioPlayer.GetUniqueName(audioPlayer.buses, "default");
+	}
+	
 	void ShowContainers(){
-		if (audioPlayer.containers != null){
-			EditorGUILayout.BeginHorizontal();
-			audioPlayer.showContainers = EditorGUILayout.Foldout(audioPlayer.showContainers, "Containers (" + audioPlayer.containers.Length + ")");
-			
-			EditorGUI.BeginDisabledGroup(Application.isPlaying);
-			if (ShowAddElementButton(serializedObject.FindProperty("containers"))){
-				audioPlayer.containers[audioPlayer.containers.Length - 1] = new AudioPlayer.Container();
-				audioPlayer.containers[audioPlayer.containers.Length - 1].name = AudioPlayer.GetUniqueName(audioPlayer.containers, "default");
-				audioPlayer.containers[audioPlayer.containers.Length - 1].subContainers = new List<AudioPlayer.SubContainer>();
-			}
-			EditorGUI.EndDisabledGroup();
-			EditorGUILayout.EndHorizontal();
-			
-			if (audioPlayer.showContainers){
-				EditorGUI.indentLevel += 1;
+		if (audioPlayer.containers == null)	return;
+		
+		audioPlayer.showContainers = AddElementFoldOut(serializedObject.FindProperty("containers"), audioPlayer.showContainers, "Containers", OnContainerAdded);
+		
+		if (audioPlayer.showContainers) {
+			EditorGUI.indentLevel += 1;
+			for (int i = 0; i < audioPlayer.containers.Length; i++) {
+				AudioPlayer.Container container = audioPlayer.containers[i];
+				currentContainer = container;
+				SerializedProperty containerProperty = serializedObject.FindProperty("containers").GetArrayElementAtIndex(i);
 				
-				for (int i = 0; i < audioPlayer.containers.Length; i++){
-					AudioPlayer.Container container = audioPlayer.containers[i];
-					SerializedProperty containerProperty = serializedObject.FindProperty("containers").GetArrayElementAtIndex(i);
-					
-					EditorGUILayout.BeginHorizontal();
-					container.showing = EditorGUILayout.Foldout(container.showing, container.name);
+				container.showing = DeleteElementFoldOutWithArrows(serializedObject.FindProperty("containers"), i, container.showing, container.name);
+				if (deleteBreak) break;
+				
+				if (container.showing) {
+					EditorGUI.indentLevel += 1;
 					EditorGUI.BeginDisabledGroup(Application.isPlaying);
-					if (ShowDeleteElementButton(serializedObject.FindProperty("containers"), i)) break;
+					container.name = EditorGUILayout.TextField(container.name);
 					EditorGUI.EndDisabledGroup();
-					EditorGUILayout.EndHorizontal();
-					
-					if (container.showing){
-						EditorGUI.indentLevel += 1;
-						
-						EditorGUI.BeginDisabledGroup(Application.isPlaying);
-						container.name = EditorGUILayout.TextField(container.name);
-						EditorGUI.EndDisabledGroup();
-						container.containerType = (AudioPlayer.Container.ContainerTypes) EditorGUILayout.EnumPopup(container.containerType);
-						
-						ShowSources(container, containerProperty);
-						
-						EditorGUI.indentLevel -= 1;
-					}
+					container.containerType = (AudioPlayer.Container.ContainerTypes)EditorGUILayout.EnumPopup(container.containerType);
+					ShowSources(container, containerProperty);
+					EditorGUI.indentLevel -= 1;
 				}
-				EditorGUI.indentLevel -= 1;
 			}
+			EditorGUI.indentLevel -= 1;
 		}
 	}
 	
+	void OnContainerAdded(SerializedProperty newContainer){
+		audioPlayer.containers[audioPlayer.containers.Length - 1] = new AudioPlayer.Container();
+		audioPlayer.containers[audioPlayer.containers.Length - 1].name = AudioPlayer.GetUniqueName(audioPlayer.containers, "default");
+		audioPlayer.containers[audioPlayer.containers.Length - 1].subContainers = new List<AudioPlayer.SubContainer>();
+	}
+	
 	void ShowSources(AudioPlayer.Container container, SerializedProperty containerProperty){
-		EditorGUILayout.BeginHorizontal();
-		container.sourcesShowing = EditorGUILayout.Foldout(container.sourcesShowing, "Sources (" + container.sources.Length + ")");
-		
-		EditorGUI.BeginDisabledGroup(Application.isPlaying);
-		if (ShowAddElementButton(containerProperty.FindPropertyRelative("sources"))){
-			container.sources[container.sources.Length - 1] = new AudioPlayer.SubContainer();
-			if (container.sources.Length > 1) container.sources[container.sources.Length - 1].Initialize(container, 0, container.sources[container.sources.Length - 2]);
-			else container.sources[container.sources.Length - 1].Initialize(container, 0);
-		}
-		
-		EditorGUI.EndDisabledGroup();
-		EditorGUILayout.EndHorizontal();
+		container.sourcesShowing = AddElementFoldOut(containerProperty.FindPropertyRelative("sources"), container.sourcesShowing, "Sources", OnSourceAdded);
 		
 		if (container.sourcesShowing){
 			EditorGUI.indentLevel += 1;
 			if (container.sources != null){
 				for (int i = 0; i < container.sources.Length; i++){
 					AudioPlayer.SubContainer source = container.sources[i];
+					currentSource = source;
 					
-					EditorGUILayout.BeginHorizontal();
-					source.showing = EditorGUILayout.Foldout(source.showing, source.name);
-					EditorGUI.BeginDisabledGroup(Application.isPlaying);
-					if (ShowDeleteElementButton(containerProperty.FindPropertyRelative("sources"), i)) {
+					source.showing = DeleteElementFoldOut(containerProperty.FindPropertyRelative("sources"), i, source.showing, source.name);
+					if (deleteBreak){
 						container.RemoveEmptyReferences();
 						break;
 					}
-					EditorGUILayout.EndHorizontal();
-					EditorGUI.EndDisabledGroup();
 					
-					if (source.sourceType == AudioPlayer.SubContainer.ContainerTypes.AudioSource){
-						ShowAudioSource(source, container, containerProperty);
-					}
-					else if (source.sourceType == AudioPlayer.SubContainer.ContainerTypes.Sampler){
-						ShowSampler(source, container, containerProperty);
-					}
-					else if (source.sourceType == AudioPlayer.SubContainer.ContainerTypes.MixContainer){
-						ShowMixContainer(source, container, containerProperty);
-					}
-					else if (source.sourceType == AudioPlayer.SubContainer.ContainerTypes.RandomContainer){
-						ShowRandomContainer(source, container, containerProperty);
-					}
-					else if (source.sourceType == AudioPlayer.SubContainer.ContainerTypes.SequenceContainer){
-						ShowSequenceContainer(source, container, containerProperty);
+					switch (source.sourceType) {
+						case AudioPlayer.SubContainer.ContainerTypes.AudioSource:
+							ShowAudioSource(source, container, containerProperty);
+							break;
+						case AudioPlayer.SubContainer.ContainerTypes.Sampler:
+							ShowSampler(source, container, containerProperty);
+							break;
+						case AudioPlayer.SubContainer.ContainerTypes.MixContainer:
+							ShowMixContainer(source, container, containerProperty);
+							break;
+						case AudioPlayer.SubContainer.ContainerTypes.RandomContainer:
+							ShowRandomContainer(source, container, containerProperty);
+							break;
+						case AudioPlayer.SubContainer.ContainerTypes.SequenceContainer:
+							ShowSequenceContainer(source, container, containerProperty);
+							break;
 					}
 				}
 			}
 			EditorGUI.indentLevel -= 1;
 		}
-		ShowSeparator(false);
+		Separator();
+	}
+	
+	void OnSourceAdded(SerializedProperty newSource){
+		currentContainer.sources[currentContainer.sources.Length - 1] = new AudioPlayer.SubContainer();
+		if (currentContainer.sources.Length > 1) currentContainer.sources[currentContainer.sources.Length - 1].Initialize(currentContainer, 0, currentContainer.sources[currentContainer.sources.Length - 2]);
+		else currentContainer.sources[currentContainer.sources.Length - 1].Initialize(currentContainer, 0);
 	}
 	
 	void ShowChildrenSources(AudioPlayer.SubContainer source, AudioPlayer.Container container, SerializedProperty containerProperty){
-		EditorGUILayout.BeginHorizontal();
-		source.sourcesShowing = EditorGUILayout.Foldout(source.sourcesShowing, "Sources (" + source.childrenLink.Count + ")");
-		
-		EditorGUI.BeginDisabledGroup(Application.isPlaying);
-		if (ShowAddElementButton(containerProperty.FindPropertyRelative("subContainers"))){
-			container.subContainers[container.subContainers.Count - 1] = new AudioPlayer.SubContainer();
-			if (container.subContainers.Count > 1) container.subContainers[container.subContainers.Count - 1].Initialize(container, source.id, container.subContainers[container.subContainers.Count - 2]);
-			else container.subContainers[container.subContainers.Count - 1].Initialize(container, source.id);
-		}
-		EditorGUI.EndDisabledGroup();
-		EditorGUILayout.EndHorizontal();
+		source.sourcesShowing = AddElementFoldOut(containerProperty.FindPropertyRelative("subContainers"), source.sourcesShowing, "Sources", OnChildSourceAdded);
 		
 		if (source.sourcesShowing){
 			EditorGUI.indentLevel += 1;
 			if (source.childrenLink.Count != 0){
 				for (int i = 0; i < source.childrenLink.Count; i++){
 					AudioPlayer.SubContainer childSource = container.GetSourceWithID(source.childrenLink[i]);
+					currentSource = childSource;
 					int index = container.subContainers.IndexOf(childSource);
 					
-					EditorGUILayout.BeginHorizontal();
-					childSource.showing = EditorGUILayout.Foldout(childSource.showing, childSource.name);
-					EditorGUI.BeginDisabledGroup(Application.isPlaying);
-					if (ShowDeleteElementButton(containerProperty.FindPropertyRelative("subContainers"), index)){
+					childSource.showing = DeleteElementFoldOut(containerProperty.FindPropertyRelative("subContainers"), index, childSource.showing, childSource.name);
+					if (deleteBreak){
 						container.GetSourceWithID(source.id).childrenLink.Remove(childSource.id);
 						container.RemoveEmptyReferences();
 						break;
 					}
-					EditorGUILayout.EndHorizontal();
-					EditorGUI.EndDisabledGroup();
 					
-					if (childSource.sourceType == AudioPlayer.SubContainer.ContainerTypes.AudioSource){
-						ShowAudioSource(childSource, container, containerProperty);
-					}
-					else if (childSource.sourceType == AudioPlayer.SubContainer.ContainerTypes.Sampler){
-						ShowSampler(childSource, container, containerProperty);
-					}
-					else if (childSource.sourceType == AudioPlayer.SubContainer.ContainerTypes.MixContainer){
-						ShowMixContainer(childSource, container, containerProperty);
-					}
-					else if (childSource.sourceType == AudioPlayer.SubContainer.ContainerTypes.RandomContainer){
-						ShowRandomContainer(childSource, container, containerProperty);
-					}
-					else if (childSource.sourceType == AudioPlayer.SubContainer.ContainerTypes.SequenceContainer){
-						ShowSequenceContainer(childSource, container, containerProperty);
+					switch (childSource.sourceType) {
+						case AudioPlayer.SubContainer.ContainerTypes.AudioSource:
+							ShowAudioSource(childSource, container, containerProperty);
+							break;
+						case AudioPlayer.SubContainer.ContainerTypes.Sampler:
+							ShowSampler(childSource, container, containerProperty);
+							break;
+						case AudioPlayer.SubContainer.ContainerTypes.MixContainer:
+							ShowMixContainer(childSource, container, containerProperty);
+							break;
+						case AudioPlayer.SubContainer.ContainerTypes.RandomContainer:
+							ShowRandomContainer(childSource, container, containerProperty);
+							break;
+						case AudioPlayer.SubContainer.ContainerTypes.SequenceContainer:
+							ShowSequenceContainer(childSource, container, containerProperty);
+							break;
 					}
 				}
 			}
 			EditorGUI.indentLevel -= 1;
 		}
-		ShowSeparator(false);
+		Separator();
+	}
+	
+	void OnChildSourceAdded(SerializedProperty newChildSource){
+		currentContainer.subContainers[currentContainer.subContainers.Count - 1] = new AudioPlayer.SubContainer();
+		if (currentContainer.subContainers.Count > 1) currentContainer.subContainers[currentContainer.subContainers.Count - 1].Initialize(currentContainer, currentSource.id, currentContainer.subContainers[currentContainer.subContainers.Count - 2]);
+		else currentContainer.subContainers[currentContainer.subContainers.Count - 1].Initialize(currentContainer, currentSource.id);
 	}
 	
 	void ShowAudioSource(AudioPlayer.SubContainer source, AudioPlayer.Container container, SerializedProperty containerProperty){
@@ -415,54 +416,6 @@ public class AudioPlayerEditor : Editor {
 		}
 		
 		return containerType;
-	}
-	
-	void AddElement(SerializedProperty property){
-		property.arraySize += 1;
-		serializedObject.ApplyModifiedProperties();
-		EditorUtility.SetDirty(target);
-	}
-	
-	void DeleteElement(SerializedProperty property, int indexToRemove){
-		property.DeleteArrayElementAtIndex(indexToRemove);
-		serializedObject.ApplyModifiedProperties();
-		EditorUtility.SetDirty(target);
-	}
-	
-	void ShowSeparator(bool showAboveSpace = true, bool showBelowSpace = true){
-		if (showAboveSpace) EditorGUILayout.Space();
-		EditorGUILayout.LabelField("", new GUIStyle("RL DragHandle"), GUILayout.Height(4));
-		if (showBelowSpace) EditorGUILayout.Space();
-	}
-	
-	bool ShowAddElementButton(SerializedProperty property){
-		bool pressed = false;
-		if (GUILayout.Button("+", EditorStyles.toolbarButton, GUILayout.Width(20))){
-			AddElement(property);
-			pressed = true;
-		}
-		return pressed;
-	}
-	
-	bool ShowLargeAddElementButton(SerializedProperty property, string name){
-		bool pressed = false;
-		GUILayout.BeginHorizontal();
-		GUILayout.Space(EditorGUI.indentLevel * 16);
-		if (GUILayout.Button(name, EditorStyles.toolbarButton)){
-			AddElement(property);
-			pressed = true;
-		}
-		GUILayout.EndHorizontal();
-		return pressed;
-	}
-	
-	bool ShowDeleteElementButton(SerializedProperty property, int indexToRemove){
-		bool pressed = false;
-		if (GUILayout.Button("-", EditorStyles.toolbarButton, GUILayout.Width(20))){
-			DeleteElement(property, indexToRemove);
-			pressed = true;
-		}
-		return pressed;
 	}
 }
 #endif

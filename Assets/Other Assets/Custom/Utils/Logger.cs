@@ -7,11 +7,17 @@ static public class Logger {
 	
 	static public void Log(params object[] toLog){
 		string log = "";
-		foreach (object item in toLog){
-			log += ObjectToString(item);
-			log += ", ";
+		
+		if (toLog != null)
+		{
+			foreach (object item in toLog)
+			{
+				log += ObjectToString(item);
+				log += ", ";
+			}
+			if (!string.IsNullOrEmpty(log))
+				log = log.Substring(0, log.Length - 2);
 		}
-		if (!string.IsNullOrEmpty(log)) log = log.Substring(0, log.Length - 2);
 		Debug.Log(log);
 	}
 		
