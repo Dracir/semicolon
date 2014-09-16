@@ -1,3 +1,3 @@
 ﻿public enum BooleanValues {
-	TRUE,FALSE
+	NULL, TRUE,FALSE
 }

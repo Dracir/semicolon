@@ -12,7 +12,7 @@ public class BooleanStatement : Statement{
 		}
 		set{
 			booleanValue = value;
-			notifyObservers();
+			resetText();
 		}
 	}
 
@@ -21,12 +21,16 @@ public class BooleanStatement : Statement{
 		int indexOfValueTag = statementText.IndexOf("%v");
 		
 		string textBefore = statementText.Substring(0,indexOfValueTag);
-		string textAfter  = booleanValue.ToString();
+		string textAfter  = "";
+		if (!booleanValue.Equals (BooleanValues.NULL)) {
+			textAfter  = booleanValue.ToString();
+		}
+
 		
 		GameObject beforeArgumentChild = createText (Vector2.zero,textBefore);
 		
 		Vector2 translate = new Vector2(indexOfValueTag, 0);
-		beforeArgumentChild = createText (translate, textAfter, GameConstantes.instance.booleanValueColor);
+		beforeArgumentChild = createMoveableText (translate, textAfter, GameConstantes.instance.booleanValueColor);
 
 		/*int indexOfValueTag = statementText.IndexOf("%v");
 		
@@ -40,6 +44,18 @@ public class BooleanStatement : Statement{
 		
 		Vector2 translate2 = new Vector2(indexOfValueTag, 0);
 		beforeArgumentChild = createText (translate2, textAfter);*/
+	}
+
+	public override bool isSameType(Statement other){
+		return other is BooleanStatement;
+	}
+
+	public override void swapParam(Statement statement){ 
+		BooleanStatement other = (BooleanStatement) statement;
+		BooleanValues tmp = other.booleanValue;
+		other.BooleanValue = this.booleanValue;
+		this.BooleanValue = tmp;
+
 	}
 
 }

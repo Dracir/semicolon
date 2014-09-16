@@ -1,16 +1,17 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Statement\BooleanStatement.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Utils\GameObjectFactory.cs">
     <Files>
-      <File FileName="Assets\Scripts\Statement\BooleanStatement.cs" Line="6" Column="33" />
       <File FileName="Assets\Editor\MapLoader\MapLoaderEditor.cs" Line="1" Column="1" />
       <File FileName="Assets\Editor\MapLoader\MapLoader.cs" Line="1" Column="1" />
-      <File FileName="Assets\Editor\MapLoader\LevelLoader.cs" Line="76" Column="4" />
-      <File FileName="Assets\Scripts\Statement\Statement.cs" Line="10" Column="48" />
-      <File FileName="Assets\Scripts\Statement\Data\BooleanValues.cs" Line="1" Column="1" />
+      <File FileName="Assets\Editor\MapLoader\LevelLoader.cs" Line="102" Column="70" />
       <File FileName="Assets\Scripts\TheGame\GameConstantes.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GameObjects\ChangeColorObject.cs" Line="11" Column="36" />
       <File FileName="Assets\Scripts\Utils\Observer.cs" Line="4" Column="22" />
+      <File FileName="Assets\Scripts\System-Statements\Statement\BooleanStatement.cs" Line="15" Column="16" />
+      <File FileName="Assets\Scripts\System-Statements\Statement.cs" Line="38" Column="36" />
+      <File FileName="Assets\Scripts\System-Statements\MoveableArgument.cs" Line="53" Column="61" />
+      <File FileName="Assets\Scripts\Utils\GameObjectFactory.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

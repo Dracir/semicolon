@@ -80,7 +80,7 @@ public class LevelLoader {
 				line = line.Substring(0,indexOfArgument) + "%v"; 
 				obj = createBooleanStatement (line,param);
 			}else{
-
+				Debug.LogError("MAPLOADER - ERROR : Unknown parameter type");
 			}
 
 		}
@@ -100,10 +100,10 @@ public class LevelLoader {
 	private GameObject createBooleanStatement(string line,string[] param ){
 		GameObject obj = GameObjectFactory.createGameObject (line, statements);
 		BooleanStatement statement = obj.AddComponent<BooleanStatement> ();
-		if (param [1].ToLower ().Equals ("false")) {
-			statement.BooleanValue = BooleanValues.FALSE;
-		} else {
+		if (param [1].ToLower ().Trim ().Equals ("true")) {
 			statement.BooleanValue = BooleanValues.TRUE;
+		} else {
+			statement.BooleanValue = BooleanValues.FALSE;
 		}
 
 		statement.setText(line);

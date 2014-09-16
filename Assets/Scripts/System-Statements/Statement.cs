@@ -35,7 +35,7 @@ public class Statement : MonoBehaviour {
 	void deleteAllChild(){
 		var children = new List<GameObject>();
 		foreach (Transform child in transform) children.Add(child.gameObject);
-		children.ForEach(child => DestroyImmediate(child));
+		children.ForEach(child => GameObjectUtils.Destroy(child));
 	}
 
 	protected virtual void createTextChild(string text){
@@ -57,8 +57,15 @@ public class Statement : MonoBehaviour {
 		return createText (translate, text, GameConstantes.instance.statementColor);
 	}
 
+	protected GameObject createMoveableText(Vector2 translate, string text, Color color){
+		GameObject obj = createText (translate, text, color);
+		MoveableArgument ma = obj.AddComponent<MoveableArgument> ();
+		BoxCollider bc = obj.AddComponent<BoxCollider> ();
+		return obj;
+	}
+
 	protected GameObject createText(Vector2 translate, string text, Color color){
-		GameObject obj = GameObjectFactory.createGameObject ("Text", this.transform);
+		GameObject obj = GameObjectFactory.createGameObject (text, this.transform);
 
 		TextMesh textMesh = obj.AddComponent<TextMesh> ();
 		textMesh.text 		= text;
@@ -75,6 +82,10 @@ public class Statement : MonoBehaviour {
 		}
 		return obj;
 	}
+
+	public virtual bool isSameType(Statement statement){ return false;}
+	
+	public virtual void swapParam(Statement statement){  }
 
 
 }
