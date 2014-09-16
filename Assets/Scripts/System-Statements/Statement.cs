@@ -39,7 +39,7 @@ public class Statement : MonoBehaviour {
 	}
 
 	protected virtual void createTextChild(string text){
-		GameObject beforeArgumentChild = createText (Vector2.zero, text);
+		createText (Vector2.zero, text);
 
 	}
 
@@ -59,8 +59,8 @@ public class Statement : MonoBehaviour {
 
 	protected GameObject createMoveableText(Vector2 translate, string text, Color color){
 		GameObject obj = createText (translate, text, color);
-		MoveableArgument ma = obj.AddComponent<MoveableArgument> ();
-		BoxCollider bc = obj.AddComponent<BoxCollider> ();
+		obj.AddComponent<MoveableArgument> ();
+		obj.AddComponent<BoxCollider> ();
 		return obj;
 	}
 

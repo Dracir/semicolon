@@ -228,6 +228,7 @@
      <Compile Include="Assets\Scripts\System-Statements\MoveableArgument.cs" />
      <Compile Include="Assets\Scripts\System-Statements\Statement.cs" />
      <Compile Include="Assets\Scripts\System-Statements\Statement\BooleanStatement.cs" />
+     <Compile Include="Assets\Scripts\System-Statements\Statement\IntegerStatement.cs" />
      <Compile Include="Assets\Scripts\TextCollider2D.cs" />
      <Compile Include="Assets\Scripts\TheGame\GameConstantes.cs" />
      <Compile Include="Assets\Scripts\TheGame\GameMenager.cs" />

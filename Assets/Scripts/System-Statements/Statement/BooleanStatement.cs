@@ -27,10 +27,10 @@ public class BooleanStatement : Statement{
 		}
 
 		
-		GameObject beforeArgumentChild = createText (Vector2.zero,textBefore);
+		createText (Vector2.zero,textBefore);
 		
 		Vector2 translate = new Vector2(indexOfValueTag, 0);
-		beforeArgumentChild = createMoveableText (translate, textAfter, GameConstantes.instance.booleanValueColor);
+		createMoveableText (translate, textAfter, GameConstantes.instance.booleanValueColor);
 
 		/*int indexOfValueTag = statementText.IndexOf("%v");
 		
