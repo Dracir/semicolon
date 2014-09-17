@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MapLoader {
+public class LevelLoaderMain {
 	
-	private static MapLoader instance = new MapLoader();
-	private MapLoader(){}
+	private static LevelLoaderMain instance = new LevelLoaderMain();
+	private LevelLoaderMain(){}
 	
 
 	private GameObject world;
@@ -19,7 +19,7 @@ public class MapLoader {
 
 	private void load(string mapText) {
 		deleteAndCreateEmptyWorld ();
-		LevelLoader levelLoader = new LevelLoader ();
+		FileToLevelLoader levelLoader = new FileToLevelLoader ();
 		levelLoader.load (mapText, world);
 	}
 
