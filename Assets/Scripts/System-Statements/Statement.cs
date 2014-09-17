@@ -25,11 +25,11 @@ public class Statement : MonoBehaviour {
 	}
 
 
-	public virtual void setText(string text){
+	public void setText(string text){
 		statementText = text;
 		deleteAllChild ();
 		createTextChild (text);
-		createCollider ();
+		//createCollider ();
 	}
 	
 	void deleteAllChild(){
@@ -72,6 +72,11 @@ public class Statement : MonoBehaviour {
 		textMesh.anchor 	= TextAnchor.MiddleLeft;
 		textMesh.font	 	= GameConstantes.instance.statementFont;
 		textMesh.color = color;
+
+		TextCollider2D textCollider = this.AddComponent<TextCollider2D>();
+		textCollider.text = text;
+		textCollider.color = color;
+		textCollider.textMesh = textMesh;
 
 		MeshRenderer mr = obj.GetComponent<MeshRenderer> ();
 		mr.material 		= GameConstantes.instance.statementMaterial;
