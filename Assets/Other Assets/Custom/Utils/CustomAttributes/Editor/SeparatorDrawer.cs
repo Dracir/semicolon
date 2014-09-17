@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class SeparatorDrawer : DecoratorDrawer {
 
 	public override void OnGUI(Rect position) {
-		position.y += 5;
+		position.y += 4;
 		EditorGUI.LabelField(position, "", new GUIStyle("RL DragHandle"));
 	}
 }

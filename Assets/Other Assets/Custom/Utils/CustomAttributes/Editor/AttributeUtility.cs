@@ -6,6 +6,8 @@ using System.Collections.Generic;
 public class AttributeUtility {
 	
 	static public float indentWidth = 0;
+	static public Dictionary<string, int> toRemove = new Dictionary<string, int>();
+	static public Dictionary<string, bool> pressedDict = new Dictionary<string, bool>();
 	
 	static int indentationDepth = 0;
 	static int indentLevel = 0;

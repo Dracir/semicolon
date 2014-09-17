@@ -56,12 +56,12 @@ public class Spawner : MonoBehaviour {
 		}
 	}
 	
-	public virtual GameObject Spawn(int IDToSpawn) {
-		return hObjectPool.Instance.Spawn(IDToSpawn, transform.position, transform.rotation);
+	public virtual GameObject Spawn(int idToSpawn) {
+		return hObjectPool.Instance.Spawn(idToSpawn, transform.position, transform.rotation);
 	}
 	
-	public virtual GameObject Spawn(int IDToSpawn, Vector3 position, Quaternion rotation) {
-		return hObjectPool.Instance.Spawn(IDToSpawn, position, rotation);
+	public virtual GameObject Spawn(int idToSpawn, Vector3 position, Quaternion rotation) {
+		return hObjectPool.Instance.Spawn(idToSpawn, position, rotation);
 	}
 	
 	public virtual GameObject Spawn(GameObject objectToSpawn) {
@@ -72,12 +72,12 @@ public class Spawner : MonoBehaviour {
 		return hObjectPool.Instance.Spawn(objectToSpawn, position, rotation);
 	}
 	
-	public virtual GameObject Spawn(string NameToSpawn) {
-		return Spawn(spawnDict[NameToSpawn]);
+	public virtual GameObject Spawn(string nameToSpawn) {
+		return Spawn(spawnDict[nameToSpawn]);
 	}
 	
-	public virtual GameObject Spawn(string NameToSpawn, Vector3 position, Quaternion rotation) {
-		return Spawn(spawnDict[NameToSpawn], position, rotation);
+	public virtual GameObject Spawn(string nameToSpawn, Vector3 position, Quaternion rotation) {
+		return Spawn(spawnDict[nameToSpawn], position, rotation);
 	}
 	
 	public virtual GameObject[] Spawn(){
