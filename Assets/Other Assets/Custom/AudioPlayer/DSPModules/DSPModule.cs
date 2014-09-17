@@ -90,7 +90,7 @@ public class DSPModule : MonoBehaviour {
 	public void OnMidiNote(MidiInfo info){
 		if (module == Modules.Oscillator){
 			oscCurrentPhase = 0;
-			frequency = HF.MidiToFrequency(info.note);
+			frequency = HelperFunctions.MidiToFrequency(info.note);
 		}
 		else if (module == Modules.Envelope){
 			envCounter = 0;

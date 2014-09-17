@@ -6,7 +6,7 @@ using UnityEditor;
 public class MinMaxSliderDrawer : CustomPropertyDrawerBase {
 
 	public override void OnGUI(Rect position, SerializedProperty property, GUIContent label){
-		position = base.Initialize(position, label);
+		position = Begin(position, property, label);
 		
 		float x = property.FindPropertyRelative("x").floatValue;
 		float y = property.FindPropertyRelative("y").floatValue;
@@ -54,6 +54,7 @@ public class MinMaxSliderDrawer : CustomPropertyDrawerBase {
 		property.FindPropertyRelative("x").floatValue = Mathf.Clamp(x, min, y);
 		property.FindPropertyRelative("y").floatValue = Mathf.Clamp(y, x, max);
 		
+		End(property);
 	}
 }
 #endif

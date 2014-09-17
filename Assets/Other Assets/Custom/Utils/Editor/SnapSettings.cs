@@ -4,34 +4,45 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
-public class SnapSettings {
+static public class SnapSettings {
 
 	static public string fileName = "SnapSettings.asset";
 	static public string directory = Application.dataPath.Substring(0, Application.dataPath.Length - 7) + "/ProjectSettings/";
 	
-	static Dictionary<string, object> settingsDict;
-	static Dictionary<string, object> SettingsDict {
+	static Dictionary<string, object> dataDict;
+	static Dictionary<string, object> DataDict {
 		get { 
-			if (settingsDict == null){
-				if (!SettingsUtility.FileExists(directory + fileName)) CreateDefaultSettingsFile();
-				settingsDict = SettingsUtility.GetSettingsDictFromFile(directory + fileName);
+			if (dataDict == null) {
+				dataDict = new Dictionary<string, object>();
+				if (!FileExists(directory + fileName)) {
+					CreateDefaultDataFile();
+				}
+				else {
+					DataDict = SaveSystem.DeserializeData(SaveSystem.ReadDataFromFile(directory + fileName));
+				}
 			}
-			return settingsDict; 
+			return dataDict; 
 		}
 		set {
-			if (settingsDict == null){
-				if (!SettingsUtility.FileExists(directory + fileName)) CreateDefaultSettingsFile();
-				settingsDict = SettingsUtility.GetSettingsDictFromFile(directory + fileName);
+			if (dataDict == null) {
+				dataDict = new Dictionary<string, object>();
+				if (!FileExists(directory + fileName)) {
+					CreateDefaultDataFile();
+				}
+				else {
+					DataDict = SaveSystem.DeserializeData(SaveSystem.ReadDataFromFile(directory + fileName));
+				}
 			}
-			settingsDict = value;
+			dataDict = value;
 		}
 	}
 	
 	[PreferenceItem("Snap Settings")]
-	static void PreferencesGUI(){
+	static void PreferencesGUI() {
 		EditorGUI.BeginChangeCheck();
 		
 		EditorGUILayout.Space();
+		
 		SetValue("MoveX", Mathf.Max(EditorGUILayout.FloatField("Move X", GetValue<float>("MoveX")), 0.001F));
 		SetValue("MoveY", Mathf.Max(EditorGUILayout.FloatField("Move Y", GetValue<float>("MoveY")), 0.001F));
 		SetValue("MoveZ", Mathf.Max(EditorGUILayout.FloatField("Move Z", GetValue<float>("MoveZ")), 0.001F));
@@ -40,86 +51,123 @@ public class SnapSettings {
 		SetValue("GridSize", EditorGUILayout.IntSlider("Grid Size", GetValue<int>("GridSize"), 0, 100));
 		SetValue("ShowCubes", EditorGUILayout.Toggle("Show Grid Cubes", GetValue<bool>("ShowCubes")));
 		SetValue("ShowLines", EditorGUILayout.Toggle("Show Grid Lines", GetValue<bool>("ShowLines")));
-		SetValue("FadeWithDistance", EditorGUILayout.Toggle("Fade With Distance", GetValue<bool>("FadeWithDistance")));
 		
 		EditorGUILayout.BeginHorizontal();
 		EditorGUILayout.Space();
-		if (GUILayout.Button("Reset", GUILayout.Width(50))) ResetToDefault();
+		if (GUILayout.Button("Reset", GUILayout.Width(50)))
+			ResetToDefault();
 		EditorGUILayout.EndHorizontal();
 		
-		if (EditorGUI.EndChangeCheck())	SceneView.RepaintAll();
-	}
-
-	static public T GetValue<T>(string key){
-		if (HasKey(key)) if (SettingsDict[key].GetType() == typeof(T)) return (T) SettingsDict[key];
-		return default(T);
-	}
-	
-	static public void SetValue<T>(string key, T value){
-		SettingsDict[key] = value;
-		SettingsUtility.WriteSettingsDictToFile(SettingsDict, directory + fileName);
-	}
-	
-	static public KeyValuePair<string, object>[] GetKeyValuePairs(){
-		return new List<KeyValuePair<string, object>>(SettingsDict).ToArray();
-	}
-	
-	static public string[] GetKeys(){
-		return new List<string>(SettingsDict.Keys).ToArray();
-	}
-	
-	static public object[] GetValues(){
-		return new List<object>(SettingsDict.Values).ToArray();
-	}
-	
-	static public bool HasKey(string key){
-		return SettingsDict.ContainsKey(key);
-	}
-	
-	static public void DeleteKey(string key){
-		if (HasKey(key)){
-			SettingsDict.Remove(key);
-			SettingsUtility.WriteSettingsDictToFile(SettingsDict, directory + fileName);
+		if (EditorGUI.EndChangeCheck()) {
+			UpdateDataDict();
+			SceneView.RepaintAll();
 		}
 	}
-	
-	static public void DeleteKeys(){
-		SettingsDict = new Dictionary<string, object>();
-		SettingsUtility.WriteSettingsDictToFile(SettingsDict, directory + fileName);
+
+	static void UpdateDataDict() {
+		SaveSystem.WriteDataToFile(DataDict, directory + fileName);
+		DataDict = SaveSystem.DeserializeData(SaveSystem.ReadDataFromFile(directory + fileName));
 	}
 	
-	static public void ResetToDefault(){
-		CreateDefaultSettingsFile();
-		SettingsDict = SettingsUtility.GetSettingsDictFromFile(directory + fileName);
+	static void CreateDefaultDataFile() {
+		DataDict = new Dictionary<string, object>() {
+			{ "MoveX", 1F },
+			{ "MoveY", 1F },
+			{ "MoveZ", 1F },
+			{ "Rotation", 15F },
+			{ "Scale", 0.1F },
+			{ "GridSize", 10 },
+			{ "ShowCubes", true },
+			{ "ShowLines", true }
+		};
+		UpdateDataDict();
 	}
 	
-	static public void CleanUp(){
-		foreach (string key in new List<string>(SettingsDict.Keys)){
-			if (!key.StartsWith("Toggle")) continue;
+	static public void ResetToDefault() {
+		CreateDefaultDataFile();
+	}
+	
+	static public void CleanUp() {
+		foreach (string key in new List<string>(DataDict.Keys)) {
+			if (!key.StartsWith("Toggle"))
+				continue;
 			
 			bool stillExists = false;
-			foreach (Transform transform in Transform.FindObjectsOfType<Transform>()){
-				if (key.Contains(transform.GetInstanceID().ToString())){
+			foreach (Transform transform in Object.FindObjectsOfType<Transform>()) {
+				if (key.Contains(transform.GetInstanceID().ToString())) {
 					stillExists = true;
 					break;
 				}
 			}
-			if (!stillExists) SettingsDict.Remove(key);
+			if (!stillExists)
+				RemoveKey(key);
 		}
-		SettingsUtility.WriteSettingsDictToFile(SettingsDict, directory + fileName);
+	}
+	
+	static public T GetValue<T>(string key) {
+		if (HasKey(key)) {
+			object value = DataDict[key];
+			if (value is T) {
+				return (T)value;
+			}
+		}
+		return default(T);
+	}
+	
+	static public object GetValue(string key) {
+		return GetValue<object>(key);
+	}
+	
+	static public void SetValue<T>(string key, T value) {
+		if (!HasKey(key) || !DataDict[key].Equals(value)) {
+			DataDict[key] = value;
+			UpdateDataDict();
+		}
+	}
+	
+	static public string[] GetAllKeys() {
+		return new List<string>(DataDict.Keys).ToArray();
+	}
+	
+	static public object[] GetValues(params string[] keys) {
+		List<object> values = new List<object>();
+		foreach (string key in keys) {
+			values.Add(GetValue(key));
+		}
+		return values.ToArray();
+	}
+	
+	static public object[] GetAllValues() {
+		return new List<object>(DataDict.Values).ToArray();
+	}
+	
+	static public void RemoveKey(string key) {
+		if (HasKey(key)) {
+			DataDict.Remove(key);
+			UpdateDataDict();
+		}
+	}
+	
+	static public void RemoveKeys(params string[] keys) {
+		foreach (string key in keys) {
+			RemoveKey(key);
+		}
+	}
+	
+	static public void RemoveAllKeys() {
+		DataDict = new Dictionary<string, object>();
+		UpdateDataDict();
+	}
+	
+	static public bool HasKey(string key) {
+		return DataDict.ContainsKey(key);
+	}
+	
+	static public bool FileExists() {
+		return File.Exists(directory + fileName);
 	}
 
-	static void CreateDefaultSettingsFile(){
-		List<string> settings = new List<string> ();
-		settings.Add(SettingsUtility.FormatSetting("MoveX", 1F));
-		settings.Add(SettingsUtility.FormatSetting("MoveY", 1F));
-		settings.Add(SettingsUtility.FormatSetting("MoveZ", 1F));
-		settings.Add(SettingsUtility.FormatSetting("Rotation", 15F));
-		settings.Add(SettingsUtility.FormatSetting("Scale", 0.1F));
-		settings.Add(SettingsUtility.FormatSetting("GridSize", 10));
-		settings.Add(SettingsUtility.FormatSetting("ShowCubes", true));
-		settings.Add(SettingsUtility.FormatSetting("ShowLines", true));
-		settings.Add(SettingsUtility.FormatSetting("FadeWithDistance", false));
-		SettingsUtility.WriteSettingsToFile(settings.ToArray(), directory + fileName);
+	static public bool FileExists(string path) {
+		return File.Exists(path);
 	}
 }
