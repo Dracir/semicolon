@@ -101,9 +101,9 @@ public class LevelLoader {
 		GameObject obj = GameObjectFactory.createGameObject (line, statements);
 		BooleanStatement statement = obj.AddComponent<BooleanStatement> ();
 		if (param [1].ToLower ().Trim ().Equals ("true")) {
-			statement.booleanValue = BooleanValues.TRUE;
+			statement.BooleanValue = BooleanValues.TRUE;
 		} else {
-			statement.booleanValue = BooleanValues.FALSE;
+			statement.BooleanValue = BooleanValues.FALSE;
 		}
 
 		statement.setText(line);
