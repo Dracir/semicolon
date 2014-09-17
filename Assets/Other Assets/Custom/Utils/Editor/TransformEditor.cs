@@ -4,7 +4,7 @@ using UnityEditor;
 using System.Collections.Generic;
 
 [CustomEditor(typeof(Transform), true), CanEditMultipleObjects]
-public class TransformEditor : CustomEditorBase {
+public class TransformEditor : Editor {
 
 	Transform transform;
 	Vector3 pLocalPosition;
@@ -12,6 +12,7 @@ public class TransformEditor : CustomEditorBase {
 	Vector3 pLocalScale;
 	bool snap;
 	bool grid;
+	bool resetBreak;
 	
 	// Snap Settings
 	float moveX;
@@ -22,6 +23,7 @@ public class TransformEditor : CustomEditorBase {
 	int gridSize;
 	bool showCubes;
 	bool showLines;
+	bool fadeWithDistance;
 	
 	void OnEnable(){
 		transform = (Transform) target;
@@ -29,20 +31,19 @@ public class TransformEditor : CustomEditorBase {
 	}
 	
 	public override void OnInspectorGUI(){
+		resetBreak = false;
 		GetSnapSettings();
 		
-		Begin(false);
-		
-		if (!deleteBreak) ShowUtilityButtons();
-		if (!deleteBreak) ShowVectors();
-		if (!deleteBreak) ShowGrid();
-		
-		End(false);
+		serializedObject.Update();
+		if (!resetBreak) DrawUtilityButtons();
+		if (!resetBreak) DrawVectors();
+		if (!resetBreak) DrawGrid();
+		serializedObject.ApplyModifiedProperties();
 	}
 	
 	void OnSceneGUI(){
 		GetSnapSettings();
-		ShowGrid();
+		DrawGrid();
 		
 		if (snap){
 			if (Selection.GetTransforms(SelectionMode.Editable).Contains(transform)){
@@ -94,9 +95,10 @@ public class TransformEditor : CustomEditorBase {
 		gridSize = SnapSettings.GetValue<int>("GridSize");
 		showCubes = SnapSettings.GetValue<bool>("ShowCubes");
 		showLines = SnapSettings.GetValue<bool>("ShowLines");
+		fadeWithDistance = SnapSettings.GetValue<bool>("FadeWithDistance");
 	}
 	
-	void ShowUtilityButtons(){
+	void DrawUtilityButtons(){
 		EditorGUILayout.BeginHorizontal();
 		
 		// Reset Button
@@ -104,20 +106,20 @@ public class TransformEditor : CustomEditorBase {
 			Undo.RegisterCompleteObjectUndo(targets, "Transform Reset");
 			foreach (Transform t in targets){
 				t.Reset();
-				SnapSettings.RemoveKey("Toggle" + "Snap" + t.GetInstanceID());
-				SnapSettings.RemoveKey("Toggle" + "Grid" + t.GetInstanceID());
+				SnapSettings.DeleteKey("Toggle" + "Snap" + t.GetInstanceID());
+				SnapSettings.DeleteKey("Toggle" + "Grid" + t.GetInstanceID());
 				EditorUtility.SetDirty(t);
-				deleteBreak = true;
+				resetBreak = true;
 			}
 			return;
 		}
 		
-		Separator(false);
+		DrawSeparator();
 		
 		// Snap Button
-		snap = ShowToggleButton("Snap", "Toggles the snapping of the transform to the grid. See Edit/Preferences -> Snap Settings to change the snap settings.", EditorStyles.miniButtonLeft);
+		snap = DrawToggleButton("Snap", "Toggles the snapping of the transform to the grid. See Edit/Preferences -> Snap Settings to change the snap settings.", EditorStyles.miniButtonLeft);
 		EditorGUI.BeginChangeCheck();
-		grid = ShowToggleButton("Grid", "Toggles the display of the grid. See Edit/Preferences -> Snap Settings to change the grid display settings.", EditorStyles.miniButtonRight);
+		grid = DrawToggleButton("Grid", "Toggles the display of the grid. See Edit/Preferences -> Snap Settings to change the grid display settings.", EditorStyles.miniButtonRight);
 		if (EditorGUI.EndChangeCheck())	SceneView.RepaintAll();
 		
 		// Add Button
@@ -140,17 +142,17 @@ public class TransformEditor : CustomEditorBase {
 		EditorGUILayout.EndHorizontal();
 	}
 	
-	void ShowVectors(){
+	void DrawVectors(){
 		const float sensibility = 0.15F;
 		
 		Vector3 parentScale = Vector3.one;
 		if (transform.parent != null) parentScale = transform.parent.lossyScale;
-		ShowVectorWithButton(serializedObject.FindProperty("m_LocalPosition"), ". P  .", "Resets the transform's local position to it's initial state.", Vector3.zero, new Vector3(moveX / parentScale.x, moveY / parentScale.y, moveZ / parentScale.z), sensibility);
-		ShowQuaternionWithButton(serializedObject.FindProperty("m_LocalRotation"), ". R  .", "Resets the transform's local rotation to it's initial state.", Quaternion.identity, new Vector3(rotation, rotation, rotation), sensibility);
-		ShowVectorWithButton(serializedObject.FindProperty("m_LocalScale"), ". S  .", "Resets the transform's local scale to it's initial state.", Vector3.one, new Vector3(scale, scale, scale), sensibility);
+		DrawVectorWithButton(serializedObject.FindProperty("m_LocalPosition"), ". P  .", "Resets the transform's local position to it's initial state.", Vector3.zero, new Vector3(moveX / parentScale.x, moveY / parentScale.y, moveZ / parentScale.z), sensibility);
+		DrawQuaternionWithButton(serializedObject.FindProperty("m_LocalRotation"), ". R  .", "Resets the transform's local rotation to it's initial state.", Quaternion.identity, new Vector3(rotation, rotation, rotation), sensibility);
+		DrawVectorWithButton(serializedObject.FindProperty("m_LocalScale"), ". S  .", "Resets the transform's local scale to it's initial state.", Vector3.one, new Vector3(scale, scale, scale), sensibility);
 	}
 	
-	void ShowVectorWithButton(SerializedProperty vectorProperty, string buttonLabel, string tooltip, Vector3 resetValue, Vector3 roundValue, float sensibility) {
+	void DrawVectorWithButton(SerializedProperty vectorProperty, string buttonLabel, string tooltip, Vector3 resetValue, Vector3 roundValue, float sensibility) {
 		float labelWidth = EditorGUIUtility.labelWidth;
 		EditorGUIUtility.labelWidth = 15;
 		
@@ -159,7 +161,7 @@ public class TransformEditor : CustomEditorBase {
 		if (GUILayout.Button(new GUIContent(buttonLabel, tooltip), EditorStyles.miniButton, GUILayout.Width(20))){
 			vectorProperty.vector3Value = resetValue;
 			serializedObject.ApplyModifiedProperties();
-			deleteBreak = true;
+			resetBreak = true;
 			return;
 		}
 		
@@ -168,7 +170,7 @@ public class TransformEditor : CustomEditorBase {
 		EditorGUI.BeginChangeCheck();
 		EditorGUILayout.PropertyField(vectorProperty.FindPropertyRelative("x"));
 		if (EditorGUI.EndChangeCheck()){
-			if (snap && !deleteBreak && !Application.isPlaying) {
+			if (snap && !resetBreak && !Application.isPlaying) {
 				if (Event.current.delta.x != 0) vectorProperty.FindPropertyRelative("x").floatValue = (previousValue.x + Event.current.delta.x * roundValue.x * sensibility);
 				vectorProperty.FindPropertyRelative("x").floatValue = vectorProperty.FindPropertyRelative("x").floatValue.Round(roundValue.x);
 				serializedObject.ApplyModifiedProperties();
@@ -178,7 +180,7 @@ public class TransformEditor : CustomEditorBase {
 		EditorGUI.BeginChangeCheck();
 		EditorGUILayout.PropertyField(vectorProperty.FindPropertyRelative("y"));
 		if (EditorGUI.EndChangeCheck()){
-			if (snap && !deleteBreak && !Application.isPlaying) {
+			if (snap && !resetBreak && !Application.isPlaying) {
 				if (Event.current.delta.x != 0) vectorProperty.FindPropertyRelative("y").floatValue = (previousValue.y + Event.current.delta.x * roundValue.y * sensibility);
 				vectorProperty.FindPropertyRelative("y").floatValue = vectorProperty.FindPropertyRelative("y").floatValue.Round(roundValue.y);
 				serializedObject.ApplyModifiedProperties();
@@ -188,7 +190,7 @@ public class TransformEditor : CustomEditorBase {
 		EditorGUI.BeginChangeCheck();
 		EditorGUILayout.PropertyField(vectorProperty.FindPropertyRelative("z"));
 		if (EditorGUI.EndChangeCheck()){
-			if (snap && !deleteBreak && !Application.isPlaying) {
+			if (snap && !resetBreak && !Application.isPlaying) {
 				if (Event.current.delta.x != 0) vectorProperty.FindPropertyRelative("z").floatValue = (previousValue.z + Event.current.delta.x * roundValue.z * sensibility);
 				vectorProperty.FindPropertyRelative("z").floatValue = vectorProperty.FindPropertyRelative("z").floatValue.Round(roundValue.z);
 				serializedObject.ApplyModifiedProperties();
@@ -200,16 +202,17 @@ public class TransformEditor : CustomEditorBase {
 		EditorGUIUtility.labelWidth = labelWidth;
 	}
 	
-	void ShowQuaternionWithButton(SerializedProperty quaternionProperty, string buttonLabel, string tooltip, Quaternion resetValue, Vector3 roundValue, float sensibility){
+	void DrawQuaternionWithButton(SerializedProperty quaternionProperty, string buttonLabel, string tooltip, Quaternion resetValue, Vector3 roundValue, float sensibility){
 		float labelWidth = EditorGUIUtility.labelWidth;
 		EditorGUIUtility.labelWidth = 15;
+		bool changed = false;
 		
 		EditorGUILayout.BeginHorizontal();
 		
 		if (GUILayout.Button(new GUIContent(buttonLabel, tooltip), EditorStyles.miniButton, GUILayout.Width(20))){
 			quaternionProperty.quaternionValue = resetValue;
 			serializedObject.ApplyModifiedProperties();
-			deleteBreak = true;
+			resetBreak = true;
 			return;
 		}
 		
@@ -218,8 +221,9 @@ public class TransformEditor : CustomEditorBase {
 		EditorGUI.BeginChangeCheck();
 		localEulerAngles.x = EditorGUILayout.FloatField("X", localEulerAngles.x % 360) % 360;
 		if (EditorGUI.EndChangeCheck()){
+			changed = true;
 			Undo.RegisterCompleteObjectUndo(targets, "Transform Rotate X");
-			if (snap && !deleteBreak && !Application.isPlaying) {
+			if (snap && !resetBreak && !Application.isPlaying) {
 				if (Event.current.delta.x != 0) localEulerAngles.x = (transform.localEulerAngles.x + Event.current.delta.x * roundValue.x * sensibility);
 				localEulerAngles.x = localEulerAngles.x.Round(roundValue.x) % 360;
 			}
@@ -233,8 +237,9 @@ public class TransformEditor : CustomEditorBase {
 		EditorGUI.BeginChangeCheck();
 		localEulerAngles.y = EditorGUILayout.FloatField("Y", localEulerAngles.y % 360) % 360;
 		if (EditorGUI.EndChangeCheck()){
+			changed = true;
 			Undo.RegisterCompleteObjectUndo(targets, "Transform Rotate Y");
-			if (snap && !deleteBreak && !Application.isPlaying) {
+			if (snap && !resetBreak && !Application.isPlaying) {
 				if (Event.current.delta.x != 0) localEulerAngles.y = (transform.localEulerAngles.y + Event.current.delta.x * roundValue.y * sensibility);
 				localEulerAngles.y = localEulerAngles.y.Round(roundValue.y) % 360;
 			}
@@ -248,8 +253,9 @@ public class TransformEditor : CustomEditorBase {
 		EditorGUI.BeginChangeCheck();
 		localEulerAngles.z = EditorGUILayout.FloatField("Z", localEulerAngles.z % 360) % 360;
 		if (EditorGUI.EndChangeCheck()){
+			changed = true;
 			Undo.RegisterCompleteObjectUndo(targets, "Transform Rotate Z");
-			if (snap && !deleteBreak && !Application.isPlaying) {
+			if (snap && !resetBreak && !Application.isPlaying) {
 				if (Event.current.delta.x != 0) localEulerAngles.z = (transform.localEulerAngles.z + Event.current.delta.x * roundValue.z * sensibility);
 				localEulerAngles.z = localEulerAngles.z.Round(roundValue.z) % 360;
 			}
@@ -260,22 +266,35 @@ public class TransformEditor : CustomEditorBase {
 			}
 		}
 		
+		if (changed) {
+			quaternionProperty.quaternionValue = Quaternion.Euler(localEulerAngles);
+			serializedObject.ApplyModifiedProperties();
+		}
+		
 		EditorGUILayout.EndHorizontal();
 		
 		EditorGUIUtility.labelWidth = labelWidth;
 	}
 	
-	void ShowGrid(){
+	void DrawGrid(){
 		if (grid && !Application.isPlaying){
 			if (Selection.activeTransform == transform){
 				bool is3D = true;
 				if (SceneView.currentDrawingSceneView != null) is3D = !SceneView.currentDrawingSceneView.in2DMode;
 				float size = 0.1F * ((moveX + moveY + moveZ) / 3);
 				const float alphaFactor = 1.25F;
-				float alpha = alphaFactor / 2;
+				const float alphaFade = 2;
+				float alpha;
+				float xAlpha = 0.5F;
+				float yAlpha = 0.5F;
 				
 				for (int y = -gridSize; y <= gridSize; y++){
+					yAlpha = Mathf.Pow((1 - Mathf.Abs((float) y) / gridSize) * alphaFactor, alphaFade) / 2;
 					for (int x = -gridSize; x <= gridSize; x++){
+						xAlpha = Mathf.Pow((1 - Mathf.Abs((float) x) / gridSize) * alphaFactor, alphaFade) / 2;
+						if (fadeWithDistance) alpha = xAlpha + yAlpha;
+						else alpha = 0.5F * alphaFactor;
+						
 						if (alpha.Round(0.1) != 0){
 							// X Squares
 							Handles.lighting = false;
@@ -362,7 +381,14 @@ public class TransformEditor : CustomEditorBase {
 		}
 	}
 	
-	bool ShowToggleButton(string buttonLabel, string tooltip, GUIStyle buttonStyle){
+	void DrawSeparator(){
+		Rect position = EditorGUILayout.BeginVertical();
+		position.y += 7;
+		EditorGUI.LabelField(position, GUIContent.none, new GUIStyle("RL DragHandle"));
+		EditorGUILayout.EndVertical();
+	}
+	
+	bool DrawToggleButton(string buttonLabel, string tooltip, GUIStyle buttonStyle){
 		bool pressed = SnapSettings.GetValue<bool>("Toggle" + buttonLabel + transform.GetInstanceID());
 		float width = buttonLabel.GetWidth(EditorStyles.miniFont) + 12;
 		int spacing = 0;

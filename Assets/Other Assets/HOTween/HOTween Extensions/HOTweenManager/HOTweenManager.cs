@@ -231,8 +231,8 @@ public class HOTweenManager : ABSHOTweenEditorElement
             _targetPath = p_targetPath;
             creationTime = p_creationTime;
 
-#if UNITY_EDITOR
             Type t = p_target.GetType();
+#if UNITY_EDITOR
             _targetType = t.FullName + ", " + t.Assembly.GetName().Name;
 #endif
             targetName = targetPath.Substring(targetPath.LastIndexOf(".") + 1);

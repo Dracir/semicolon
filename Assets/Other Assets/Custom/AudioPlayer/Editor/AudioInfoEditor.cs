@@ -4,18 +4,18 @@ using UnityEditor;
 using System.Collections;
 
 [CustomEditor(typeof(AudioInfo)), CanEditMultipleObjects]
-public class AudioInfoEditor : CustomEditorBase {
+public class AudioInfoEditor : Editor {
 
 	AudioInfo audioInfo;
 	
 	public override void OnInspectorGUI(){
 		audioInfo = (AudioInfo) target;
+		
+		EditorGUI.BeginChangeCheck();
+		
 		if (!audioInfo.init) audioInfo.Start();
 		else Update();
-		
-		Begin();
-		
-		EditorGUILayout.Space();
+		serializedObject.Update();
 		EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeIn"));
 		EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeInCurve"));
 		EditorGUILayout.PropertyField(serializedObject.FindProperty("fadeOut"));
@@ -25,14 +25,13 @@ public class AudioInfoEditor : CustomEditorBase {
 		EditorGUILayout.PropertyField(serializedObject.FindProperty("delay"));
 		EditorGUILayout.PropertyField(serializedObject.FindProperty("syncMode"));
 		EditorGUILayout.PropertyField(serializedObject.FindProperty("doNotKill"));
-		if (PDPlayer.Instance != null) EditorGUILayout.PropertyField(serializedObject.FindProperty("sendToPD"));
-		else serializedObject.FindProperty("sendToPD").boolValue = false;
 		EditorGUILayout.PropertyField(serializedObject.FindProperty("effects"), true);
 		ShowRTPCs();
 		ShowBuses();
 		EditorGUILayout.PropertyField(serializedObject.FindProperty("clipInfo"), true);
+		serializedObject.ApplyModifiedProperties();
 		
-		End();
+		if (EditorGUI.EndChangeCheck()) EditorUtility.SetDirty(target);
 	}
 	
 	void ShowRTPCs(){

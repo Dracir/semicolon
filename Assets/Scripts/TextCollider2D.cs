@@ -3,11 +3,9 @@ using System.Collections.Generic;
 
 [ExecuteInEditMode]
 [SelectionBase]
-public class TextCollider2D : MonoBehaviour {
+public class TextCollider2D : MonoBehaviour
+{
 
-	[HideInInspector] public TextMesh[] childrenTextMesh;
-	[PopupSelector("childrenTextMesh", NoPrefixLabel = true)] public TextMesh textMesh;
-	
 	[TextArea] public string text;
 	[Min] public int fontSize = 100;
 	public FontStyle fontStyle;
@@ -17,6 +15,8 @@ public class TextCollider2D : MonoBehaviour {
 	public bool colliderIsTrigger;
 
 	List<BoxCollider2D> boxColliders;
+	GameObject textMeshObject;
+	TextMesh textMesh;
 	MeshRenderer meshRenderer;
 
 	string pText;
@@ -27,30 +27,28 @@ public class TextCollider2D : MonoBehaviour {
 	Vector2 pColliderSize;
 	bool pTrigger;
 
-	void OnEnable() {
-		if (textMesh == null) {
-			if (gameObject.GetComponentsInChildren<TextMesh>().Length == 0) {
-				GameObject textMeshObject = gameObject.AddChild("TextMesh");
-				textMeshObject.AddComponent<TextMesh>();
-			}
-		}
-		else {
-			textMesh.transform.localScale = Vector3.one / 10;
-			meshRenderer = textMesh.GetOrAddComponent<MeshRenderer>();
-			boxColliders = new List<BoxCollider2D>(textMesh.GetComponents<BoxCollider2D>());
-			if (font == null)
-				font = References.Fonts.LucidiaConsole;
-			pText = text;
-			pFont = font;
-			pFontSize = fontSize;
-			pFontStyle = fontStyle;
-			UpdateTextMesh();
-		}
+	void OnEnable()
+	{
+		textMeshObject = gameObject.FindOrAddChild("TextMesh");
+		textMeshObject.transform.localScale = Vector3.one / 10;
+		meshRenderer = textMeshObject.GetOrAddComponent<MeshRenderer>();
+		textMesh = textMeshObject.GetOrAddComponent<TextMesh>();
+		boxColliders = new List<BoxCollider2D>(textMeshObject.GetComponents<BoxCollider2D>());
+		if (font == null)
+			font = References.Fonts.LucidiaConsole;
+		pText = text;
+		pFont = font;
+		pFontSize = fontSize;
+		pFontStyle = fontStyle;
+		UpdateTextMesh();
 	}
 
-	void Update() {
-		if (Application.isPlaying) {
-			if (pText != text || pFont != font || pFontSize != fontSize || pFontStyle != fontStyle || pColor != color || pColliderSize != colliderSize || pTrigger != colliderIsTrigger) {
+	void Update()
+	{
+		if (Application.isPlaying)
+		{
+			if (pText != text || pFont != font || pFontSize != fontSize || pFontStyle != fontStyle || pColor != color || pColliderSize != colliderSize || pTrigger != colliderIsTrigger)
+			{
 				pText = text;
 				pFont = font;
 				pFontSize = fontSize;
@@ -65,9 +63,12 @@ public class TextCollider2D : MonoBehaviour {
 			Preview();
 	}
 
-	void UpdateTextMesh() {
-		if (string.IsNullOrEmpty(text) || fontSize == 0) {
-			foreach (BoxCollider2D boxCollider in boxColliders) {
+	void UpdateTextMesh()
+	{
+		if (string.IsNullOrEmpty(text) || fontSize == 0)
+		{
+			foreach (BoxCollider2D boxCollider in boxColliders)
+			{
 				boxCollider.Remove();
 			}
 			textMesh.text = text;
@@ -78,7 +79,8 @@ public class TextCollider2D : MonoBehaviour {
 				meshRenderer.material = font.material;
 			textMesh.color = color;
 		}
-		else if (font != null) {
+		else if (font != null)
+		{
 			textMesh.text = text;
 			textMesh.fontSize = fontSize;
 			textMesh.fontStyle = fontStyle;
@@ -88,15 +90,17 @@ public class TextCollider2D : MonoBehaviour {
 
 			string[] lines = text.Split('\n');
 
-			for (int i = lines.Length; i < boxColliders.Count; i++) {
+			for (int i = lines.Length; i < boxColliders.Count; i++)
+			{
 				boxColliders[i].Remove();
 				boxColliders.RemoveAt(i);
 			}
 
 			float heightSum = 0;
-			for (int i = 0; i < lines.Length; i++) {
+			for (int i = 0; i < lines.Length; i++)
+			{
 				if (i >= boxColliders.Count)
-					boxColliders.Add(textMesh.AddComponent<BoxCollider2D>());
+					boxColliders.Add(textMeshObject.AddComponent<BoxCollider2D>());
 				BoxCollider2D boxCollider = boxColliders[i];
 				boxCollider.isTrigger = colliderIsTrigger;
 
@@ -121,27 +125,26 @@ public class TextCollider2D : MonoBehaviour {
 		}
 	}
 
-	void Preview() {
-		childrenTextMesh = GetComponentsInChildren<TextMesh>();
-		
-		if (textMesh != null) {
-			textMesh.transform.localScale = Vector3.one / 10;
-			textMesh.anchor = TextAnchor.UpperLeft;
-			meshRenderer = textMesh.GetOrAddComponent<MeshRenderer>();
-			boxColliders = new List<BoxCollider2D>(textMesh.GetComponents<BoxCollider2D>());
-			if (font == null)
-				font = References.Fonts.LucidiaConsole;
+	void Preview()
+	{
+		textMeshObject = gameObject.FindOrAddChild("TextMesh");
+		textMeshObject.transform.localScale = Vector3.one / 10;
+		meshRenderer = textMeshObject.GetOrAddComponent<MeshRenderer>();
+		textMesh = textMeshObject.GetOrAddComponent<TextMesh>();
+		boxColliders = new List<BoxCollider2D>(textMeshObject.GetComponents<BoxCollider2D>());
+		if (font == null)
+			font = References.Fonts.LucidiaConsole;
 
-			pText = textMesh.text;
-			pFontSize = textMesh.fontSize;
-			pFontStyle = textMesh.fontStyle;
-			pFont = textMesh.font;
-			pColor = textMesh.color;
-			if (pText != text || pFont != font || pFontSize != fontSize || pFontStyle != fontStyle || pColor != color || pColliderSize != colliderSize || pTrigger != colliderIsTrigger) {
-				pColliderSize = colliderSize;
-				pTrigger = colliderIsTrigger;
-				UpdateTextMesh();
-			}
+		pText = textMesh.text;
+		pFontSize = textMesh.fontSize;
+		pFontStyle = textMesh.fontStyle;
+		pFont = textMesh.font;
+		pColor = textMesh.color;
+		if (pText != text || pFont != font || pFontSize != fontSize || pFontStyle != fontStyle || pColor != color || pColliderSize != colliderSize || pTrigger != colliderIsTrigger)
+		{
+			pColliderSize = colliderSize;
+			pTrigger = colliderIsTrigger;
+			UpdateTextMesh();
 		}
 	}
 }

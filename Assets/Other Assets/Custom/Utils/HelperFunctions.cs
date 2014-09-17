@@ -2,19 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-static public class HelperFunctions {
+static public class HF {
 
 	static public float MidiToFrequency(float note){
 		return Mathf.Pow(2, (note - 69) / 12) * 440;
-	}
-	
-	static public void Destroy(Object toDestroy){
-		if (Application.isPlaying){
-			Object.Destroy(toDestroy);
-		}
-		else {
-			Object.DestroyImmediate(toDestroy);
-		}
 	}
 	
 	static public float Hypotenuse(float a){

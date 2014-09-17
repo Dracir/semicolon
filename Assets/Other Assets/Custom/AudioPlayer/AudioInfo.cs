@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 [ExecuteInEditMode]
-public class AudioInfo : MonoBehaviour {
+public class AudioInfo : MonoBehaviour{
 	
 	public bool init;
 	public float fadeIn;
@@ -15,8 +15,6 @@ public class AudioInfo : MonoBehaviour {
 	public float delay;
 	public AudioPlayer.SyncMode syncMode;
 	public bool doNotKill;
-	public bool sendToPD;
-	[Separator]
 	public Effects effects;
 	public RTPC[] rTPCs;
 	public bool rTPCsShowing;
@@ -49,20 +47,19 @@ public class AudioInfo : MonoBehaviour {
 	float pFadeIn;
 	float pFadeOut;
 	
-	void Awake() {
-		if (Application.isPlaying)
-			UpdateInfo();
+	void Awake(){
+		if (Application.isPlaying) UpdateInfo();
 	}
 	
-	public void Start() {
+	public void Start(){
 		init = true;
 		UpdateBuses();
 		UpdateRTPCs();
 		
-		if (!Application.isPlaying) {
+		if (!Application.isPlaying){
 			AudioSource audioSource = audio;
 			
-			if (audioSource == null) {
+			if (audioSource == null){
 				audioSource = gameObject.AddComponent<AudioSource>();
 				audioSource.clip = clip;
 				audioSource.mute = mute;
@@ -83,23 +80,23 @@ public class AudioInfo : MonoBehaviour {
 				audioSource.pan = pan;
 			}
 			
-			if (effects != null) {
-				if (effects.lowPassFilter) {
-					if (effects.audioSourceLowPassFilter == null) {
+			if (effects != null){
+				if (effects.lowPassFilter){
+					if (effects.audioSourceLowPassFilter == null){
 						effects.audioSourceLowPassFilter = gameObject.AddComponent<AudioLowPassFilter>();
 						effects.audioSourceLowPassFilter.cutoffFrequency = effects.lowPassCutoffFrequency;
 						effects.audioSourceLowPassFilter.lowpassResonaceQ = effects.lowPassResonance;
 					}
 				}
-				if (effects.highPassFilter) {
-					if (effects.audioSourceHighPassFilter == null) {
+				if (effects.highPassFilter){
+					if (effects.audioSourceHighPassFilter == null){
 						effects.audioSourceHighPassFilter = gameObject.AddComponent<AudioHighPassFilter>();
 						effects.audioSourceHighPassFilter.cutoffFrequency = effects.highPassCutoffFrequency;
 						effects.audioSourceHighPassFilter.highpassResonaceQ = effects.highPassResonance;
 					}
 				}
-				if (effects.echoFilter) {
-					if (effects.audioSourceEchoFilter == null) {
+				if (effects.echoFilter){
+					if (effects.audioSourceEchoFilter == null){
 						effects.audioSourceEchoFilter = gameObject.AddComponent<AudioEchoFilter>();
 						effects.audioSourceEchoFilter.delay = effects.echoDelay;
 						effects.audioSourceEchoFilter.decayRatio = effects.echoDecayRatio;
@@ -107,14 +104,14 @@ public class AudioInfo : MonoBehaviour {
 						effects.audioSourceEchoFilter.wetMix = effects.echoWetMix;
 					}
 				}
-				if (effects.distortionFilter) {
-					if (effects.audioSourceDistortionFilter == null) {
+				if (effects.distortionFilter){
+					if (effects.audioSourceDistortionFilter == null){
 						effects.audioSourceDistortionFilter = gameObject.AddComponent<AudioDistortionFilter>();
 						effects.audioSourceDistortionFilter.distortionLevel = effects.distortionLevel;
 					}
 				}
-				if (effects.reverbFilter) {
-					if (effects.audioSourceReverbFilter == null) {
+				if (effects.reverbFilter){
+					if (effects.audioSourceReverbFilter == null){
 						effects.audioSourceReverbFilter = gameObject.AddComponent<AudioReverbFilter>();
 						effects.audioSourceReverbFilter.reverbPreset = effects.reverbPreset;
 						effects.audioSourceReverbFilter.dryLevel = effects.reverbDryLevel;
@@ -133,8 +130,8 @@ public class AudioInfo : MonoBehaviour {
 						effects.audioSourceReverbFilter.density = effects.reverbDensity;
 					}
 				}
-				if (effects.chorusFilter) {
-					if (effects.audioSourceChorusFilter == null) {
+				if (effects.chorusFilter){
+					if (effects.audioSourceChorusFilter == null){
 						effects.audioSourceChorusFilter = gameObject.AddComponent<AudioChorusFilter>();
 						effects.audioSourceChorusFilter.dryMix = effects.chorusDryMix;
 						effects.audioSourceChorusFilter.wetMix1 = effects.chorusDryMix;
@@ -150,7 +147,7 @@ public class AudioInfo : MonoBehaviour {
 		}
 	}
 	
-	public void UpdateInfo() {
+	public void UpdateInfo(){
 		AudioSource audioSource = audio;
 		
 		clip = audioSource.clip;
@@ -171,87 +168,60 @@ public class AudioInfo : MonoBehaviour {
 		maxDistance = audioSource.maxDistance;
 		pan = audioSource.pan;
 		
-		if (clipInfo != null) {
+		if (clipInfo != null){
 			clipInfo.name = clip.name;
 			clipInfo.channels = clip.channels;
 			clipInfo.frequency = clip.frequency;
 			clipInfo.length = Mathf.Abs(clip.length / audioSource.pitch);
 			clipInfo.samples = clip.samples;
-			if (pFadeOut != fadeOut) {
-				fadeIn = Mathf.Clamp(fadeIn, 0, clipInfo.length - fadeOut);
-				pFadeOut = fadeOut;
-			}
-			if (pFadeIn != fadeIn) {
-				fadeOut = Mathf.Clamp(fadeOut, 0, clipInfo.length - fadeIn);
-				pFadeIn = fadeIn;
-			}
+			if (pFadeOut != fadeOut){fadeIn = Mathf.Clamp(fadeIn, 0, clipInfo.length - fadeOut); pFadeOut = fadeOut;}
+			if (pFadeIn != fadeIn){fadeOut = Mathf.Clamp(fadeOut, 0, clipInfo.length - fadeIn); pFadeIn = fadeIn;}
 			fadeIn = Mathf.Clamp(fadeIn, 0, clipInfo.length);
 			fadeOut = Mathf.Clamp(fadeOut, 0, clipInfo.length);
 		}
 		delay = Mathf.Max(delay, 0);
 		
-		if (AudioPlayer.Instance != null) {
-			if (AudioPlayer.Instance.buses != null) {
-				if (buses == null)
-					UpdateBuses();
-				else
-				if (buses.Length != AudioPlayer.Instance.buses.Length)
-					UpdateBuses();
+		if (AudioPlayer.Instance != null){
+			if (AudioPlayer.Instance.buses != null){
+				if (buses == null) UpdateBuses();
+				else if (buses.Length != AudioPlayer.Instance.buses.Length) UpdateBuses();
 				else {
-					for (int i = 0; i < AudioPlayer.Instance.buses.Length; i++) {
-						if (buses[i].name != AudioPlayer.Instance.buses[i].name) {
-							UpdateBuses();
-							break;
-						}
+					for (int i = 0; i < AudioPlayer.Instance.buses.Length; i++){
+						if (buses[i].name != AudioPlayer.Instance.buses[i].name){UpdateBuses(); break;}
 					}
 				}
 			}
 			
-			if (AudioPlayer.Instance.rTPCs != null) {
-				if (rTPCs == null)
-					UpdateRTPCs();
-				else
-				if (rTPCs.Length != AudioPlayer.Instance.rTPCs.Length)
-					UpdateRTPCs();
+			if (AudioPlayer.Instance.rTPCs != null){
+				if (rTPCs == null) UpdateRTPCs();
+				else if (rTPCs.Length != AudioPlayer.Instance.rTPCs.Length) UpdateRTPCs();
 				else {
-					for (int i = 0; i < AudioPlayer.Instance.rTPCs.Length; i++) {
-						if (rTPCs[i].name != AudioPlayer.Instance.rTPCs[i].name) {
-							UpdateRTPCs();
-							break;
-						}
+					for (int i = 0; i < AudioPlayer.Instance.rTPCs.Length; i++){
+						if (rTPCs[i].name != AudioPlayer.Instance.rTPCs[i].name){UpdateRTPCs(); break;}
 					}
 				}
 			}
 		}
-		if (rTPCs != null) {
-			foreach (RTPC rtpc in rTPCs) {
-				if (rtpc != null)
-					rtpc.Update();
+		if (rTPCs != null){
+			foreach (RTPC rtpc in rTPCs){
+				if (rtpc != null) rtpc.Update();
 			}
 		}
 		
-		if (fadeInCurve == null) {
-			fadeInCurve = new AnimationCurve(new Keyframe[2] {
-				new Keyframe(0, 0),
-				new Keyframe(1, 1)
-			});
-		}
-		if (fadeOutCurve == null){ fadeOutCurve = new AnimationCurve(new Keyframe[2] {
-				new Keyframe(0, 1),
-				new Keyframe(1, 0)
-			});}
+		if (fadeInCurve == null){
+			fadeInCurve = new AnimationCurve(new Keyframe[2]{new Keyframe(0, 0), new Keyframe(1, 1)});}
+		if (fadeOutCurve == null){fadeOutCurve = new AnimationCurve(new Keyframe[2]{new Keyframe(0, 1), new Keyframe(1, 0)});}
 		UpdateCurve(fadeInCurve, "In");
 		UpdateCurve(fadeOutCurve, "Out");
 		
-		if (effects != null) {
-			if (effects.lowPassFilter) {
-				if (effects.audioSourceLowPassFilter == null) {
+		if (effects != null){
+			if (effects.lowPassFilter){
+				if (effects.audioSourceLowPassFilter == null){
 					effects.audioSourceLowPassFilter = gameObject.AddComponent<AudioLowPassFilter>();
 					effects.audioSourceLowPassFilter.cutoffFrequency = effects.lowPassCutoffFrequency;
 					effects.audioSourceLowPassFilter.lowpassResonaceQ = effects.lowPassResonance;
 				}
-				else
-				if (effects.audioSourceLowPassFilter.cutoffFrequency == 5000 && effects.audioSourceLowPassFilter.cutoffFrequency != effects.lowPassCutoffFrequency) {
+				else if (effects.audioSourceLowPassFilter.cutoffFrequency == 5000 && effects.audioSourceLowPassFilter.cutoffFrequency != effects.lowPassCutoffFrequency){
 					effects.audioSourceLowPassFilter.cutoffFrequency = effects.lowPassCutoffFrequency;
 				}
 				else {
@@ -259,11 +229,10 @@ public class AudioInfo : MonoBehaviour {
 					effects.lowPassResonance = effects.audioSourceLowPassFilter.lowpassResonaceQ;
 				}
 			}
-			else
-			if (effects.audioSourceLowPassFilter != null){ DestroyImmediate(effects.audioSourceLowPassFilter);}
+			else if(effects.audioSourceLowPassFilter != null){DestroyImmediate(effects.audioSourceLowPassFilter);}
 			
-			if (effects.highPassFilter) {
-				if (effects.audioSourceHighPassFilter == null) {
+			if (effects.highPassFilter){
+				if (effects.audioSourceHighPassFilter == null){
 					effects.audioSourceHighPassFilter = gameObject.AddComponent<AudioHighPassFilter>();
 					effects.audioSourceHighPassFilter.cutoffFrequency = effects.highPassCutoffFrequency;
 					effects.audioSourceHighPassFilter.highpassResonaceQ = effects.highPassResonance;
@@ -273,11 +242,10 @@ public class AudioInfo : MonoBehaviour {
 					effects.highPassResonance = effects.audioSourceHighPassFilter.highpassResonaceQ;
 				}
 			}
-			else
-			if (effects.audioSourceHighPassFilter != null){ DestroyImmediate(effects.audioSourceHighPassFilter);}
+			else if(effects.audioSourceHighPassFilter != null){DestroyImmediate(effects.audioSourceHighPassFilter);}
 			
-			if (effects.echoFilter) {
-				if (effects.audioSourceEchoFilter == null) {
+			if (effects.echoFilter){
+				if (effects.audioSourceEchoFilter == null){
 					effects.audioSourceEchoFilter = gameObject.AddComponent<AudioEchoFilter>();
 					effects.audioSourceEchoFilter.delay = effects.echoDelay;
 					effects.audioSourceEchoFilter.decayRatio = effects.echoDecayRatio;
@@ -291,11 +259,10 @@ public class AudioInfo : MonoBehaviour {
 					effects.echoWetMix = effects.audioSourceEchoFilter.wetMix;
 				}
 			}
-			else
-			if (effects.audioSourceEchoFilter != null){ DestroyImmediate(effects.audioSourceEchoFilter);}
+			else if(effects.audioSourceEchoFilter != null){DestroyImmediate(effects.audioSourceEchoFilter);}
 			
-			if (effects.distortionFilter) {
-				if (effects.audioSourceDistortionFilter == null) {
+			if (effects.distortionFilter){
+				if (effects.audioSourceDistortionFilter == null){
 					effects.audioSourceDistortionFilter = gameObject.AddComponent<AudioDistortionFilter>();
 					effects.audioSourceDistortionFilter.distortionLevel = effects.distortionLevel;
 				}
@@ -303,11 +270,10 @@ public class AudioInfo : MonoBehaviour {
 					effects.distortionLevel = effects.audioSourceDistortionFilter.distortionLevel;
 				}
 			}
-			else
-			if (effects.audioSourceDistortionFilter != null){ DestroyImmediate(effects.audioSourceDistortionFilter);}
+			else if(effects.audioSourceDistortionFilter != null){DestroyImmediate(effects.audioSourceDistortionFilter);}
 			
-			if (effects.reverbFilter) {
-				if (effects.audioSourceReverbFilter == null) {
+			if (effects.reverbFilter){
+				if (effects.audioSourceReverbFilter == null){
 					effects.audioSourceReverbFilter = gameObject.AddComponent<AudioReverbFilter>();
 					effects.audioSourceReverbFilter.reverbPreset = effects.reverbPreset;
 					effects.audioSourceReverbFilter.dryLevel = effects.reverbDryLevel;
@@ -343,11 +309,10 @@ public class AudioInfo : MonoBehaviour {
 					effects.reverbDensity = effects.audioSourceReverbFilter.density;
 				}
 			}
-			else
-			if (effects.audioSourceReverbFilter != null){ DestroyImmediate(effects.audioSourceReverbFilter);}
+			else if(effects.audioSourceReverbFilter != null){DestroyImmediate(effects.audioSourceReverbFilter);}
 			
-			if (effects.chorusFilter) {
-				if (effects.audioSourceChorusFilter == null) {
+			if (effects.chorusFilter){
+				if (effects.audioSourceChorusFilter == null){
 					effects.audioSourceChorusFilter = gameObject.AddComponent<AudioChorusFilter>();
 					effects.audioSourceChorusFilter.dryMix = effects.chorusDryMix;
 					effects.audioSourceChorusFilter.wetMix1 = effects.chorusDryMix;
@@ -367,31 +332,29 @@ public class AudioInfo : MonoBehaviour {
 					effects.chorusDepth = effects.audioSourceChorusFilter.depth;
 				}
 			}
-			else
-			if (effects.audioSourceChorusFilter != null){ DestroyImmediate(effects.audioSourceChorusFilter);}
+			else if(effects.audioSourceChorusFilter != null){DestroyImmediate(effects.audioSourceChorusFilter);}
 		}
 	}
 	
-	void UpdateCurve(AnimationCurve curve, string mode) {
-		if (curve != null) {
-			if (curve.keys.Length == 0) {
+	void UpdateCurve(AnimationCurve curve, string mode){
+		if (curve != null){
+			if (curve.keys.Length == 0){
 				curve.AddKey(0, 0);
 				curve.AddKey(1, 1);
 			}
-			for (int i = 0; i < curve.keys.Length; i++) {
-				if (i == 0) {
-					if (mode == "In") {
-						if (curve.keys[i].time != 0 || curve.keys[i].value != 0) {
-							Keyframe key = new Keyframe(0, 0);
+			for (int i = 0; i < curve.keys.Length; i++){
+				if (i == 0){
+					if (mode == "In"){
+						if (curve.keys[i].time != 0 || curve.keys[i].value != 0){
+					    	Keyframe key = new Keyframe(0, 0);
 							key.tangentMode = curve.keys[i].tangentMode;
 							key.inTangent = curve.keys[i].inTangent;
 							key.outTangent = curve.keys[i].outTangent;
 							curve.MoveKey(i, key);
 						}
-					}
-					else
-					if (mode == "Out") {
-						if (curve.keys[i].time != 0 || curve.keys[i].value != 1) {
+				    }
+					else if (mode == "Out"){
+						if (curve.keys[i].time != 0 || curve.keys[i].value != 1){
 							Keyframe key = new Keyframe(0, 1);
 							key.tangentMode = curve.keys[i].tangentMode;
 							key.inTangent = curve.keys[i].inTangent;
@@ -400,10 +363,9 @@ public class AudioInfo : MonoBehaviour {
 						}
 					}
 				}
-				else
-				if (i == curve.keys.Length - 1) {
-					if (mode == "In") {
-						if (curve.keys[i].time != 1 || curve.keys[i].value != 1) {
+				else if (i == curve.keys.Length - 1){
+					if (mode == "In"){
+						if (curve.keys[i].time != 1 || curve.keys[i].value != 1){
 							Keyframe key = new Keyframe(1, 1);
 							key.tangentMode = curve.keys[i].tangentMode;
 							key.inTangent = curve.keys[i].inTangent;
@@ -411,9 +373,8 @@ public class AudioInfo : MonoBehaviour {
 							curve.MoveKey(i, key);
 						}
 					}
-					else
-					if (mode == "Out") {
-						if (curve.keys[i].time != 1 || curve.keys[i].value != 0) {
+					else if (mode == "Out"){
+						if (curve.keys[i].time != 1 || curve.keys[i].value != 0){
 							Keyframe key = new Keyframe(1, 0);
 							key.tangentMode = curve.keys[i].tangentMode;
 							key.inTangent = curve.keys[i].inTangent;
@@ -426,14 +387,14 @@ public class AudioInfo : MonoBehaviour {
 		}
 	}
 	
-	void UpdateBuses() {
+	void UpdateBuses(){
 		BusDict = new Dictionary<string, AudioBus>();
 		List<AudioBus> audioBuses = new List<AudioBus>();
-		if (AudioPlayer.Instance != null) {
-			if (AudioPlayer.Instance.buses != null) {
-				if (buses == null){ buses = new AudioBus[0];}
-				for (int i = 0; i < AudioPlayer.Instance.buses.Length; i++) {
-					if (i < buses.Length) {
+		if (AudioPlayer.Instance != null){
+			if (AudioPlayer.Instance.buses != null){
+				if (buses == null){buses = new AudioBus[0];}
+				for (int i = 0; i < AudioPlayer.Instance.buses.Length; i++){
+					if (i < buses.Length){
 						buses[i].name = AudioPlayer.Instance.buses[i].name;
 						audioBuses.Add(buses[i]);
 					}
@@ -445,22 +406,22 @@ public class AudioInfo : MonoBehaviour {
 				}
 				buses = audioBuses.ToArray();
 				
-				foreach (AudioBus bus in buses) {
+				foreach (AudioBus bus in buses){
 					BusDict[bus.name] = bus;
 				}
 			}
 		}
 	}
 	
-	void UpdateRTPCs() {
+	void UpdateRTPCs(){
 		RTPCDict = new Dictionary<string, RTPC>();
 		List<RTPC> rtpcs = new List<RTPC>();
 		
-		if (AudioPlayer.Instance != null) {
-			if (AudioPlayer.Instance.rTPCs != null) {
-				if (rTPCs == null){ rTPCs = new RTPC[0];}
-				for (int i = 0; i < AudioPlayer.Instance.rTPCs.Length; i++) {
-					if (i < rTPCs.Length) {
+		if (AudioPlayer.Instance != null){
+			if (AudioPlayer.Instance.rTPCs != null){
+				if (rTPCs == null){rTPCs = new RTPC[0];}
+				for (int i = 0; i < AudioPlayer.Instance.rTPCs.Length; i++){
+					if (i < rTPCs.Length){
 						rTPCs[i].name = AudioPlayer.Instance.rTPCs[i].name;
 						
 						rTPCs[i].volume.name = "Volume";
@@ -472,24 +433,18 @@ public class AudioInfo : MonoBehaviour {
 						newRTPC.name = AudioPlayer.Instance.rTPCs[i].name;
 						newRTPC.volume = new RTPCParameter();
 						newRTPC.volume.name = "Volume";
-						newRTPC.volume.curve = new AnimationCurve(new Keyframe[2] {
-							new Keyframe(0, 0),
-							new Keyframe(1, 1)
-						});
+						newRTPC.volume.curve = new AnimationCurve(new Keyframe[2]{new Keyframe(0, 0), new Keyframe(1, 1)});
 						
 						newRTPC.pitch = new RTPCParameter();
 						newRTPC.pitch.name = "Pitch";
-						newRTPC.pitch.curve = new AnimationCurve(new Keyframe[2] {
-							new Keyframe(0, 0),
-							new Keyframe(1, 1)
-						});
+						newRTPC.pitch.curve = new AnimationCurve(new Keyframe[2]{new Keyframe(0, 0), new Keyframe(1, 1)});
 						
 						rtpcs.Add(newRTPC);
 					}
 				}
 				rTPCs = rtpcs.ToArray();
 				
-				foreach (RTPC rtpc in rTPCs) {
+				foreach (RTPC rtpc in rTPCs){
 					RTPCDict[rtpc.name] = rtpc;
 				}
 			}
@@ -497,7 +452,7 @@ public class AudioInfo : MonoBehaviour {
 	}
 	
 	[System.Serializable]
-	public class Effects {
+	public class Effects{
 		public bool lowPassFilter;
 		[HideInInspector] public AudioLowPassFilter audioSourceLowPassFilter;
 		[HideInInspector] public float lowPassCutoffFrequency = 5000;
@@ -549,7 +504,7 @@ public class AudioInfo : MonoBehaviour {
 	}
 	
 	[System.Serializable]
-	public class AudioBus {
+	public class AudioBus{
 		public string name;
 		public bool enabled;
 		[Range(0, 100)] public float sendVolume;
@@ -557,7 +512,7 @@ public class AudioInfo : MonoBehaviour {
 	}
 	
 	[System.Serializable]
-	public class RTPC {
+	public class RTPC{
 		public string name;
 		public RTPCParameter[] parameters;
 		
@@ -565,14 +520,14 @@ public class AudioInfo : MonoBehaviour {
 		public RTPCParameter pitch;
 		public bool showing;
 		
-		public void Update() {
-			parameters = new RTPCParameter[]{ volume, pitch };
+		public void Update(){
+			parameters = new RTPCParameter[]{volume, pitch};
 			
-			foreach (RTPCParameter parameter in parameters) {
-				if (parameter != null) {
-					if (parameter.curve != null) {
-						for (int i = 0; i < parameter.curve.keys.Length; i++) {
-							if (parameter.curve.keys[i].time < 0 || parameter.curve.keys[i].time > 1 || parameter.curve.keys[i].value < 0 || parameter.curve.keys[i].value > 1) {
+			foreach (RTPCParameter parameter in parameters){
+				if (parameter != null){
+					if (parameter.curve != null){
+						for (int i = 0; i < parameter.curve.keys.Length; i++){
+							if (parameter.curve.keys[i].time < 0 || parameter.curve.keys[i].time > 1 || parameter.curve.keys[i].value < 0 || parameter.curve.keys[i].value > 1){
 								Keyframe key = new Keyframe(Mathf.Clamp01(parameter.curve.keys[i].time), Mathf.Clamp01(parameter.curve.keys[i].value));
 								key.tangentMode = parameter.curve.keys[i].tangentMode;
 								key.inTangent = parameter.curve.keys[i].inTangent;
@@ -587,7 +542,7 @@ public class AudioInfo : MonoBehaviour {
 	}
 	
 	[System.Serializable]
-	public class RTPCParameter {
+	public class RTPCParameter{
 		public string name;
 		public bool enabled;
 		public AnimationCurve curve;

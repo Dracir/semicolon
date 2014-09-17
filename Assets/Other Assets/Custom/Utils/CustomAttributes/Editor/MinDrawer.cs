@@ -6,9 +6,12 @@ using UnityEditor;
 public class MinDrawer : CustomPropertyDrawerBase {
 
 	public override void OnGUI(Rect position, SerializedProperty property, GUIContent label){
-		drawPrefixLabel = false;
-		position = Begin(position, property, label);
 		float min = ((MinAttribute) attribute).min;
+		
+		noPrefixLabel = ((CustomAttributeBase) attribute).NoPrefixLabel;
+		noFieldLabel = ((CustomAttributeBase) attribute).NoFieldLabel;
+		
+		if (noPrefixLabel || noFieldLabel) label = GUIContent.none;
 		
 		EditorGUI.BeginChangeCheck();
 		EditorGUI.PropertyField(position, property, label, true);
@@ -36,24 +39,11 @@ public class MinDrawer : CustomPropertyDrawerBase {
 				case "Vector4f":
 					property.vector4Value = new Vector4(Mathf.Max(property.vector4Value.x, min), Mathf.Max(property.vector4Value.y, min), Mathf.Max(property.vector4Value.z, min), Mathf.Max(property.vector4Value.w, min));
 					break;
-				case "Quaternion":
-					property.quaternionValue = new Quaternion(Mathf.Max(property.quaternionValue.x, min), Mathf.Max(property.quaternionValue.y, min), Mathf.Max(property.quaternionValue.z, min), Mathf.Max(property.quaternionValue.w, min));
-					break;
 				case "ColorRGBA":
 					property.colorValue = new Color(Mathf.Max(property.colorValue.r, min), Mathf.Max(property.colorValue.g, min), Mathf.Max(property.colorValue.b, min), Mathf.Max(property.colorValue.a, min));
 					break;
-				case "Rectf":
-					property.rectValue = new Rect(Mathf.Max(property.rectValue.x, min), Mathf.Max(property.rectValue.y, min), Mathf.Max(property.rectValue.width, min), Mathf.Max(property.rectValue.height, min));
-					break;
-				case "AABB":
-					property.boundsValue = new Bounds(new Vector3(Mathf.Max(property.boundsValue.center.x, min), Mathf.Max(property.boundsValue.center.y, min), Mathf.Max(property.boundsValue.center.z, min)), new Vector3(Mathf.Max(property.boundsValue.size.x, min), Mathf.Max(property.boundsValue.size.y, min), Mathf.Max(property.boundsValue.size.z, min)));
-					break;
-				case "AnimationCurve":
-					property.animationCurveValue = new AnimationCurve(property.animationCurveValue.Clamp(min, Mathf.Infinity, min, Mathf.Infinity).keys);
-					break;
 			}
 		}
-		End(property);
 	}
 }
 #endif

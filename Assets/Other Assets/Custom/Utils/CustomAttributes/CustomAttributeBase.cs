@@ -1,8 +1,6 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-[AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = true)]
-public class CustomAttributeBase : PropertyAttribute {
+public class CustomAttributeBase : PropertyAttribute{
 	
 	public string PrefixLabel = "";
 	public bool NoPrefixLabel = false;

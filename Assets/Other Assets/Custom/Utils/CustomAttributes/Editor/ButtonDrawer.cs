@@ -8,12 +8,12 @@ using System.Collections.Generic;
 public class ButtonDrawer : CustomPropertyDrawerBase {
 
 	public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
-		position = Begin(position, property, label);
+		position = base.Initialize(position, label);
 		
 		if (property.type == "UInt8"){
 			string buttonLabel = ((ButtonAttribute) attribute).label;
 			if (string.IsNullOrEmpty(buttonLabel)) buttonLabel = label.text;
-			string buttonPressedMethodName = ((ButtonAttribute) attribute).methodName;
+			string buttonPressMethodName = ((ButtonAttribute) attribute).methodName;
 			string buttonIndexVariableName = ((ButtonAttribute) attribute).indexVariableName;
 			GUIStyle buttonStyle = ((ButtonAttribute) attribute).style;
 			
@@ -29,14 +29,12 @@ public class ButtonDrawer : CustomPropertyDrawerBase {
 			
 			if (pressed){
 				if (!string.IsNullOrEmpty(buttonIndexVariableName)) property.serializedObject.FindProperty(buttonIndexVariableName).intValue = index;
-			    if (!string.IsNullOrEmpty(buttonPressedMethodName)) ((MonoBehaviour) property.serializedObject.targetObject).Invoke(buttonPressedMethodName, 0);
+			    if (!string.IsNullOrEmpty(buttonPressMethodName)) ((MonoBehaviour) property.serializedObject.targetObject).Invoke(buttonPressMethodName, 0);
 				EditorUtility.SetDirty(property.serializedObject.targetObject);
 			}
 			property.boolValue = pressed;
 		}
 		else EditorGUI.LabelField(position, "Button variable must be of type boolean.");
-		
-		End(property);
 	}
 }
 #endif

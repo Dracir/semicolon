@@ -820,11 +820,15 @@
             Restarts this Tweener/Sequence from the beginning (loops and tween delay included).
             </summary>
         </member>
-        <member name="M:Holoville.HOTween.IHOTweenComponent.Reverse">
+        <member name="M:Holoville.HOTween.IHOTweenComponent.Reverse(System.Boolean)">
             <summary>
             Reverses this Tweener/Sequence,
             animating it backwards from its current position.
             </summary>
+            <param name="p_forcePlay">
+            If TRUE, the tween will also start playing in case it was paused,
+            otherwise it will maintain its current play/pause state (default).
+            </param>
         </member>
         <member name="M:Holoville.HOTween.IHOTweenComponent.Complete">
             <summary>
@@ -1203,6 +1207,46 @@
             Refrehsed at the end of each update.
             </summary>
         </member>
+        <member name="F:Holoville.HOTween.Core.ABSTweenComponent.manageBehaviours">
+            <summary>
+            True if there are behaviours to manage
+            </summary>
+        </member>
+        <member name="F:Holoville.HOTween.Core.ABSTweenComponent.manageGameObjects">
+            <summary>
+            True if there are gameObject to manage
+            </summary>
+        </member>
+        <member name="F:Holoville.HOTween.Core.ABSTweenComponent.managedBehavioursOn">
+            <summary>
+            Behaviours to activate
+            </summary>
+        </member>
+        <member name="F:Holoville.HOTween.Core.ABSTweenComponent.managedBehavioursOff">
+            <summary>
+            Behaviours to deactivate
+            </summary>
+        </member>
+        <member name="F:Holoville.HOTween.Core.ABSTweenComponent.managedGameObjectsOn">
+            <summary>
+            GameObjects to activate
+            </summary>
+        </member>
+        <member name="F:Holoville.HOTween.Core.ABSTweenComponent.managedGameObjectsOff">
+            <summary>
+            GameObejcts to deactivate
+            </summary>
+        </member>
+        <member name="F:Holoville.HOTween.Core.ABSTweenComponent.managedBehavioursOriginalState">
+            <summary>
+            True = enabled, False = disabled
+            </summary>
+        </member>
+        <member name="F:Holoville.HOTween.Core.ABSTweenComponent.managedGameObjectsOriginalState">
+            <summary>
+            True = active, False = inactive
+            </summary>
+        </member>
         <member name="M:Holoville.HOTween.Core.ABSTweenComponent.Kill">
             <summary>
             Kills this Tweener/Sequence, removes it from HOTween, and cleans it.
@@ -1247,11 +1291,15 @@
             Restarts this Tweener/Sequence from the beginning (loops and tween delay included).
             </summary>
         </member>
-        <member name="M:Holoville.HOTween.Core.ABSTweenComponent.Reverse">
+        <member name="M:Holoville.HOTween.Core.ABSTweenComponent.Reverse(System.Boolean)">
             <summary>
             Reverses this Tweener/Sequence,
             animating it backwards from its curren position.
             </summary>
+            <param name="p_forcePlay">
+            If TRUE, the tween will also start playing in case it was paused,
+            otherwise it will maintain its current play/pause state (default).
+            </param>
         </member>
         <member name="M:Holoville.HOTween.Core.ABSTweenComponent.Complete">
             <summary>
@@ -1388,6 +1436,22 @@
             <returns>
             A value of <c>true</c> if the given target is currently involved in a running tween or sequence.
             </returns>
+        </member>
+        <member name="M:Holoville.HOTween.Core.ABSTweenComponent.IsTweening(System.String)">
+            <summary>
+            Returns <c>true</c> if the tween with the given string id is currently involved in a running tween or sequence.
+            </summary>
+            <param name="p_id">
+            The id to check for.
+            </param>
+        </member>
+        <member name="M:Holoville.HOTween.Core.ABSTweenComponent.IsTweening(System.Int32)">
+            <summary>
+            Returns <c>true</c> if the tween with the given int id is currently involved in a running tween or sequence.
+            </summary>
+            <param name="p_id">
+            The id to check for.
+            </param>
         </member>
         <member name="M:Holoville.HOTween.Core.ABSTweenComponent.IsLinkedTo(System.Object)">
             <summary>
@@ -1526,6 +1590,11 @@
             Manages on update behaviour.
             </summary>
         </member>
+        <member name="M:Holoville.HOTween.Core.ABSTweenComponent.OnPluginUpdated(Holoville.HOTween.Plugins.Core.ABSTweenPlugin)">
+            <summary>
+            Manages on plugin results behaviour.
+            </summary>
+        </member>
         <member name="M:Holoville.HOTween.Core.ABSTweenComponent.OnPause">
             <summary>
             Manages on pause behaviour.
@@ -1533,7 +1602,7 @@
         </member>
         <member name="M:Holoville.HOTween.Core.ABSTweenComponent.OnPlay">
             <summary>
-            Manages on resume behaviour.
+            Manages on resume behaviour (also called when the tween starts).
             </summary>
         </member>
         <member name="M:Holoville.HOTween.Core.ABSTweenComponent.OnRewinded">
@@ -1571,6 +1640,11 @@
         <member name="M:Holoville.HOTween.Core.ABSTweenComponent.SetLoops">
             <summary>
             Sets <c>completedLoops</c> and <c>isLoopingBack</c>, based on the current <c>fullElapsed</c> value.
+            </summary>
+        </member>
+        <member name="M:Holoville.HOTween.Core.ABSTweenComponent.ManageObjects(System.Boolean)">
+            <summary>
+            Manages the components/gameObjects that should be activated/deactivated.
             </summary>
         </member>
         <member name="M:Holoville.HOTween.Core.ABSTweenComponent.FillPluginsList(System.Collections.Generic.List{Holoville.HOTween.Plugins.Core.ABSTweenPlugin})">
@@ -1982,9 +2056,22 @@
             <param name="p_target">
             The target to check.
             </param>
-            <returns>
-            A value of <c>true</c> if the given target is currently involved in a running tween of this Sequence (taking into account also nested tweens).
-            </returns>
+        </member>
+        <member name="M:Holoville.HOTween.Sequence.IsTweening(System.String)">
+            <summary>
+            Returns <c>true</c> if the tween with the given string id is currently involved in a running tween or sequence.
+            </summary>
+            <param name="p_id">
+            The id to check for.
+            </param>
+        </member>
+        <member name="M:Holoville.HOTween.Sequence.IsTweening(System.Int32)">
+            <summary>
+            Returns <c>true</c> if the tween with the given int id is currently involved in a running tween or sequence.
+            </summary>
+            <param name="p_id">
+            The id to check for.
+            </param>
         </member>
         <member name="M:Holoville.HOTween.Sequence.IsLinkedTo(System.Object)">
             <summary>
@@ -3359,6 +3446,11 @@
             An array of eventual parameters that were passed to the callback.
             </summary>
         </member>
+        <member name="P:Holoville.HOTween.TweenEvent.plugin">
+            <summary>
+            The plugin (if any) that triggered the callback.
+            </summary>
+        </member>
         <member name="T:Holoville.HOTween.Plugins.PlugString">
             <summary>
             Plugin for the tweening of strings.
@@ -3602,9 +3694,24 @@
             <param name="p_target">
             The target to check.
             </param>
-            <returns>
-            A value of <c>true</c> if the given target and this Tweener target are the same, and this Tweener is running.
-            </returns>
+        </member>
+        <member name="M:Holoville.HOTween.Tweener.IsTweening(System.String)">
+            <summary>
+            Returns <c>true</c> if the tween with the given string id is currently involved in a running tween or sequence.
+            This method is here to uniform <see cref="T:Holoville.HOTween.Tweener"/> with <see cref="T:Holoville.HOTween.Sequence"/>.
+            </summary>
+            <param name="p_id">
+            The id to check for.
+            </param>
+        </member>
+        <member name="M:Holoville.HOTween.Tweener.IsTweening(System.Int32)">
+            <summary>
+            Returns <c>true</c> if the tween with the given int id is currently involved in a running tween or sequence.
+            This method is here to uniform <see cref="T:Holoville.HOTween.Tweener"/> with <see cref="T:Holoville.HOTween.Sequence"/>.
+            </summary>
+            <param name="p_id">
+            The id to check for.
+            </param>
         </member>
         <member name="M:Holoville.HOTween.Tweener.IsLinkedTo(System.Object)">
             <summary>
@@ -3850,6 +3957,11 @@
             Target of this tween.
             </summary>
         </member>
+        <member name="P:Holoville.HOTween.Tweener.pixelPerfect">
+            <summary>
+            <c>true</c> if this tween is animated via integers values only.
+            </summary>
+        </member>
         <member name="P:Holoville.HOTween.Tweener.speedBased">
             <summary>
             <c>true</c> if this tween is animated by speed instead than by duration.
@@ -3987,17 +4099,16 @@
             Controls all tween types (<see cref="T:Holoville.HOTween.Tweener"/> and <see cref="T:Holoville.HOTween.Sequence"/>),
             and is used to directly create Tweeners (to create Sequences, directly create a new <see cref="T:Holoville.HOTween.Sequence"/> instead).
             <para>Author: Daniele Giardini (http://www.holoville.com)</para>
-            <para>Version: 1.1.420</para>
-            </summary>
-        </member>
-        <member name="F:Holoville.HOTween.HOTween.VERSION">
-            <summary>
-            HOTween version.
             </summary>
         </member>
         <member name="F:Holoville.HOTween.HOTween.AUTHOR">
             <summary>
             HOTween author - me! :P
+            </summary>
+        </member>
+        <member name="F:Holoville.HOTween.HOTween.VERSION">
+            <summary>
+            HOTween version.
             </summary>
         </member>
         <member name="F:Holoville.HOTween.HOTween.defUpdateType">
@@ -4172,6 +4283,37 @@
             or <c>null</c> if the parameters were invalid.
             </returns>
         </member>
+        <member name="M:Holoville.HOTween.HOTween.To(System.Object,System.Single,System.String,System.Object,System.Boolean,Holoville.HOTween.EaseType,System.Single)">
+            <summary>
+            Creates a new tween with default values, and returns the <see cref="T:Holoville.HOTween.Tweener"/> representing it,
+            or <c>null</c> if the tween was invalid (no valid property to tween was given).
+            </summary>
+            <param name="p_target">
+            The tweening target (must be the object containing the properties or fields to tween).
+            </param>
+            <param name="p_duration">
+            The duration in seconds of the tween.
+            </param>
+            <param name="p_propName">
+            The name of the property or field to tween.
+            </param>
+            <param name="p_endVal">
+            The end value the property should reach with the tween.
+            </param>
+            <param name="p_isRelative">
+            If <c>true</c> treats the end value as relative (tween BY instead than tween TO), otherwise as absolute.
+            </param>
+            <param name="p_easeType">
+            The ease to use.
+            </param>
+            <param name="p_delay">
+            The eventual delay to apply.
+            </param>
+            <returns>
+            The newly created <see cref="T:Holoville.HOTween.Tweener"/>,
+            or <c>null</c> if the parameters were invalid.
+            </returns>
+        </member>
         <member name="M:Holoville.HOTween.HOTween.To(System.Object,System.Single,Holoville.HOTween.TweenParms)">
             <summary>
             Creates a new tween and returns the <see cref="T:Holoville.HOTween.Tweener"/> representing it,
@@ -4234,6 +4376,37 @@
             </param>
             <param name="p_isRelative">
             If <c>true</c> treats the end value as relative (tween BY instead than tween TO), otherwise as absolute.
+            </param>
+            <returns>
+            The newly created <see cref="T:Holoville.HOTween.Tweener"/>,
+            or <c>null</c> if the parameters were invalid.
+            </returns>
+        </member>
+        <member name="M:Holoville.HOTween.HOTween.From(System.Object,System.Single,System.String,System.Object,System.Boolean,Holoville.HOTween.EaseType,System.Single)">
+            <summary>
+            Creates a new FROM tween with default values, and returns the <see cref="T:Holoville.HOTween.Tweener"/> representing it,
+            or <c>null</c> if the tween was invalid (no valid property to tween was given).
+            </summary>
+            <param name="p_target">
+            The tweening target (must be the object containing the properties or fields to tween).
+            </param>
+            <param name="p_duration">
+            The duration in seconds of the tween.
+            </param>
+            <param name="p_propName">
+            The name of the property or field to tween.
+            </param>
+            <param name="p_fromVal">
+            The end value the property should reach with the tween.
+            </param>
+            <param name="p_isRelative">
+            If <c>true</c> treats the end value as relative (tween BY instead than tween TO), otherwise as absolute.
+            </param>
+            <param name="p_easeType">
+            The ease to use.
+            </param>
+            <param name="p_delay">
+            The eventual delay to apply.
             </param>
             <returns>
             The newly created <see cref="T:Holoville.HOTween.Tweener"/>,
@@ -5094,7 +5267,7 @@
             The total number of restarted Tweeners/Sequences.
             </returns>
         </member>
-        <member name="M:Holoville.HOTween.HOTween.Reverse(System.Object)">
+        <member name="M:Holoville.HOTween.HOTween.Reverse(System.Object,System.Boolean)">
             <summary>
             Reverses all the tweens for the given target,
             animating them from their current value back to the starting one,
@@ -5103,11 +5276,15 @@
             <param name="p_target">
             The target whose tweens to reverse.
             </param>
+            <param name="p_forcePlay">
+            If TRUE, the tween will also start playing in case it was paused,
+            otherwise it will maintain its current play/pause state (default).
+            </param>
             <returns>
             The total number of reversed Tweeners.
             </returns>
         </member>
-        <member name="M:Holoville.HOTween.HOTween.Reverse(System.String)">
+        <member name="M:Holoville.HOTween.HOTween.Reverse(System.String,System.Boolean)">
             <summary>
             Reverses all the Tweeners/Sequences with the given ID,
             animating them from their current value back to the starting one,
@@ -5116,11 +5293,15 @@
             <param name="p_id">
             The ID of the Tweeners/Sequences to reverse.
             </param>
+            <param name="p_forcePlay">
+            If TRUE, the tween will also start playing in case it was paused,
+            otherwise it will maintain its current play/pause state (default).
+            </param>
             <returns>
             The total number of reversed Tweeners/Sequences.
             </returns>
         </member>
-        <member name="M:Holoville.HOTween.HOTween.Reverse(System.Int32)">
+        <member name="M:Holoville.HOTween.HOTween.Reverse(System.Int32,System.Boolean)">
             <summary>
             Reverses all the Tweeners/Sequences with the given intId,
             animating them from their current value back to the starting one,
@@ -5129,11 +5310,15 @@
             <param name="p_intId">
             The intId of the Tweeners/Sequences to reverse.
             </param>
+            <param name="p_forcePlay">
+            If TRUE, the tween will also start playing in case it was paused,
+            otherwise it will maintain its current play/pause state (default).
+            </param>
             <returns>
             The total number of reversed Tweeners/Sequences.
             </returns>
         </member>
-        <member name="M:Holoville.HOTween.HOTween.Reverse(Holoville.HOTween.Tweener)">
+        <member name="M:Holoville.HOTween.HOTween.Reverse(Holoville.HOTween.Tweener,System.Boolean)">
             <summary>
             Reverses the given Tweener,
             animating it from its current value back to the starting one,
@@ -5142,27 +5327,39 @@
             <param name="p_tweener">
             The Tweener to reverse.
             </param>
+            <param name="p_forcePlay">
+            If TRUE, the tween will also start playing in case it was paused,
+            otherwise it will maintain its current play/pause state (default).
+            </param>
             <returns>
             The total number of reversed Tweeners (1 if the Tweener existed, otherwise 0).
             </returns>
         </member>
-        <member name="M:Holoville.HOTween.HOTween.Reverse(Holoville.HOTween.Sequence)">
+        <member name="M:Holoville.HOTween.HOTween.Reverse(Holoville.HOTween.Sequence,System.Boolean)">
             <summary>
             Reverses the given Sequence, and returns the total number of reversed ones (1 if the Sequence existed, otherwise 0).
             </summary>
             <param name="p_sequence">
             The Sequence to reverse.
             </param>
+            <param name="p_forcePlay">
+            If TRUE, the tween will also start playing in case it was paused,
+            otherwise it will maintain its current play/pause state (default).
+            </param>
             <returns>
             The total number of reversed Sequences (1 if the Sequence existed, otherwise 0).
             </returns>
         </member>
-        <member name="M:Holoville.HOTween.HOTween.Reverse">
+        <member name="M:Holoville.HOTween.HOTween.Reverse(System.Boolean)">
             <summary>
             Reverses all Tweeners/Sequences,
             animating them from their current value back to the starting one,
             and returns the total number of reversed Tweeners/Sequences.
             </summary>
+            <param name="p_forcePlay">
+            If TRUE, the tween will also start playing in case it was paused,
+            otherwise it will maintain its current play/pause state (default).
+            </param>
             <returns>
             The total number of reversed Tweeners/Sequences.
             </returns>
@@ -5312,6 +5509,21 @@
             </summary>
             <param name="p_tween"></param>
         </member>
+        <member name="M:Holoville.HOTween.HOTween.GetAllTweens">
+            <summary>
+            Returns all existing Tweeners (excluding nested ones) and Sequences, paused or not.
+            </summary>
+        </member>
+        <member name="M:Holoville.HOTween.HOTween.GetAllPlayingTweens">
+            <summary>
+            Returns all existing Tweeners (excluding nested ones) and Sequences that are currently playing.
+            </summary>
+        </member>
+        <member name="M:Holoville.HOTween.HOTween.GetAllPausedTweens">
+            <summary>
+            Returns all existing Tweeners (excluding nested ones) and Sequences that are currently paused.
+            </summary>
+        </member>
         <member name="M:Holoville.HOTween.HOTween.GetTweensById(System.String,System.Boolean)">
             <summary>
             Returns a list of the eventual existing tweens with the given Id,
@@ -5351,6 +5563,22 @@
             <returns>
             A value of <c>true</c> if the given target is currently involved in any running Tweener or Sequence (taking into account also nested tweens).
             </returns>
+        </member>
+        <member name="M:Holoville.HOTween.HOTween.IsTweening(System.String)">
+            <summary>
+            Returns <c>true</c> if the given id is involved in any running Tweener or Sequence (taking into account also nested tweens).
+            </summary>
+            <param name="p_id">
+            The target to check.
+            </param>
+        </member>
+        <member name="M:Holoville.HOTween.HOTween.IsTweening(System.Int32)">
+            <summary>
+            Returns <c>true</c> if the given id is involved in any running Tweener or Sequence (taking into account also nested tweens).
+            </summary>
+            <param name="p_id">
+            The target to check.
+            </param>
         </member>
         <member name="M:Holoville.HOTween.HOTween.IsLinkedTo(System.Object)">
             <summary>
@@ -5576,6 +5804,21 @@
             On update parameters.
             </summary>
         </member>
+        <member name="F:Holoville.HOTween.Core.ABSTweenComponentParms.onPluginUpdated">
+            <summary>
+            On plugin results.
+            </summary>
+        </member>
+        <member name="F:Holoville.HOTween.Core.ABSTweenComponentParms.onPluginUpdatedWParms">
+            <summary>
+            On plugin results with parms.
+            </summary>
+        </member>
+        <member name="F:Holoville.HOTween.Core.ABSTweenComponentParms.onPluginUpdatedParms">
+            <summary>
+            On plugin results parameters.
+            </summary>
+        </member>
         <member name="F:Holoville.HOTween.Core.ABSTweenComponentParms.onPause">
             <summary>
             On pause.
@@ -5649,6 +5892,36 @@
         <member name="F:Holoville.HOTween.Core.ABSTweenComponentParms.onCompleteParms">
             <summary>
             On complete parameters.
+            </summary>
+        </member>
+        <member name="F:Holoville.HOTween.Core.ABSTweenComponentParms.manageBehaviours">
+            <summary>
+            True if there are behaviours to manage
+            </summary>
+        </member>
+        <member name="F:Holoville.HOTween.Core.ABSTweenComponentParms.manageGameObjects">
+            <summary>
+            True if there are gameObject to manage
+            </summary>
+        </member>
+        <member name="F:Holoville.HOTween.Core.ABSTweenComponentParms.managedBehavioursOn">
+            <summary>
+            Behaviours to activate
+            </summary>
+        </member>
+        <member name="F:Holoville.HOTween.Core.ABSTweenComponentParms.managedBehavioursOff">
+            <summary>
+            Behaviours to deactivate
+            </summary>
+        </member>
+        <member name="F:Holoville.HOTween.Core.ABSTweenComponentParms.managedGameObjectsOn">
+            <summary>
+            GameObjects to activate
+            </summary>
+        </member>
+        <member name="F:Holoville.HOTween.Core.ABSTweenComponentParms.managedGameObjectsOff">
+            <summary>
+            GameObejcts to deactivate
             </summary>
         </member>
         <member name="M:Holoville.HOTween.Core.ABSTweenComponentParms.InitializeOwner(Holoville.HOTween.Core.ABSTweenComponent)">
@@ -6112,6 +6385,107 @@
             The eased value.
             </returns>
         </member>
+        <member name="T:Holoville.HOTween.Plugins.Core.PlugColor32">
+            <summary>
+            Default plugin for the tweening of Color32 objects.
+            </summary>
+        </member>
+        <member name="M:Holoville.HOTween.Plugins.Core.PlugColor32.#ctor(UnityEngine.Color32)">
+            <summary>
+            Creates a new instance of this plugin using the main ease type.
+            </summary>
+            <param name="p_endVal">
+            The <see cref="T:UnityEngine.Color32"/> value to tween to.
+            </param>
+        </member>
+        <member name="M:Holoville.HOTween.Plugins.Core.PlugColor32.#ctor(UnityEngine.Color32,Holoville.HOTween.EaseType)">
+            <summary>
+            Creates a new instance of this plugin.
+            </summary>
+            <param name="p_endVal">
+            The <see cref="T:UnityEngine.Color32"/> value to tween to.
+            </param>
+            <param name="p_easeType">
+            The <see cref="T:Holoville.HOTween.EaseType"/> to use.
+            </param>
+        </member>
+        <member name="M:Holoville.HOTween.Plugins.Core.PlugColor32.#ctor(UnityEngine.Color32,System.Boolean)">
+            <summary>
+            Creates a new instance of this plugin using the main ease type.
+            </summary>
+            <param name="p_endVal">
+            The <see cref="T:UnityEngine.Color32"/> value to tween to.
+            </param>
+            <param name="p_isRelative">
+            If <c>true</c>, the given end value is considered relative instead than absolute.
+            </param>
+        </member>
+        <member name="M:Holoville.HOTween.Plugins.Core.PlugColor32.#ctor(UnityEngine.Color32,Holoville.HOTween.EaseType,System.Boolean)">
+            <summary>
+            Creates a new instance of this plugin.
+            </summary>
+            <param name="p_endVal">
+            The <see cref="T:UnityEngine.Color32"/> value to tween to.
+            </param>
+            <param name="p_easeType">
+            The <see cref="T:Holoville.HOTween.EaseType"/> to use.
+            </param>
+            <param name="p_isRelative">
+            If <c>true</c>, the given end value is considered relative instead than absolute.
+            </param>
+        </member>
+        <member name="M:Holoville.HOTween.Plugins.Core.PlugColor32.#ctor(UnityEngine.Color32,UnityEngine.AnimationCurve,System.Boolean)">
+            <summary>
+            Creates a new instance of this plugin.
+            </summary>
+            <param name="p_endVal">
+            The <see cref="T:UnityEngine.Color32"/> value to tween to.
+            </param>
+            <param name="p_easeAnimCurve">
+            The <see cref="T:UnityEngine.AnimationCurve"/> to use for easing.
+            </param>
+            <param name="p_isRelative">
+            If <c>true</c>, the given end value is considered relative instead than absolute.
+            </param>
+        </member>
+        <member name="M:Holoville.HOTween.Plugins.Core.PlugColor32.GetSpeedBasedDuration(System.Single)">
+            <summary>
+            Returns the speed-based duration based on the given speed x second.
+            </summary>
+        </member>
+        <member name="M:Holoville.HOTween.Plugins.Core.PlugColor32.SetChangeVal">
+            <summary>
+            Sets the typed changeVal based on the current startVal and endVal.
+            </summary>
+        </member>
+        <member name="M:Holoville.HOTween.Plugins.Core.PlugColor32.SetIncremental(System.Int32)">
+            <summary>
+            Sets the correct values in case of Incremental loop type.
+            </summary>
+            <param name="p_diffIncr">
+            The difference from the previous loop increment.
+            </param>
+        </member>
+        <member name="M:Holoville.HOTween.Plugins.Core.PlugColor32.DoUpdate(System.Single)">
+            <summary>
+            Updates the tween.
+            </summary>
+            <param name="p_totElapsed">
+            The total elapsed time since startup.
+            </param>
+        </member>
+        <member name="P:Holoville.HOTween.Plugins.Core.PlugColor32.startVal">
+            <summary>
+            Gets the untyped start value,
+            sets both the untyped and the typed start value.
+            </summary>
+        </member>
+        <member name="P:Holoville.HOTween.Plugins.Core.PlugColor32.endVal">
+            <summary>
+            Gets the untyped end value,
+            sets both the untyped and the typed end value.
+            </summary>
+        </member>
         <member name="T:Holoville.HOTween.Core.TweenWarning">
             <summary>
             Used internally to generate warnings that are managed without throwing exceptions.
@@ -6214,6 +6588,15 @@
             <param name="p_target">
             The <see cref="T:Holoville.HOTween.Tweener"/> target.
             </param>
+        </member>
+        <member name="M:Holoville.HOTween.TweenParms.PixelPerfect">
+            <summary>
+            Sets this tween so that it works with pixel perfect values.
+            Only works with <see cref="T:UnityEngine.Vector3"/>, <see cref="T:UnityEngine.Vector2"/>, <see cref="T:System.Single"/>,
+            <see cref="T:Holoville.HOTween.Plugins.PlugVector3X"/>, <see cref="T:Holoville.HOTween.Plugins.PlugVector3Y"/>, <see cref="T:Holoville.HOTween.Plugins.PlugVector3Z"/>
+            plugins.
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:Holoville.HOTween.TweenParms.SpeedBased">
             <summary>
@@ -6496,6 +6879,18 @@
             Additional comma separated parameters to pass to the function.
             </param>
         </member>
+        <member name="M:Holoville.HOTween.TweenParms.OnPluginUpdated(Holoville.HOTween.Core.TweenDelegate.TweenCallbackWParms,System.Object[])">
+            <summary>
+            Function to call each time a plugin is updated.
+            </summary>
+            <param name="p_function">
+            The function to call.
+            It must return <c>void</c> and has to accept a single parameter of type <see cref="T:Holoville.HOTween.TweenEvent"/>.
+            </param>
+            <param name="p_funcParms">
+            Additional comma separated parameters to pass to the function.
+            </param>
+        </member>
         <member name="M:Holoville.HOTween.TweenParms.OnPause(Holoville.HOTween.Core.TweenDelegate.TweenCallback)">
             <summary>
             Function to call when the Tweener switches from a playing state to a paused state.
@@ -6641,6 +7036,46 @@
             <param name="p_funcParms">
             Additional comma separated parameters to pass to the function.
             </param>
+        </member>
+        <member name="M:Holoville.HOTween.TweenParms.KeepEnabled(UnityEngine.Behaviour)">
+            <summary>
+            Keeps the given component enabled while the tween is playing
+            </summary>
+        </member>
+        <member name="M:Holoville.HOTween.TweenParms.KeepEnabled(UnityEngine.GameObject)">
+            <summary>
+            Keeps the given gameObject activated while the tween is playing
+            </summary>
+        </member>
+        <member name="M:Holoville.HOTween.TweenParms.KeepEnabled(UnityEngine.Behaviour[])">
+            <summary>
+            Keeps the given components enabled while the tween is playing
+            </summary>
+        </member>
+        <member name="M:Holoville.HOTween.TweenParms.KeepEnabled(UnityEngine.GameObject[])">
+            <summary>
+            Keeps the given GameObject activated while the tween is playing
+            </summary>
+        </member>
+        <member name="M:Holoville.HOTween.TweenParms.KeepDisabled(UnityEngine.Behaviour)">
+            <summary>
+            Keeps the given component disabled while the tween is playing
+            </summary>
+        </member>
+        <member name="M:Holoville.HOTween.TweenParms.KeepDisabled(UnityEngine.GameObject)">
+            <summary>
+            Keeps the given GameObject disabled while the tween is playing
+            </summary>
+        </member>
+        <member name="M:Holoville.HOTween.TweenParms.KeepDisabled(UnityEngine.Behaviour[])">
+            <summary>
+            Keeps the given components disabled while the tween is playing
+            </summary>
+        </member>
+        <member name="M:Holoville.HOTween.TweenParms.KeepDisabled(UnityEngine.GameObject[])">
+            <summary>
+            Keeps the given GameObject disabled while the tween is playing
+            </summary>
         </member>
         <member name="M:Holoville.HOTween.TweenParms.IsFrom">
             <summary>
@@ -7579,6 +8014,46 @@
             <param name="p_methodName">Name of the method to call</param>
             <param name="p_value">Eventual additional parameter</param>
             <param name="p_options">SendMessageOptions</param>
+        </member>
+        <member name="M:Holoville.HOTween.SequenceParms.KeepEnabled(UnityEngine.Behaviour)">
+            <summary>
+            Keeps the given component enabled while the tween is playing
+            </summary>
+        </member>
+        <member name="M:Holoville.HOTween.SequenceParms.KeepEnabled(UnityEngine.GameObject)">
+            <summary>
+            Keeps the given gameObject activated while the tween is playing
+            </summary>
+        </member>
+        <member name="M:Holoville.HOTween.SequenceParms.KeepEnabled(UnityEngine.Behaviour[])">
+            <summary>
+            Keeps the given components enabled while the tween is playing
+            </summary>
+        </member>
+        <member name="M:Holoville.HOTween.SequenceParms.KeepEnabled(UnityEngine.GameObject[])">
+            <summary>
+            Keeps the given GameObject activated while the tween is playing
+            </summary>
+        </member>
+        <member name="M:Holoville.HOTween.SequenceParms.KeepDisabled(UnityEngine.Behaviour)">
+            <summary>
+            Keeps the given component disabled while the tween is playing
+            </summary>
+        </member>
+        <member name="M:Holoville.HOTween.SequenceParms.KeepDisabled(UnityEngine.GameObject)">
+            <summary>
+            Keeps the given GameObject disabled while the tween is playing
+            </summary>
+        </member>
+        <member name="M:Holoville.HOTween.SequenceParms.KeepDisabled(UnityEngine.Behaviour[])">
+            <summary>
+            Keeps the given components disabled while the tween is playing
+            </summary>
+        </member>
+        <member name="M:Holoville.HOTween.SequenceParms.KeepDisabled(UnityEngine.GameObject[])">
+            <summary>
+            Keeps the given GameObject disabled while the tween is playing
+            </summary>
         </member>
         <member name="T:Holoville.HOTween.Plugins.PlugInt">
             <summary>

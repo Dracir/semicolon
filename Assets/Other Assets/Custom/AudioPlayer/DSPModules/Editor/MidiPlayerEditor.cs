@@ -1,6 +1,8 @@
 ﻿#if UNITY_EDITOR
+using Hydrogen;
 using UnityEngine;
 using UnityEditor;
+using System.Collections;
 using System.Collections.Generic;
 
 [CustomEditor(typeof(MidiPlayer)), CanEditMultipleObjects]

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class SingleLineVectorDrawer : CustomPropertyDrawerBase {
 
 	public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
-		position = Begin(position, property, label);
+		position = base.Initialize(position, label);
 		
 		float x = property.FindPropertyRelative("x").floatValue;
 		float y = property.FindPropertyRelative("y").floatValue;
@@ -70,8 +70,6 @@ public class SingleLineVectorDrawer : CustomPropertyDrawerBase {
 			property.FindPropertyRelative("w").floatValue = w;
 		}
 		AttributeUtility.EndIndentation();
-		
-		End(property);
 	}
 }
 #endif

@@ -323,7 +323,7 @@ public class PolyMeshEditor : Editor
 
 	void RecordUndo()
 	{
-#if UNITY_4_6 || UNITY_4_5 || UNITY_4_3
+#if UNITY_4_5 || UNITY_4_3
 		Undo.RecordObject(target, "PolyMesh Changed");
 #else
 		Undo.RegisterUndo(target, "PolyMesh Changed");
@@ -333,7 +333,7 @@ public class PolyMeshEditor : Editor
 	void RecordDeepUndo()
 	{
 	
-#if UNITY_4_5 || UNITY_4_6
+#if UNITY_4_5
 		Undo.RegisterFullObjectHierarchyUndo(target, "PolyMesh Changed");
 #elif UNITY_4_3
 		Undo.RegisterFullObjectHierarchyUndo(target);

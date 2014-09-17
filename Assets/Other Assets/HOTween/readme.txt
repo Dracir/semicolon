@@ -2,7 +2,7 @@ HOTWEEN
 A Unity Tween Engine by Daniele Giardini - Holoville
 First release date: january 1, 2012
 
-You can find detailed information, documentation, API, and more examples about HOTween on its website: http://www.holoville.com/hotween
+You can find detailed information, documentation, API, more examples, and most recent versions of HOTween on its website: http://www.holoville.com/hotween
 Open-source code is available on Google Code: http://code.google.com/p/hotween
 
 ---------------------------
