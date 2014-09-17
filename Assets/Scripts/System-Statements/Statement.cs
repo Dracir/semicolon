@@ -60,7 +60,7 @@ public class Statement : MonoBehaviour {
 	protected GameObject createMoveableText(Vector2 translate, string text, Color color){
 		GameObject obj = createText (translate, text, color);
 		obj.AddComponent<MoveableArgument> ();
-		obj.AddComponent<BoxCollider> ();
+		//obj.AddComponent<BoxCollider> ();
 		return obj;
 	}
 
@@ -68,13 +68,14 @@ public class Statement : MonoBehaviour {
 		GameObject obj = GameObjectFactory.createGameObject (text, this.transform);
 
 		TextMesh textMesh = obj.AddComponent<TextMesh> ();
-		textMesh.text 		= text;
+		/*textMesh.text 		= text;
 		textMesh.anchor 	= TextAnchor.MiddleLeft;
 		textMesh.font	 	= GameConstantes.instance.statementFont;
-		textMesh.color = color;
+		textMesh.color = color;*/
 
 		TextCollider2D textCollider = this.AddComponent<TextCollider2D>();
 		textCollider.text = text;
+		textCollider.fontSize = 166;
 		textCollider.color = color;
 		textCollider.textMesh = textMesh;
 

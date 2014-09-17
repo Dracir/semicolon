@@ -105,8 +105,7 @@ public class LevelLoader {
 		} else {
 			statement.booleanValue = BooleanValues.FALSE;
 		}
-		
-		Debug.Log ("create " + line);
+
 		statement.setText(line);
 		return obj;
 	}
