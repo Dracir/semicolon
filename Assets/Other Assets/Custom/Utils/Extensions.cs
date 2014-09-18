@@ -55,6 +55,10 @@ static public class Extensions {
 		return s.Pop(0, out remaining);
 	}
 	
+	static public char PopRandom(this string s, out string remaining) {
+		return s.Pop(UnityEngine.Random.Range(0, s.Length), out remaining);
+	}
+	
 	static public string PopRange(this string s, int startIndex, char stopCharacter, out string remaining) {
 		string popped = "";
 		int maximumIterations = s.Length;
@@ -236,17 +240,6 @@ static public class Extensions {
 		return typeof(T) == typeof(Type) ? array.Any(t => t.Equals(type)) : array.Any(t => t.GetType() == type);
 	}
 	
-	static public T Last<T>(this T[] array) {
-		return array != null ? array[array.Length - 1] : default(T);
-	}
-	
-	static public T GetRandom<T>(this T[] array) {
-		if (array == null || array.Length == 0)
-			return default(T);
-		
-		return array[UnityEngine.Random.Range(0, array.Length - 1)];
-	}
-	
 	static public T[] Slice<T>(this T[] array, int startIndex) {
 		return array.Slice(startIndex, array.Length - 1);
 	}
@@ -258,10 +251,47 @@ static public class Extensions {
 		}
 		return slicedArray;
 	}
+	
+	static public T Pop<T>(this T[] array, int index, out T[] remaining) {
+		List<T> list = new List<T>(array);
+		T item = list.Pop(index);
+		remaining = list.ToArray();
+		return item;
+	}
+	
+	static public T Pop<T>(this T[] array, out T[] remaining) {
+		return array.Pop(0, out remaining);
+	}
+	
+	static public T PopRandom<T>(this T[] array, out T[] remaining) {
+		return array.Pop(UnityEngine.Random.Range(0, array.Length), out remaining);
+	}
+	
+	static public T[] PopRange<T>(this T[] array, int startIndex, int count, out T[] remaining) {
+		List<T> list = new List<T>(array);
+		T[] popped = list.PopRange(startIndex, count).ToArray();
+		remaining = list.ToArray();
+		return popped;
+	}
+	
+	static public T[] PopRange<T>(this T[] array, int count, out T[] remaining) {
+		return array.PopRange(0, count, out remaining);
+	}
+	
+	static public T Last<T>(this IList<T> array) {
+		return array != null ? array[array.Count - 1] : default(T);
+	}
+	
+	static public T GetRandom<T>(this IList<T> array) {
+		if (array == null || array.Count == 0)
+			return default(T);
+		
+		return array[UnityEngine.Random.Range(0, array.Count - 1)];
+	}
 	#endregion
 
 	#region List
-	static public T Pop<T>(this IList<T> list, int index = 0) {
+	static public T Pop<T>(this List<T> list, int index = 0) {
 		if (list == null || list.Count == 0)
 			return default(T);
 			
@@ -270,21 +300,27 @@ static public class Extensions {
 		return item;
 	}
 	
-	static public T PopRandom<T>(this IList<T> list) {
+	static public T PopRandom<T>(this List<T> list) {
 		if (list == null || list.Count == 0)
 			return default(T);
 		
-		int index = UnityEngine.Random.Range(0, list.Count - 1);
+		int index = UnityEngine.Random.Range(0, list.Count);
 		T item = list[index];
 		list.RemoveAt(index);
 		return item;
 	}
-
-	static public T GetRandom<T>(this IList<T> list) {
-		if (list == null || list.Count == 0)
-			return default(T);
+	
+	static public List<T> PopRange<T>(this List<T> list, int startIndex, int count) {
+		List<T> popped = new List<T>();
 		
-		return list[UnityEngine.Random.Range(0, list.Count - 1)];
+		for (int i = 0; i < count; i++) {
+			popped.Add(list.Pop(i + startIndex));
+		}
+		return popped;
+	}
+	
+	static public List<T> PopRange<T>(this List<T> list, int count) {
+		return list.PopRange(0, count);
 	}
 	#endregion
 	

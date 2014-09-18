@@ -17,7 +17,7 @@ public class SymbolsWindow : EditorWindow {
 	
 	static SymbolsWindow Instance;
 	
-	[MenuItem("Window/Symbols")]
+	[MenuItem("Magicolo's Tools/Symbols")]
 	static void CreateSymbolsWindow(){
 		if (Instance == null) {
 			Instance = (SymbolsWindow)EditorWindow.GetWindow<SymbolsWindow>("Symbols", true);

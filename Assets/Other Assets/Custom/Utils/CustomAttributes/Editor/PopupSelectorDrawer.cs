@@ -20,13 +20,15 @@ public class PopupSelectorDrawer : CustomPropertyDrawerBase {
 				if (property.objectReferenceValue == array.GetArrayElementAtIndex(i).objectReferenceValue){
 					selectedIndex = i;
 				}
-				displayedOptions.Add(array.GetArrayElementAtIndex(i).objectReferenceValue.ToString());
+				if (array.GetArrayElementAtIndex(i).objectReferenceValue != null){
+					displayedOptions.Add(string.Format("[{0}] ", i) + array.GetArrayElementAtIndex(i).objectReferenceValue.ToString());
+				}
 			}
 		}
 		
 		EditorGUI.BeginChangeCheck();
 		selectedIndex = EditorGUI.Popup(position, selectedIndex, displayedOptions.ToArray());
-		if (array != null){
+		if (array != null && array.GetArrayElementAtIndex(selectedIndex) != null){
 			property.objectReferenceValue = array.GetArrayElementAtIndex(selectedIndex).objectReferenceValue;
 		}
 		if (EditorGUI.EndChangeCheck()){

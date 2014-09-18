@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class TextCollider2D : MonoBehaviour {
 
 	[HideInInspector] public TextMesh[] childrenTextMesh;
-	[PopupSelector("childrenTextMesh", NoPrefixLabel = true)] public TextMesh textMesh;
+	[PopupSelector("childrenTextMesh")] public TextMesh textMesh;
 	
 	[TextArea] public string text;
 	[Min] public int fontSize = 100;
@@ -31,11 +31,11 @@ public class TextCollider2D : MonoBehaviour {
 		if (textMesh == null) {
 			if (gameObject.GetComponentsInChildren<TextMesh>().Length == 0) {
 				GameObject textMeshObject = gameObject.AddChild("TextMesh");
+				textMeshObject.transform.Reset();
 				textMeshObject.AddComponent<TextMesh>();
 			}
 		}
 		else {
-			textMesh.transform.localScale = Vector3.one / 10;
 			meshRenderer = textMesh.GetOrAddComponent<MeshRenderer>();
 			boxColliders = new List<BoxCollider2D>(textMesh.GetComponents<BoxCollider2D>());
 			if (font == null)
@@ -102,7 +102,7 @@ public class TextCollider2D : MonoBehaviour {
 
 				CharacterInfo charInfo;
 				font.GetCharacterInfo(' ', out charInfo, fontSize, fontStyle);
-				float xOffset = (lines[i].Length - lines[i].TrimStart().Length) * charInfo.width / 10;
+				float xOffset = (lines[i].Length - lines[i].TrimStart().Length) * charInfo.width / 100;
 
 				Rect textRect;
 				if (string.IsNullOrEmpty(lines[i].TrimStart()))
@@ -110,13 +110,13 @@ public class TextCollider2D : MonoBehaviour {
 				else
 					textRect = lines[i].TrimStart().TrimEnd().GetRect(font, fontSize, fontStyle);
 
-				float width = (textRect.width * colliderSize.x) / 10;
-				float height = (textRect.height * colliderSize.y) / 10;
-				float x = (width / 2) + (textRect.width / 10 - width) / 2 + xOffset;
-				float y = heightSum - (height + (textRect.height / 10 - height)) / 2;
+				float width = (textRect.width * colliderSize.x) / 100;
+				float height = (textRect.height * colliderSize.y) / 100;
+				float x = (width / 2) + (textRect.width / 100 - width) / 2 + xOffset;
+				float y = heightSum - (height + (textRect.height / 100 - height)) / 2;
 				boxCollider.size = new Vector2(width, height);
 				boxCollider.center = new Vector2(x, y);
-				heightSum -= textRect.height / 10;
+				heightSum -= textRect.height / 100;
 			}
 		}
 	}
@@ -125,8 +125,8 @@ public class TextCollider2D : MonoBehaviour {
 		childrenTextMesh = GetComponentsInChildren<TextMesh>();
 		
 		if (textMesh != null) {
-			textMesh.transform.localScale = Vector3.one / 10;
 			textMesh.anchor = TextAnchor.UpperLeft;
+			textMesh.characterSize = 0.1F;
 			meshRenderer = textMesh.GetOrAddComponent<MeshRenderer>();
 			boxColliders = new List<BoxCollider2D>(textMesh.GetComponents<BoxCollider2D>());
 			if (font == null)

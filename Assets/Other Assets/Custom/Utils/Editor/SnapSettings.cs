@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
-static public class SnapSettings {
+public class SnapSettings : EditorWindow {
 
 	static public string fileName = "SnapSettings.asset";
 	static public string directory = Application.dataPath.Substring(0, Application.dataPath.Length - 7) + "/ProjectSettings/";
@@ -37,8 +37,18 @@ static public class SnapSettings {
 		}
 	}
 	
-	[PreferenceItem("Snap Settings")]
-	static void PreferencesGUI() {
+	static SnapSettings Instance;
+	
+	[MenuItem("Magicolo's Tools/Snap Settings")]
+	static void CreateSnapSettingsWindow(){
+		if (Instance == null) {
+			Instance = (SnapSettings)EditorWindow.GetWindow<SnapSettings>("Snap Settings", true);
+			Instance.position = new Rect(Screen.currentResolution.width / 2 - 121, Screen.currentResolution.height / 2 - 167, 275, 176);
+			Instance.minSize = new Vector2(275, 176);
+		}
+	}
+	
+	void OnGUI() {
 		EditorGUI.BeginChangeCheck();
 		
 		EditorGUILayout.Space();
@@ -63,7 +73,7 @@ static public class SnapSettings {
 			SceneView.RepaintAll();
 		}
 	}
-
+	
 	static void UpdateDataDict() {
 		SaveSystem.WriteDataToFile(DataDict, directory + fileName);
 		DataDict = SaveSystem.DeserializeData(SaveSystem.ReadDataFromFile(directory + fileName));

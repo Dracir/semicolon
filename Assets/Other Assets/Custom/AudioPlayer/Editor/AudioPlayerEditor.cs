@@ -10,7 +10,7 @@ public class AudioPlayerEditor : CustomEditorBase {
 	AudioPlayer.Container currentContainer;
 	AudioPlayer.SubContainer currentSource;
 	
-	[MenuItem("GameObject/Audio/Audio Player")]
+	[MenuItem("Magicolo's Tools/Create/Audio Player")]
 	static void CreateAudioPlayer() {
 		GameObject gameObject;
 		AudioPlayer existingAudioPlayer = FindObjectOfType<AudioPlayer>();

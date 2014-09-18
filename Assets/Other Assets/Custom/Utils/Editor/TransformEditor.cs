@@ -115,9 +115,9 @@ public class TransformEditor : CustomEditorBase {
 		Separator(false);
 		
 		// Snap Button
-		snap = ShowToggleButton("Snap", "Toggles the snapping of the transform to the grid. See Edit/Preferences -> Snap Settings to change the snap settings.", EditorStyles.miniButtonLeft);
+		snap = ShowToggleButton("Snap", "Toggles the snapping of the transform to the grid. See Magicolo's Tools/Snap Settings to change the snap settings.", EditorStyles.miniButtonLeft);
 		EditorGUI.BeginChangeCheck();
-		grid = ShowToggleButton("Grid", "Toggles the display of the grid. See Edit/Preferences -> Snap Settings to change the grid display settings.", EditorStyles.miniButtonRight);
+		grid = ShowToggleButton("Grid", "Toggles the display of the grid. See Magicolo's Tools/Snap Settings to change the grid display settings.", EditorStyles.miniButtonRight);
 		if (EditorGUI.EndChangeCheck())	SceneView.RepaintAll();
 		
 		// Add Button
