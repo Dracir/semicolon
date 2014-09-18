@@ -2,15 +2,15 @@
 using System.Collections;
 using UnityEditor;
 
-public class MapLoaderEditor : EditorWindow {
+public class LevelLoaderEditor : EditorWindow {
 
 	public string fileName = "";
 	
 	void OnGUI(){
 		GUILayout.BeginHorizontal ();
 		fileName = GUILayout.TextField (fileName);
-		if (GUILayout.Button ("Find Map File")) {
-			fileName = EditorUtility.OpenFilePanel("Open Map file","maps","txt");
+		if (GUILayout.Button ("Find Level File")) {
+			fileName = EditorUtility.OpenFilePanel("Open Level File","levels","txt");
 		}
 		GUILayout.EndHorizontal ();
 		
@@ -19,17 +19,17 @@ public class MapLoaderEditor : EditorWindow {
 		//MapLoader.loadGameElement = !GUILayout.Toggle(!MapLoader.loadGameElement, "Load only tiles and AI");
 		if (fileName.Length == 0) {
 			GUI.enabled = false;
-			GUILayout.Button("Load Map");
+			GUILayout.Button("Load Level");
 			GUI.enabled = true;
 		}else{
-			if(GUILayout.Button("Load Map")) {
-				MapLoader.loadFromFile(fileName);
+			if(GUILayout.Button("Load Level")) {
+				LevelLoaderMain.loadFromFile(fileName);
 			}
 		}
 	}
 
-	[MenuItem ("FruitsUtils/MapLoader")]
+	[MenuItem ("FruitsUtils/Level Loader")]
 	public static void ShowWindow(){
-		EditorWindow.GetWindow(typeof(MapLoaderEditor), true, "MapLoader");
+		EditorWindow.GetWindow(typeof(LevelLoaderEditor), true, "Level Loader");
 	}
 }

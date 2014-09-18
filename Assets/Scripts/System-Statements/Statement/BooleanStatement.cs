@@ -19,7 +19,8 @@ public class BooleanStatement : Statement{
 
 	protected override void createTextChild(string text){
 		int indexOfValueTag = statementText.IndexOf("%v");
-		
+
+
 		string textBefore = statementText.Substring(0,indexOfValueTag);
 		string textAfter  = "";
 		if (!booleanValue.Equals (BooleanValues.NULL)) {

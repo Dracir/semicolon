@@ -77,6 +77,7 @@ public class Statement : MonoBehaviour {
 		textCollider.text = text;
 		textCollider.fontSize = 166;
 		textCollider.color = color;
+		textCollider.textMesh = textMesh;
 
 		MeshRenderer mr = obj.GetComponent<MeshRenderer> ();
 		mr.material 		= GameConstantes.instance.statementMaterial;

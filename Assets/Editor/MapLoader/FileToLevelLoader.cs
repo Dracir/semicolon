@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public enum ReadingMod{ PARAM, LEVEL}
 
-public class LevelLoader {
+public class FileToLevelLoader {
 
 	private ReadingMod readingMod;
 	private GameObject statements;
@@ -101,9 +101,9 @@ public class LevelLoader {
 		GameObject obj = GameObjectFactory.createGameObject (line, statements);
 		BooleanStatement statement = obj.AddComponent<BooleanStatement> ();
 		if (param [1].ToLower ().Trim ().Equals ("true")) {
-			statement.BooleanValue = BooleanValues.TRUE;
+			statement.booleanValue = BooleanValues.TRUE;
 		} else {
-			statement.BooleanValue = BooleanValues.FALSE;
+			statement.booleanValue = BooleanValues.FALSE;
 		}
 
 		statement.setText(line);
