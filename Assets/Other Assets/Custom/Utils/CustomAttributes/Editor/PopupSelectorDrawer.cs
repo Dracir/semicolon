@@ -27,8 +27,8 @@ public class PopupSelectorDrawer : CustomPropertyDrawerBase {
 		}
 		
 		EditorGUI.BeginChangeCheck();
-		selectedIndex = EditorGUI.Popup(position, selectedIndex, displayedOptions.ToArray());
-		if (array != null && array.GetArrayElementAtIndex(selectedIndex) != null){
+		selectedIndex = Mathf.Clamp(EditorGUI.Popup(position, selectedIndex, displayedOptions.ToArray()), 0, array.arraySize - 1);
+		if (array != null && array.arraySize > selectedIndex){
 			property.objectReferenceValue = array.GetArrayElementAtIndex(selectedIndex).objectReferenceValue;
 		}
 		if (EditorGUI.EndChangeCheck()){

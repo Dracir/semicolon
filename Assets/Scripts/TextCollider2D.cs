@@ -36,6 +36,9 @@ public class TextCollider2D : MonoBehaviour {
 			}
 		}
 		else {
+			if (string.IsNullOrEmpty(text)){
+				text = textMesh.text;
+			}
 			meshRenderer = textMesh.GetOrAddComponent<MeshRenderer>();
 			boxColliders = new List<BoxCollider2D>(textMesh.GetComponents<BoxCollider2D>());
 			if (font == null)
@@ -122,7 +125,17 @@ public class TextCollider2D : MonoBehaviour {
 	}
 
 	void Preview() {
-		childrenTextMesh = GetComponentsInChildren<TextMesh>();
+		List<TextMesh> childrenTextMeshList = new List<TextMesh>();
+		TextMesh ownTextMesh = GetComponent<TextMesh>();
+		if (ownTextMesh != null) {
+			childrenTextMeshList.Add(ownTextMesh);
+		}
+		foreach (TextMesh child in GetComponentsInChildren<TextMesh>()) {
+			if (child != null && !childrenTextMeshList.Contains(child)) {
+				childrenTextMeshList.Add(child);
+			}
+		}                         
+		childrenTextMesh = childrenTextMeshList.ToArray();
 		
 		if (textMesh != null) {
 			textMesh.anchor = TextAnchor.UpperLeft;
