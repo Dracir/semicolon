@@ -9,7 +9,7 @@ public class TextCollider2D : MonoBehaviour {
 	[PopupSelector("childrenTextMesh", NoPrefixLabel = true)] public TextMesh textMesh;
 	
 	[TextArea] public string text;
-	[Min] public int fontSize = 100;
+	[Min] public int fontSize = 166;
 	public FontStyle fontStyle;
 	public Font font;
 	public Color color = Color.white;
