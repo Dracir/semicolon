@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(TextMesh))]
 [RequireComponent(typeof(TextCollider2D))]
 public class Instruction : MonoBehaviour {
 
@@ -22,7 +23,7 @@ public class Instruction : MonoBehaviour {
 	public void reset(){
 		this.name = instructionText;
 		deleteAllChild ();
-		tmpFix ();
+		//tmpFix ();
 		createParameterGameObjects ();
 		setTextToShow ();
 		
@@ -47,7 +48,7 @@ public class Instruction : MonoBehaviour {
 		children.ForEach(child => GameObjectUtils.Destroy(child));
 	}
 
-	void tmpFix(){
+	/*void tmpFix(){
 		GameObject obj = GameObjectFactory.createGameObject ("TMP FIX", this.transform);
 		
 		TextMesh textMesh = obj.AddComponent<TextMesh> ();
@@ -56,7 +57,7 @@ public class Instruction : MonoBehaviour {
 		textCollider.text = instructionText;
 		textCollider.fontSize = 166;
 		textCollider.textMesh = textMesh;
-	}
+	}*/
 
 	void createParameterGameObjects(){
 		string remainingText = instructionText;
@@ -106,10 +107,8 @@ public class Instruction : MonoBehaviour {
 
 	GameObject createBooleanParameter(ParameterData data){
 		GameObject go = GameObjectFactory.createGameObject ("Boolean", this.transform);
-
-		GameObject obj = GameObjectFactory.createGameObject ("TMP FIX", go.transform);
 		
-		TextMesh textMesh = obj.AddComponent<TextMesh> ();
+		TextMesh textMesh = go.AddComponent<TextMesh> ();
 		
 		TextCollider2D textCollider = go.AddComponent<TextCollider2D>();
 		textCollider.text = "TRUE";
@@ -121,10 +120,8 @@ public class Instruction : MonoBehaviour {
 	
 	GameObject createIntegerParameter(ParameterData data){
 		GameObject go = GameObjectFactory.createGameObject ("Integer", this.transform);
-		
-		GameObject obj = GameObjectFactory.createGameObject ("TMP FIX", go.transform);
-		
-		TextMesh textMesh = obj.AddComponent<TextMesh> ();
+	
+		TextMesh textMesh = go.AddComponent<TextMesh> ();
 		
 		TextCollider2D textCollider = go.AddComponent<TextCollider2D>();
 		textCollider.text = "1";
