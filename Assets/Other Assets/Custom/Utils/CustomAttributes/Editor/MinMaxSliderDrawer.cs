@@ -20,15 +20,15 @@ public class MinMaxSliderDrawer : CustomPropertyDrawerBase {
 		if (property.FindPropertyRelative("w") != null) max = property.FindPropertyRelative("w").floatValue;
 		else max = ((MinMaxSliderAttribute) attribute).max;
 		
-		position = AttributeUtility.BeginIndentation(position);
-		
+		EditorGUI.indentLevel = 0;
 		float width = position.width;
 		
 		position.width = width / 4;
 		if (!noFieldLabel && !string.IsNullOrEmpty(minLabel) && width / 8 >= 16){
-			position.width = width / 8;
+			position.width = Mathf.Min(minLabel.GetWidth(EditorStyles.standardFont) + 4, width / 8);
 			EditorGUI.LabelField(position, minLabel);
 			position.x += position.width;
+			position.width = width / 4 - position.width;
 			x = EditorGUI.FloatField(position, x);
 		}
 		else x = EditorGUI.FloatField(position, x);
@@ -40,21 +40,26 @@ public class MinMaxSliderDrawer : CustomPropertyDrawerBase {
 		position.x += position.width + 2;
 		position.width = width / 4;
 		if (!noFieldLabel && !string.IsNullOrEmpty(maxLabel) && width / 8 >= 16){
-			position.width = width / 8;
+			float labelWidth = Mathf.Min(maxLabel.GetWidth(EditorStyles.standardFont) + 4, width / 8);
+			position.width = width / 4 - labelWidth;
 			GUIStyle style = new GUIStyle(EditorStyles.label);
 			style.alignment = TextAnchor.MiddleRight;
 			y = EditorGUI.FloatField(position, y);
 			position.x += position.width;
+			position.width = labelWidth;
 			EditorGUI.LabelField(position, maxLabel, style);
 			
 		}
 		else y = EditorGUI.FloatField(position, y);
-		AttributeUtility.EndIndentation();
 		
 		property.FindPropertyRelative("x").floatValue = Mathf.Clamp(x, min, y);
 		property.FindPropertyRelative("y").floatValue = Mathf.Clamp(y, x, max);
 		
 		End(property);
+	}
+
+	public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
+		return EditorGUIUtility.singleLineHeight;
 	}
 }
 #endif

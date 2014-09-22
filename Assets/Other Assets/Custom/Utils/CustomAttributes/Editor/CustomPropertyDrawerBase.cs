@@ -36,11 +36,24 @@ public class CustomPropertyDrawerBase : PropertyDrawer {
 		if (fieldInfo.FieldType.IsArray){
  			index = AttributeUtility.GetIndexFromLabel(label);
  			arrayProperty = property.serializedObject.FindProperty(fieldInfo.Name);
+ 			
+ 			if (noIndex){
+ 				if (string.IsNullOrEmpty(prefixLabel)){
+					label.text = label.text.Substring(0, label.text.Length - 2);
+				}
+ 			}
+ 			else if (!string.IsNullOrEmpty(prefixLabel)){
+ 				prefixLabel += " " + index;
+ 			}
 		}
-		else if (drawPrefixLabel){
+		
+		
+		if (drawPrefixLabel){
 			if (!noPrefixLabel){
-				if (!string.IsNullOrEmpty(prefixLabel)) position = EditorGUI.PrefixLabel(position, new GUIContent(prefixLabel));
-				else position = EditorGUI.PrefixLabel(position, label);
+				if (!string.IsNullOrEmpty(prefixLabel)) {
+					label.text = prefixLabel;
+				}
+				position = EditorGUI.PrefixLabel(position, label);
 			}
 		}
 		else {

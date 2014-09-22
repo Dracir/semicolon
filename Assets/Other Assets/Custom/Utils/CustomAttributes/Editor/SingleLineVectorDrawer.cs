@@ -29,10 +29,9 @@ public class SingleLineVectorDrawer : CustomPropertyDrawerBase {
 			w = property.FindPropertyRelative("w").floatValue;
 		}
 		
-		position = AttributeUtility.BeginIndentation(position);
-		
 		float width = position.width;
-		float maxLabelWidth = width / (nbOfFields * 2);
+		float maxLabelWidth = width / (nbOfFields * 2) - 3;
+		EditorGUI.indentLevel = 0;
 		
 		position.width /= nbOfFields;
 		
@@ -69,9 +68,12 @@ public class SingleLineVectorDrawer : CustomPropertyDrawerBase {
 			}
 			property.FindPropertyRelative("w").floatValue = w;
 		}
-		AttributeUtility.EndIndentation();
 		
 		End(property);
+	}
+
+	public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
+		return EditorGUIUtility.singleLineHeight;
 	}
 }
 #endif

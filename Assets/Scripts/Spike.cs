@@ -2,7 +2,6 @@
 
 public class Spike : MonoBehaviour
 {
-	[Header("BOba")]
 	[Min] public float fallSpeed = 3;
 	[Min] public float lifeTime = 3;
 	[HideInInspector] public int index;

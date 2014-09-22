@@ -25,6 +25,22 @@ static public class HelperFunctions {
 		return Mathf.Sqrt(Mathf.Pow(a, 2) + Mathf.Pow(b, 2));
 	}
 	
+	static public string ColorChannelsToVectorAxis(string channels){
+		channels = channels.Replace('R', 'X');
+		channels = channels.Replace('G', 'Y');
+		channels = channels.Replace('B', 'Z');
+		channels = channels.Replace('A', 'W');
+		return channels;
+	}
+	
+	static public string VectorAxisToColorChannels(string channels){
+		channels = channels.Replace('X', 'R');
+		channels = channels.Replace('Y', 'G');
+		channels = channels.Replace('Z', 'B');
+		channels = channels.Replace('W', 'A');
+		return channels;
+	}
+	
 	static public object WeightedRandom(Dictionary<object, float> objectsAndWeights){
 		object[] objectList = new object[objectsAndWeights.Keys.Count];
 		float[] weightList = new float[objectsAndWeights.Values.Count];

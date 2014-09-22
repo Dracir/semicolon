@@ -75,17 +75,17 @@ static public class Logger {
 		
 		if (v is Vector2){
 			Vector2 v2 = (Vector2) v;
-			v2 = v2.Round(RoundPrecision);
+//			v2 = v2.Round(RoundPrecision);
 			str += "Vector2(" + v2.x + ", " + v2.y;
 		}
 		else if (v is Vector3){
 			Vector3 v3 = (Vector3) v;
-			v3 = v3.Round(RoundPrecision);
+//			v3 = v3.Round(RoundPrecision);
 			str += "Vector3(" + v3.x + ", " + v3.y + ", " + v3.z;
 		}
 		else if (v is Vector4){
 			Vector4 v4 = (Vector4) v;
-			v4 = v4.Round(RoundPrecision);
+//			v4 = v4.Round(RoundPrecision);
 			str += "Vector4(" + v4.x + ", " + v4.y + ", " + v4.z + ", " + v4.w;
 		}
 		else if (v is Quaternion){
@@ -95,7 +95,7 @@ static public class Logger {
 		}
 		else if (v is Color){
 			Color c = (Color) v;
-			c = c.Round(RoundPrecision);
+//			c = c.Round(RoundPrecision);
 			str += "Color(" + c.r + ", " + c.g + ", " + c.b + ", " + c.a;
 		}
 		else if (v is Rect){

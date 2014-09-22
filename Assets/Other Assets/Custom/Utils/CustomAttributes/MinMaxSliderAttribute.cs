@@ -1,8 +1,8 @@
 ﻿
 public sealed class MinMaxSliderAttribute : CustomAttributeBase {
 	
-	public float min;
-	public float max;
+	public float min = 0;
+	public float max = 1;
 	public string minLabel;
 	public string maxLabel;
 	
@@ -12,11 +12,6 @@ public sealed class MinMaxSliderAttribute : CustomAttributeBase {
 	public MinMaxSliderAttribute(float min, float max){
 		this.min = min;
 		this.max = max;
-	}
-	
-	public MinMaxSliderAttribute(string minLabel, string maxLabel){
-		this.minLabel = minLabel;
-		this.maxLabel = maxLabel;
 	}
 	
 	public MinMaxSliderAttribute(float min, float max, string minLabel, string maxLabel){

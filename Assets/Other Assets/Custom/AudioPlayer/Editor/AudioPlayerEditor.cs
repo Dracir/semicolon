@@ -162,6 +162,7 @@ public class AudioPlayerEditor : CustomEditorBase {
 		
 		if (audioPlayer.showContainers) {
 			EditorGUI.indentLevel += 1;
+			
 			for (int i = 0; i < audioPlayer.containers.Length; i++) {
 				AudioPlayer.Container container = audioPlayer.containers[i];
 				currentContainer = container;
@@ -172,11 +173,13 @@ public class AudioPlayerEditor : CustomEditorBase {
 				
 				if (container.showing) {
 					EditorGUI.indentLevel += 1;
+					
 					EditorGUI.BeginDisabledGroup(Application.isPlaying);
 					container.name = EditorGUILayout.TextField(container.name);
 					EditorGUI.EndDisabledGroup();
 					container.containerType = (AudioPlayer.Container.ContainerTypes)EditorGUILayout.EnumPopup(container.containerType);
 					ShowSources(container, containerProperty);
+					
 					EditorGUI.indentLevel -= 1;
 				}
 			}
@@ -195,6 +198,7 @@ public class AudioPlayerEditor : CustomEditorBase {
 		
 		if (container.sourcesShowing){
 			EditorGUI.indentLevel += 1;
+			
 			if (container.sources != null){
 				for (int i = 0; i < container.sources.Length; i++){
 					AudioPlayer.SubContainer source = container.sources[i];
@@ -237,10 +241,11 @@ public class AudioPlayerEditor : CustomEditorBase {
 	}
 	
 	void ShowChildrenSources(AudioPlayer.SubContainer source, AudioPlayer.Container container, SerializedProperty containerProperty){
-		source.sourcesShowing = AddElementFoldOut(containerProperty.FindPropertyRelative("subContainers"), source.sourcesShowing, "Sources", OnChildSourceAdded);
+		source.sourcesShowing = AddElementFoldOut(containerProperty.FindPropertyRelative("subContainers"), source.sourcesShowing, "Sources", source.childrenLink.Count, OnChildSourceAdded);
 		
 		if (source.sourcesShowing){
 			EditorGUI.indentLevel += 1;
+			
 			if (source.childrenLink.Count != 0){
 				for (int i = 0; i < source.childrenLink.Count; i++){
 					AudioPlayer.SubContainer childSource = container.GetSourceWithID(source.childrenLink[i]);
@@ -280,8 +285,12 @@ public class AudioPlayerEditor : CustomEditorBase {
 	
 	void OnChildSourceAdded(SerializedProperty newChildSource){
 		currentContainer.subContainers[currentContainer.subContainers.Count - 1] = new AudioPlayer.SubContainer();
-		if (currentContainer.subContainers.Count > 1) currentContainer.subContainers[currentContainer.subContainers.Count - 1].Initialize(currentContainer, currentSource.id, currentContainer.subContainers[currentContainer.subContainers.Count - 2]);
-		else currentContainer.subContainers[currentContainer.subContainers.Count - 1].Initialize(currentContainer, currentSource.id);
+		if (currentContainer.subContainers.Count > 1) {
+			currentContainer.subContainers.Last().Initialize(currentContainer, currentSource.id, currentContainer.subContainers[currentContainer.subContainers.Count - 2]);
+		}
+		else {
+			currentContainer.subContainers.Last().Initialize(currentContainer, currentSource.id);
+		}
 	}
 	
 	void ShowAudioSource(AudioPlayer.SubContainer source, AudioPlayer.Container container, SerializedProperty containerProperty){
