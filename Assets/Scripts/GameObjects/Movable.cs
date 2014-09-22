@@ -93,6 +93,12 @@ public class Movable : MonoBehaviour {
 		}
 	}
 	
+	protected virtual int HeadLayers {
+		get{
+			return 1 >> LayerMask.NameToLayer("Default");
+		}
+	}
+	
 	//---------------------------------------------------\\
 	//----------------Getters and setters----------------\\
 	//---------------------------------------------------\\
@@ -243,6 +249,17 @@ public class Movable : MonoBehaviour {
 	protected virtual void Jump () {
 		grounded = false;
 		velocity = new Vector2(velocity.x, GetJumpForce());
+	}
+	
+	protected virtual void CheckHeadBump () {
+		CollisionCheck(velocity.y * Time.deltaTime, HeadLayers, CheckDirections.up, HeadBump);
+//		RaycastHit2D[] rays = CollisionCheck(velocity.y * Time.deltaTime, HeadLayers, CheckDirections.up, HeadBump);
+		
+	}
+	
+	protected virtual void HeadBump () {
+		velocity = new Vector2(velocity.x, 0);
+		//TODO play sound?
 	}
 	
 	protected virtual void Grounded () {

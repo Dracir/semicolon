@@ -8,7 +8,7 @@ public class Semicolon : Movable {
 	public float extraHopFromMovement;
 	public float hopAfter = 0.16f;
 	
-	
+	private float jumpParamModifier = 1f;
 	public static Semicolon instance;
 	
 	protected override float GetMaxSpeed() {
@@ -47,7 +47,9 @@ public class Semicolon : Movable {
 		if (hasGravity){
 			HandleGravity();
 		}
-		
+		if (velocity.y > 0){
+			CheckHeadBump();
+		}
 		HandleMovement(controller.hAxis);
 		
 		if (!hasJumped && (controller.getJumpDown || controller.getUDown)){
@@ -83,12 +85,11 @@ public class Semicolon : Movable {
 			onGroundTimer = 0;
 		}
 		
-		
-		
-		
 	}
 	
 	
-	
+	public void SetJumpHeight (int param){
+		jumpForce = param * jumpParamModifier;
+	}
 	
 }
