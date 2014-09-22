@@ -56,7 +56,7 @@ public class FileToLevelLoader {
 			int lenght = indexOfNextSpace - x;
 			if(lenght > 0){
 				string nextStatement = line.Substring(x,lenght);
-				if(nextStatement.Length != 0){
+				if(nextStatement.Length != 0 && !nextStatement.Equals(" ")){
 					createInstruction(nextStatement,x,levelY);
 					x += lenght;
 				}
@@ -98,6 +98,8 @@ public class FileToLevelLoader {
 		}
 
 		GameObject go = GameObjectFactory.createGameObject (line,this.statements);
+		go.transform.Translate (x, y, 0);
+
 		Instruction instruction = go.AddComponent<Instruction> ();
 		instruction.setText (line);
 
