@@ -75,26 +75,30 @@ public class FileToLevelLoader {
 
 		Instruction instruction = createInstructionObject(line,x,y);
 
-		int indexOfArgument = line.IndexOf ('%');
+		int indexOfArgument = line.IndexOf ('$');
 		int indexOfWhereImAt = 0;
+		int indexOfChild = 0;
 		while (indexOfArgument != -1) {
 			string argumentKey 	= line.Substring(indexOfArgument,3);
 			if(parameters.ContainsKey(argumentKey)){
-				string param 		= parameters[argumentKey];
+				string paramData 	= parameters[argumentKey];
+				Parameter parameter = instruction.gameObject.GetChild(indexOfChild++).GetComponent<Parameter>();
+				setParameterData(parameter, paramData);
 			}else{
 				Debug.LogError("Unknown parameter key\"" + argumentKey + "\"");
 			}
 			indexOfWhereImAt+= indexOfArgument + 1;
-			indexOfArgument = line.IndexOf ('%',indexOfArgument+1);
+			indexOfArgument = line.IndexOf ('$',indexOfArgument+1);
 		}
+		instruction.reset ();
 	}
 
 	private Instruction createInstructionObject(string line, float x, float y){
-		int indexOfArgument = line.IndexOf ('%');
+		int indexOfArgument = line.IndexOf ('$');
 		while (indexOfArgument != -1) {
 			string argumentKey 	= line.Substring(indexOfArgument,3);
-			line = line.Replace(argumentKey,"%v");
-			indexOfArgument = line.IndexOf ('%',indexOfArgument+1);
+			line = line.Replace(argumentKey,"$v");
+			indexOfArgument = line.IndexOf ('$',indexOfArgument+1);
 		}
 
 		GameObject go = GameObjectFactory.createGameObject (line,this.statements);
@@ -109,49 +113,26 @@ public class FileToLevelLoader {
 		return instruction;
 	}
 
-	private void createStatement(string line, float x, float y){
-		line = line.Replace('_',' ');
-		GameObject obj = null;
-		int indexOfArgument = line.IndexOf ('%');
-		if (indexOfArgument == -1) {
-			obj = createCommentStatement (line);
-		} else {
-			string key = line.Substring(indexOfArgument).TrimEnd(';');
-			string[] param = parameters[key].Split(' ');
-			string type = param[0].ToLower();
-			if(type.Equals("boolean")){
-				line = line.Substring(0,indexOfArgument) + "%v"; 
-				obj = createBooleanStatement (line,param);
+	private void setParameterData(Parameter parameter, string paramData){
+		string[] param = paramData.Split(' ');
+		string type = param[0].ToLower();
+		string value = param[1].ToLower();
+		if(type.Equals("boolean")){
+			parameter.dataType = DataType.BOOLEAN;
+			if(value.StartsWith("true")){
+				parameter.value = new SCBoolean(true);
+			}else if(value.StartsWith("false")){
+				parameter.value = new SCBoolean(false);
 			}else{
-				Debug.LogError("MAPLOADER - ERROR : Unknown parameter type");
+				Debug.LogError("MAPLOADER - ERROR : Unknown parameter value for " + paramData);
 			}
-
+		}else if(type.Equals("integer")){
+			parameter.dataType = DataType.INTEGER;
+			parameter.value = new SCInteger(int.Parse(value));
+		}else{
+			Debug.LogError("MAPLOADER - ERROR : Unknown parameter type for " + paramData);
 		}
-		
-		obj.transform.Translate (x, y, 0);
+		parameter.refresh();
 	}
-
-
-
-	private GameObject createCommentStatement(string line){
-		GameObject obj = GameObjectFactory.createGameObject (line, statements);
-		Statement statement = obj.AddComponent<Statement> ();
-		statement.setText(line);
-		return obj;
-	}
-
-	private GameObject createBooleanStatement(string line,string[] param ){
-		GameObject obj = GameObjectFactory.createGameObject (line, statements);
-		BooleanStatement statement = obj.AddComponent<BooleanStatement> ();
-		if (param [1].ToLower ().Trim ().Equals ("true")) {
-			statement.booleanValue = BooleanValues.TRUE;
-		} else {
-			statement.booleanValue = BooleanValues.FALSE;
-		}
-
-		statement.setText(line);
-		return obj;
-	}
-
 
 }

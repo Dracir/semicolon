@@ -33,23 +33,33 @@ public class Parameter : MonoBehaviour {
 	}
 
 	public void reset(){
+		switch (dataType) {
+		case DataType.BOOLEAN: 
+			this.value = new SCBoolean(false);
+			break;
+		case DataType.INTEGER:
+			this.value = new SCInteger(0);
+			break;
+		}
+
+		refresh ();
+	}
+
+	public void refresh(){
 		TextCollider2D tc = this.GetComponent<TextCollider2D> ();
 
 		switch (dataType) {
 		case DataType.BOOLEAN: 
-			this.value = new SCBoolean(false);
-			this.name = "Bool";
 			tc.color = GameConstantes.instance.booleanValueColor;
+			this.name = "Bool";
 			break;
 		case DataType.INTEGER:
-			this.value = new SCInteger(0);
-			this.name = "Int";
 			tc.color = GameConstantes.instance.integerValueColor;
+			this.name = "Int";
 			break;
 		}
 
 		tc.text = this.value.ToString ();
-		this.transform.parent.GetComponent<Instruction> ().resetTexts();
 	}
 
 

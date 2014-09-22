@@ -31,28 +31,28 @@ public class Instruction : MonoBehaviour {
 
 
 	void fixChildAmount(){
-		var children = new List<GameObject>();
-
-		foreach (Transform child in transform) children.Add(child.gameObject);
-		
-		int nbParam = this.instructionText.Split (new char[]{'%'}).Length - 1;
-		if (nbParam > children.Count) {
+		int childCount = this.GetChildCount();
+		int nbParam = this.instructionText.Split (new char[]{'$'}).Length - 1;
+		if (nbParam > childCount) {
 			var newchildren = new List<Parameter>();
-			for (int i = children.Count; i < nbParam; i++) {
+			for (int i = childCount; i < nbParam; i++) {
 				var newChild = addChild();
 				newchildren.Add(newChild);
  			}
 			foreach (Parameter newC in newchildren) {
 				newC.reset();
 			}
-		} else if (nbParam < children.Count) {
-			for (int i = nbParam; i < children.Count; i++) {
+		} else if (nbParam < childCount) {
+			GameObject[] children = this.GetChildren();
+			for (int i = nbParam; i < childCount; i++) {
+
 				GameObjectUtils.Destroy( children[i] );
 			}
 		}
 		/*
 		children.ForEach(child => GameObjectUtils.Destroy(child));*/
 	}
+
 
 	Parameter addChild(){
 		GameObject go = GameObjectFactory.createGameObject ("Parameter", this.transform);
@@ -68,7 +68,7 @@ public class Instruction : MonoBehaviour {
 
 	public void resetTexts (){
 		string remainingText = instructionText;
-		int indexOfValueTag = remainingText.IndexOf("%v");
+		int indexOfValueTag = remainingText.IndexOf("$v");
 		int x = 0;
 		int childIndex = 0;
 		textToShow = "";
@@ -77,7 +77,7 @@ public class Instruction : MonoBehaviour {
 			textToShow += remainingText.Substring(0,indexOfValueTag);
 			remainingText 		= remainingText.Substring(indexOfValueTag+2);
 			x += indexOfValueTag;
-			indexOfValueTag 	= remainingText.IndexOf("%v");
+			indexOfValueTag 	= remainingText.IndexOf("$v");
 			
 			GameObject go = this.GetChild(childIndex);
 			go.transform.SetPosition(new Vector3(x + this.transform.position.x,this.transform.position.y,0));
