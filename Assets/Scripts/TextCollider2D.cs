@@ -46,6 +46,7 @@ public class TextCollider2D : MonoBehaviour {
 			pFontStyle = fontStyle;
 			UpdateTextMesh();
 		}
+		Preview();
 	}
 
 	void Update() {
@@ -133,6 +134,10 @@ public class TextCollider2D : MonoBehaviour {
 			}
 		}                         
 		childrenTextMesh = childrenTextMeshList.ToArray();
+		
+		if (textMesh == null){
+			textMesh = ownTextMesh;
+		}
 		
 		if (textMesh != null) {
 			textMesh.anchor = TextAnchor.UpperLeft;
