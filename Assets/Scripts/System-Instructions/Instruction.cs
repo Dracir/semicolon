@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(TextMesh))]
 [RequireComponent(typeof(TextCollider2D))]
+[RequireComponent(typeof(TextMesh))]
 [System.Serializable]
 public class Instruction : MonoBehaviour {
 
@@ -23,7 +23,6 @@ public class Instruction : MonoBehaviour {
 	
 	public void reset(){
 		this.name = instructionText;
-
 		fixChildAmount();
 		resetTexts ();
 		notifyObservers ();
@@ -31,6 +30,7 @@ public class Instruction : MonoBehaviour {
 
 
 	void fixChildAmount(){
+
 		int childCount = this.GetChildCount();
 		int nbParam = this.instructionText.Split (new char[]{'$'}).Length - 1;
 		if (nbParam > childCount) {
@@ -56,7 +56,6 @@ public class Instruction : MonoBehaviour {
 
 	Parameter addChild(){
 		GameObject go = GameObjectFactory.createGameObject ("Parameter", this.transform);
-		
 		Parameter parameter = go.AddComponent<Parameter> ();
 		TextMesh textMesh = go.GetComponent<TextMesh> ();
 		
@@ -83,10 +82,13 @@ public class Instruction : MonoBehaviour {
 			go.transform.SetPosition(new Vector3(x + this.transform.position.x,this.transform.position.y,0));
 
 			TextCollider2D tc = go.GetComponent<TextCollider2D>();
-			x+= tc.text.Length;
-			string spaces = createSpaces(tc.text.Length);
-			textToShow += spaces;
-			
+			if(tc != null){
+				x+= tc.text.Length;
+				string spaces = createSpaces(tc.text.Length);
+				textToShow += spaces;
+			}else{
+				Debug.LogWarning("Instruction wierd stuff");
+			}
 			childIndex++;
 		}
 		
