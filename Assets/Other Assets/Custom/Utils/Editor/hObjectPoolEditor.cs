@@ -9,6 +9,10 @@ public class hObjectPoolEditor : CustomEditorBase {
 	hObjectPool objectPool;
 	bool objectPoolsShowing = true;
 	
+	void OnEnable(){
+		((hObjectPool) target).SetExecutionOrder(-12);
+	}
+	
     public override void OnInspectorGUI(){
 		objectPool = (hObjectPool) target;
 		

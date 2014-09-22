@@ -20,7 +20,7 @@ public class Spawner : MonoBehaviour {
 	int[] poolIDs;
 	Dictionary<string, int> spawnDict;
 	
-	public virtual void Start() {
+	public virtual void Awake() {
 		poolIDs = hObjectPool.Instance.Add(objectsToSpawn);
 		BuildSpawnDict();
 	}

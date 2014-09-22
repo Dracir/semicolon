@@ -36,9 +36,6 @@ public class TextCollider2D : MonoBehaviour {
 			}
 		}
 		else {
-			if (string.IsNullOrEmpty(text)){
-				text = textMesh.text;
-			}
 			meshRenderer = textMesh.GetOrAddComponent<MeshRenderer>();
 			boxColliders = new List<BoxCollider2D>(textMesh.GetComponents<BoxCollider2D>());
 			if (font == null)

@@ -11,36 +11,32 @@ using System.Runtime.Serialization.Formatters.Binary;
 static public class Extensions {
 
 	#region Int
-	static public int Round(this int i, double step = 1) {
-		return step == 0 ? i : (int)(Mathf.Round((float)(i * (1D / step))) / (1D / step));
+	static public float Pow(this int i, double power = 2){
+		return Mathf.Pow(i, (float)power);
 	}
 	
-	static public float[] ToFloatArray(this int[] intArray) {
-		float[] floatArray = new float[intArray.Length];
-		for (int i = 0; i < intArray.Length; i++) {
-			floatArray[i] = (float)intArray[i];
-		}
-		return floatArray;
+	static public int Round(this int i, double step = 1) {
+		return step <= 0 ? i : (int)(Mathf.Round((float)(i * (1D / step))) / (1D / step));
 	}
 	#endregion
 	
 	#region Float
+	static public float Pow(this float f, double power = 2){
+		return Mathf.Pow(f, (float)power);
+	}
+	
 	static public float Round(this float f, double step = 1) {
-		return step == 0 ? f : (float)(Mathf.Round((float)(f * (1D / step))) / (1D / step));
+		return step <= 0 ? f : (float)(Mathf.Round((float)(f * (1D / step))) / (1D / step));
 	}
 	#endregion
 			
 	#region Double
-	static public double Round(this double d, double step = 1) {
-		return step == 0 ? d : (double)(Mathf.Round((float)(d * (1D / step))) / (1D / step));
+	static public float Pow(this double d, double power = 2){
+		return Mathf.Pow((float)d, (float)power);
 	}
 	
-	static public float[] ToFloatArray(this double[] doubleArray) {
-		float[] floatArray = new float[doubleArray.Length];
-		for (int i = 0; i < doubleArray.Length; i++) {
-			floatArray[i] = (float)doubleArray[i];
-		}
-		return floatArray;
+	static public double Round(this double d, double step = 1) {
+		return step <= 0 ? d : (double)(Mathf.Round((float)(d * (1D / step))) / (1D / step));
 	}
 	#endregion
 	
@@ -170,10 +166,10 @@ static public class Extensions {
 		return new Rect(0, 0, width, height);
 	}
 	
-	static public GUIContent[] ToGUIContents(this string[] labels, char labelTooltipSeparator = '\0') {
-		GUIContent[] guiContents = new GUIContent[labels.Length];
+	static public GUIContent[] ToGUIContents(this IList<string> labels, char labelTooltipSeparator = '\0') {
+		GUIContent[] guiContents = new GUIContent[labels.Count];
 		
-		for (int i = 0; i < labels.Length; i++) {
+		for (int i = 0; i < labels.Count; i++) {
 			if (labelTooltipSeparator != '\0') {
 				string[] split = labels[i].Split(labelTooltipSeparator);
 				if (split.Length == 1)
@@ -189,67 +185,35 @@ static public class Extensions {
 		return guiContents;
 	}
 	
-	static public GUIContent[] ToGUIContents(this string[] labels, string[] tooltips) {
-		GUIContent[] guiContents = new GUIContent[labels.Length];
+	static public GUIContent[] ToGUIContents(this IList<string> labels, IList<string> tooltips) {
+		GUIContent[] guiContents = new GUIContent[labels.Count];
 		
-		for (int i = 0; i < labels.Length; i++) {
+		for (int i = 0; i < labels.Count; i++) {
 			guiContents[i] = new GUIContent(labels[i], tooltips[i]);
 		}
 		return guiContents;
 	}
+	
+	static public Dictionary<T, U> DeserializeXml<T, U>(this string data) {
+		string[] keysValuesData = data.Split('£');
+		T[] keys = keysValuesData[0].DeserializeXml<T[]>();
+		U[] values = keysValuesData[1].DeserializeXml<U[]>();
+		Dictionary<T, U> dictionary = new Dictionary <T, U>();
+		
+		for (int i = 0; i < keys.Length; i++) {
+			dictionary[keys[i]] = values[i];
+		}
+		return dictionary;
+	}
 	#endregion
 	
 	#region Array
-	static public int[] ToIntArray<T>(this T[] array) {
-		int[] intArray = new int[array.Length];
-		for (int i = 0; i < array.Length; i++) {
-			intArray[i] = array[i].GetHashCode();
-		}
-		return intArray;
-	}
-	
-	static public float[] ToFloatArray<T>(this T[] array) {
-		float[] floatArray = new float[array.Length];
-		for (int i = 0; i < array.Length; i++) {
-			floatArray[i] = (float)(array[i].GetHashCode());
-		}
-		return floatArray;
-	}
-	
-	static public double[] ToDoubleArray<T>(this T[] array) {
-		double[] doubleArray = new double[array.Length];
-		for (int i = 0; i < array.Length; i++) {
-			doubleArray[i] = (double)(array[i].GetHashCode());
-		}
-		return doubleArray;
-	}
-	
-	static public string[] ToStringArray<T>(this T[] array) {
-		string[] stringArray = new string[array.Length];
-		for (int i = 0; i < array.Length; i++) {
-			stringArray[i] = array[i].ToString();
-		}
-		return stringArray;
-	}
-	
 	static public bool Contains<T>(this T[] array, T targetObject) {
 		return array.Any(t => t.Equals(targetObject));
 	}
 	
 	static public bool Contains<T>(this T[] array, Type type) {
 		return typeof(T) == typeof(Type) ? array.Any(t => t.Equals(type)) : array.Any(t => t.GetType() == type);
-	}
-	
-	static public T[] Slice<T>(this T[] array, int startIndex) {
-		return array.Slice(startIndex, array.Length - 1);
-	}
-	
-	static public T[] Slice<T>(this T[] array, int startIndex, int endIndex) {
-		T[] slicedArray = new T[endIndex - startIndex];
-		for (int i = 0; i < endIndex - startIndex; i++) {
-			slicedArray[i] = array[i + startIndex];
-		}
-		return slicedArray;
 	}
 	
 	static public T Pop<T>(this T[] array, int index, out T[] remaining) {
@@ -279,14 +243,58 @@ static public class Extensions {
 	}
 	
 	static public T Last<T>(this IList<T> array) {
-		return array != null ? array[array.Count - 1] : default(T);
+		return array != null && array.Count != 0 ? array[array.Count - 1] : default(T);
 	}
 	
 	static public T GetRandom<T>(this IList<T> array) {
 		if (array == null || array.Count == 0)
 			return default(T);
 		
-		return array[UnityEngine.Random.Range(0, array.Count - 1)];
+		return array[UnityEngine.Random.Range(0, array.Count)];
+	}
+	
+	static public T[] Slice<T>(this T[] array, int startIndex) {
+		return array.Slice(startIndex, array.Length - 1);
+	}
+	
+	static public T[] Slice<T>(this T[] array, int startIndex, int endIndex) {
+		T[] slicedArray = new T[endIndex - startIndex];
+		for (int i = 0; i < endIndex - startIndex; i++) {
+			slicedArray[i] = array[i + startIndex];
+		}
+		return slicedArray;
+	}
+	
+	static public int[] ToIntArray<T>(this IList<T> array) {
+		int[] intArray = new int[array.Count];
+		for (int i = 0; i < array.Count; i++) {
+			intArray[i] = array[i].GetHashCode();
+		}
+		return intArray;
+	}
+	
+	static public float[] ToFloatArray<T>(this IList<T> array) {
+		float[] floatArray = new float[array.Count];
+		for (int i = 0; i < array.Count; i++) {
+			floatArray[i] = (float)(array[i].GetHashCode());
+		}
+		return floatArray;
+	}
+	
+	static public double[] ToDoubleArray<T>(this IList<T> array) {
+		double[] doubleArray = new double[array.Count];
+		for (int i = 0; i < array.Count; i++) {
+			doubleArray[i] = (double)(array[i].GetHashCode());
+		}
+		return doubleArray;
+	}
+	
+	static public string[] ToStringArray<T>(this IList<T> array) {
+		string[] stringArray = new string[array.Count];
+		for (int i = 0; i < array.Count; i++) {
+			stringArray[i] = array[i].ToString();
+		}
+		return stringArray;
 	}
 	#endregion
 
@@ -331,24 +339,38 @@ static public class Extensions {
 		dictionary[key1] = value2;
 		dictionary[key2] = value1;
 	}
+	
+	static public void GetOrderedKeysValues<T, U>(this IDictionary<T, U> dictionary, out List<T> keys, out List<U> values) {
+		keys = new List<T>(dictionary.Keys);
+		values = new List<U>();
+		for (int i = 0; i < keys.Count; i++) {
+			values.Add(dictionary[keys[i]]);
+		}
+	}
+	
+	static public void GetOrderedKeysValues<T, U>(this IDictionary<T, U> dictionary, out T[] keys, out U[] values) {
+		List<T> keyList = new List<T>();
+		List<U> valueList = new List<U>();
+		dictionary.GetOrderedKeysValues(out keyList, out valueList);
+		keys = keyList.ToArray();
+		values = valueList.ToArray();
+	}
+	
+	static public string SerializeXml<T, U>(this IDictionary<T, U> dictionary){
+		T[] keys;
+		U[] values;
+		dictionary.GetOrderedKeysValues(out keys, out values);
+		return keys.SerializeXml() + '£' + values.SerializeXml();
+	}
 	#endregion
 	
-	#region Vector
+	#region Vector2
 	static public bool Intersects(this Vector2 vector, Rect rect) {
 		return vector.x >= rect.xMin && vector.x <= rect.xMax && vector.y >= rect.yMin && vector.y <= rect.yMax;
 	}
-	
-	static public Vector2 Round(this Vector2 vector, double step = 1) {
-		if (step == 0)
-			return vector;
-		vector.x = (float)(Mathf.Round((float)(vector.x * (1D / step))) / (1D / step));
-		vector.y = (float)(Mathf.Round((float)(vector.y * (1D / step))) / (1D / step));
-		return vector;
-	}
 		
 	static public Vector2 Rotate(this Vector2 vector, float angle) {
-		Vector3 vec = new Vector3(vector.x, vector.y, 0).Rotate(angle);
-		return new Vector2(vec.x, vec.y);
+		return ((Vector3)vector).Rotate(angle);
 	}
 	
 	static public Vector2 SquareClamp(this Vector2 vector, float size = 1) {
@@ -361,15 +383,84 @@ static public class Extensions {
 		return new Vector2(v.x, v.y);
 	}
 	
-	static public Vector3 Round(this Vector3 vector, double step = 1) {
-		if (step == 0)
-			return vector;
-		vector.x = (float)(Mathf.Round((float)(vector.x * (1D / step))) / (1D / step));
-		vector.y = (float)(Mathf.Round((float)(vector.y * (1D / step))) / (1D / step));
-		vector.z = (float)(Mathf.Round((float)(vector.z * (1D / step))) / (1D / step));
-		return vector;
+	static public Vector2 Mult(this Vector2 vector, Vector2 otherVector, string axis) {
+		return ((Vector4)vector).Mult(otherVector, axis);
 	}
 	
+	static public Vector2 Mult(this Vector2 vector, Vector2 otherVector) {
+		return vector.Mult(otherVector, "XY");
+	}
+	
+	static public Vector2 Mult(this Vector2 vector, Vector3 otherVector, string axis) {
+		return vector.Mult((Vector2)otherVector, axis);
+	}
+	
+	static public Vector2 Mult(this Vector2 vector, Vector3 otherVector) {
+		return vector.Mult((Vector2)otherVector, "XY");
+	}
+	
+	static public Vector2 Mult(this Vector2 vector, Vector4 otherVector, string axis) {
+		return vector.Mult((Vector2)otherVector, axis);
+	}
+	
+	static public Vector2 Mult(this Vector2 vector, Vector4 otherVector) {
+		return vector.Mult((Vector2)otherVector, "XY");
+	}
+	
+	static public Vector2 Div(this Vector2 vector, Vector2 otherVector, string axis) {
+		return ((Vector4)vector).Div(otherVector, axis);
+	}
+	
+	static public Vector2 Div(this Vector2 vector, Vector2 otherVector) {
+		return vector.Div(otherVector, "XY");
+	}
+	
+	static public Vector2 Div(this Vector2 vector, Vector3 otherVector, string axis) {
+		return vector.Div((Vector2)otherVector, axis);
+	}
+	
+	static public Vector2 Div(this Vector2 vector, Vector3 otherVector) {
+		return vector.Div((Vector2)otherVector, "XY");
+	}
+	
+	static public Vector2 Div(this Vector2 vector, Vector4 otherVector, string axis) {
+		return vector.Div((Vector2)otherVector, axis);
+	}
+	
+	static public Vector2 Div(this Vector2 vector, Vector4 otherVector) {
+		return vector.Div((Vector2)otherVector, "XY");
+	}
+	
+	static public Vector2 Pow(this Vector2 vector, double power, string axis) {
+		return ((Vector4)vector).Pow(power, axis);
+	}
+	
+	static public Vector2 Pow(this Vector2 vector, double power) {
+		return vector.Pow(power, "XY");
+	}
+	
+	static public Vector2 Round(this Vector2 vector, double step, string axis) {
+		return ((Vector4)vector).Round(step, axis);
+	}
+	
+	static public Vector2 Round(this Vector2 vector, double step) {
+		return vector.Round(step, "XY");
+	}
+	
+	static public Vector2 Round(this Vector2 vector) {
+		return vector.Round(1, "XY");
+	}
+	
+	static public float Average(this Vector2 vector, string axis) {
+		return ((Vector4)vector).Average(axis);
+	}
+	
+	static public float Average(this Vector2 vector) {
+		return ((Vector4)vector).Average("XY");
+	}
+	#endregion
+	
+	#region Vector3
 	static public Vector3 Rotate(this Vector3 vector, float angle) {
 		return vector.Rotate(angle, Vector3.forward);
 	}
@@ -398,26 +489,254 @@ static public class Extensions {
 		return vector;
 	}
 	
-	static public Vector4 Round(this Vector4 vector, double step = 1) {
-		if (step == 0)
-			return vector;
-		vector.x = (float)(Mathf.Round((float)(vector.x * (1D / step))) / (1D / step));
-		vector.y = (float)(Mathf.Round((float)(vector.y * (1D / step))) / (1D / step));
-		vector.z = (float)(Mathf.Round((float)(vector.z * (1D / step))) / (1D / step));
-		vector.w = (float)(Mathf.Round((float)(vector.w * (1D / step))) / (1D / step));
+	static public Vector3 Mult(this Vector3 vector, Vector3 otherVector, string axis) {
+		return ((Vector4)vector).Mult(otherVector, axis);
+	}
+	
+	static public Vector3 Mult(this Vector3 vector, Vector3 otherVector) {
+		return vector.Mult(otherVector, "XYZ");
+	}
+	
+	static public Vector3 Mult(this Vector3 vector, Vector2 otherVector, string axis) {
+		return vector.Mult((Vector3)otherVector, axis);
+	}
+	
+	static public Vector3 Mult(this Vector3 vector, Vector2 otherVector) {
+		return vector.Mult((Vector3)otherVector, "XY");
+	}
+	
+	static public Vector3 Mult(this Vector3 vector, Vector4 otherVector, string axis) {
+		return vector.Mult((Vector3)otherVector, axis);
+	}
+	
+	static public Vector3 Mult(this Vector3 vector, Vector4 otherVector) {
+		return vector.Mult((Vector3)otherVector, "XYZ");
+	}
+	
+	static public Vector3 Div(this Vector3 vector, Vector3 otherVector, string axis) {
+		return ((Vector4)vector).Div(otherVector, axis);
+	}
+	
+	static public Vector3 Div(this Vector3 vector, Vector3 otherVector) {
+		return vector.Div(otherVector, "XYZ");
+	}
+	
+	static public Vector3 Div(this Vector3 vector, Vector2 otherVector, string axis) {
+		return vector.Div((Vector3)otherVector, axis);
+	}
+	
+	static public Vector3 Div(this Vector3 vector, Vector2 otherVector) {
+		return vector.Div((Vector3)otherVector, "XY");
+	}
+	
+	static public Vector3 Div(this Vector3 vector, Vector4 otherVector, string axis) {
+		return vector.Div((Vector3)otherVector, axis);
+	}
+	
+	static public Vector3 Div(this Vector3 vector, Vector4 otherVector) {
+		return vector.Div((Vector3)otherVector, "XYZ");
+	}
+	
+	static public Vector3 Pow(this Vector3 vector, double power, string axis) {
+		return ((Vector4)vector).Pow(power, axis);
+	}
+	
+	static public Vector3 Pow(this Vector3 vector, double power) {
+		return vector.Pow(power, "XYZ");
+	}
+	
+	static public Vector3 Round(this Vector3 vector, double step, string axis) {
+		return ((Vector4)vector).Round(step, axis);
+	}
+	
+	static public Vector3 Round(this Vector3 vector, double step) {
+		return vector.Round(step, "XYZ");
+	}
+	
+	static public Vector3 Round(this Vector3 vector) {
+		return vector.Round(1, "XYZ");
+	}
+	
+	static public float Average(this Vector3 vector, string axis) {
+		return ((Vector4)vector).Average(axis);
+	}
+	
+	static public float Average(this Vector3 vector) {
+		return ((Vector4)vector).Average("XYZ");
+	}
+	#endregion
+	
+	#region Vector4
+	static public Vector4 Mult(this Vector4 vector, Vector4 otherVector, string axis) {
+		if (axis.Contains("X")) {
+			vector.x *= otherVector.x;
+		}
+		if (axis.Contains("Y")) {
+			vector.y *= otherVector.y;
+		}
+		if (axis.Contains("Z")) {
+			vector.z *= otherVector.z;
+		}
+		if (axis.Contains("W")) {
+			vector.w *= otherVector.w;
+		}
 		return vector;
+	}
+	
+	static public Vector4 Mult(this Vector4 vector, Vector4 otherVector) {
+		return vector.Mult(otherVector, "XYZW");
+	}
+	
+	static public Vector4 Mult(this Vector4 vector, Vector2 otherVector, string axis) {
+		return vector.Mult((Vector4)otherVector, axis);
+	}
+	
+	static public Vector4 Mult(this Vector4 vector, Vector2 otherVector) {
+		return vector.Mult((Vector4)otherVector, "XY");
+	}
+	
+	static public Vector4 Mult(this Vector4 vector, Vector3 otherVector, string axis) {
+		return vector.Mult((Vector4)otherVector, axis);
+	}
+	
+	static public Vector4 Mult(this Vector4 vector, Vector3 otherVector) {
+		return vector.Mult((Vector4)otherVector, "XYZ");
+	}
+	
+	static public Vector4 Div(this Vector4 vector, Vector4 otherVector, string axis) {
+		if (axis.Contains("X")) {
+			vector.x /= otherVector.x;
+		}
+		if (axis.Contains("Y")) {
+			vector.y /= otherVector.y;
+		}
+		if (axis.Contains("Z")) {
+			vector.z /= otherVector.z;
+		}
+		if (axis.Contains("W")) {
+			vector.w /= otherVector.w;
+		}
+		return vector;
+	}
+	
+	static public Vector4 Div(this Vector4 vector, Vector4 otherVector) {
+		return vector.Div(otherVector, "XYZW");
+	}
+	
+	static public Vector4 Div(this Vector4 vector, Vector2 otherVector, string axis) {
+		return vector.Div((Vector4)otherVector, axis);
+	}
+	
+	static public Vector4 Div(this Vector4 vector, Vector2 otherVector) {
+		return vector.Div((Vector4)otherVector, "XY");
+	}
+	
+	static public Vector4 Div(this Vector4 vector, Vector3 otherVector, string axis) {
+		return vector.Div((Vector4)otherVector, axis);
+	}
+	
+	static public Vector4 Div(this Vector4 vector, Vector3 otherVector) {
+		return vector.Div((Vector4)otherVector, "XYZ");
+	}
+	
+	static public Vector4 Pow(this Vector4 vector, double power, string axis) {
+		if (axis.Contains("X")) {
+			vector.x = Mathf.Pow(vector.x, (float)power);
+		}
+		if (axis.Contains("Y")) {
+			vector.y = Mathf.Pow(vector.y, (float)power);
+		}
+		if (axis.Contains("Z")) {
+			vector.z = Mathf.Pow(vector.z, (float)power);
+		}
+		if (axis.Contains("W")) {
+			vector.w = Mathf.Pow(vector.w, (float)power);
+		}
+		return vector;
+	}
+	
+	static public Vector4 Pow(this Vector4 vector, double power) {
+		return vector.Pow(power, "XYZW");
+	}
+	
+	static public Vector4 Round(this Vector4 vector, double step, string axis) {
+		if (step <= 0)
+			return vector;
+		if (axis.Contains("X")) {
+			vector.x = (float)(Mathf.Round((float)(vector.x * (1D / step))) / (1D / step));
+		}
+		if (axis.Contains("Y")) {
+			vector.y = (float)(Mathf.Round((float)(vector.y * (1D / step))) / (1D / step));
+		}
+		if (axis.Contains("Z")) {
+			vector.z = (float)(Mathf.Round((float)(vector.z * (1D / step))) / (1D / step));
+		}
+		if (axis.Contains("W")) {
+			vector.w = (float)(Mathf.Round((float)(vector.w * (1D / step))) / (1D / step));
+		}
+		return vector;
+	}
+	
+	static public Vector4 Round(this Vector4 vector, double step) {
+		return vector.Round(step, "XYZW");
+	}
+	
+	static public Vector4 Round(this Vector4 vector) {
+		return vector.Round(1, "XYZW");
+	}
+	
+	static public float Average(this Vector4 vector, string axis) {
+		float average = 0;
+		int axisCount = 0;
+		if (axis.Contains("X")) {
+			average += vector.x;
+			axisCount += 1;
+		}
+		if (axis.Contains("Y")) {
+			average += vector.y;
+			axisCount += 1;
+		}
+		if (axis.Contains("Z")) {
+			average += vector.z;
+			axisCount += 1;
+		}
+		if (axis.Contains("W")) {
+			average += vector.w;
+			axisCount += 1;
+		}
+		return average / axisCount;
+	}
+	
+	static public float Average(this Vector4 vector) {
+		return ((Vector4)vector).Average("XYZW");
 	}
 	#endregion
 	
 	#region Quaternion
-	static public Quaternion Round(this Quaternion quaternion, double step = 1) {
-		if (step == 0)
+	static public Quaternion Round(this Quaternion quaternion, double step, string axis) {
+		if (step <= 0)
 			return quaternion;
-		quaternion.x = (float)(Mathf.Round((float)(quaternion.x * (1D / step))) / (1D / step));
-		quaternion.y = (float)(Mathf.Round((float)(quaternion.y * (1D / step))) / (1D / step));
-		quaternion.z = (float)(Mathf.Round((float)(quaternion.z * (1D / step))) / (1D / step));
-		quaternion.w = (float)(Mathf.Round((float)(quaternion.w * (1D / step))) / (1D / step));
+		if (axis.Contains("X")) {
+			quaternion.x = (float)(Mathf.Round((float)(quaternion.x * (1D / step))) / (1D / step));
+		}
+		if (axis.Contains("Y")) {
+			quaternion.y = (float)(Mathf.Round((float)(quaternion.y * (1D / step))) / (1D / step));
+		}
+		if (axis.Contains("Z")) {
+			quaternion.z = (float)(Mathf.Round((float)(quaternion.z * (1D / step))) / (1D / step));
+		}
+		if (axis.Contains("W")) {
+			quaternion.w = (float)(Mathf.Round((float)(quaternion.w * (1D / step))) / (1D / step));
+		}
 		return quaternion;
+	}
+	
+	static public Quaternion Round(this Quaternion quaternion, double step) {
+		return quaternion.Round(step, "XYZW");
+	}
+	
+	static public Quaternion Round(this Quaternion quaternion) {
+		return quaternion.Round(1, "XYZW");
 	}
 	
 	static public Quaternion Pow(this Quaternion quaternion, float power) {
@@ -447,14 +766,80 @@ static public class Extensions {
 	#endregion
 	
 	#region Color
-	static public Color Round(this Color c, double step = 1) {
-		if (step == 0)
-			return c;
-		c.r = (float)(Mathf.Round((float)(c.r * (1D / step))) / (1D / step));
-		c.g = (float)(Mathf.Round((float)(c.g * (1D / step))) / (1D / step));
-		c.b = (float)(Mathf.Round((float)(c.b * (1D / step))) / (1D / step));
-		c.a = (float)(Mathf.Round((float)(c.a * (1D / step))) / (1D / step));
-		return c;
+	static public Color Mult(this Color color, Color otherColor, string channels) {
+		return ((Vector4)color).Mult((Vector4)otherColor, HelperFunctions.ColorChannelsToVectorAxis(channels));
+	}
+	
+	static public Color Mult(this Color color, Color otherColor) {
+		return color.Mult(otherColor, "RGBA");
+	}
+	
+	static public Color Div(this Color color, Color otherColor, string channels) {
+		return ((Vector4)color).Div((Vector4)otherColor, HelperFunctions.ColorChannelsToVectorAxis(channels));
+	}
+	
+	static public Color Div(this Color color, Color otherColor) {
+		return color.Div(otherColor, "RGBA");
+	}
+	
+	static public Color Pow(this Color color, double power, string channels) {
+		return ((Vector4)color).Pow(power, HelperFunctions.ColorChannelsToVectorAxis(channels));
+	}
+	
+	static public Color Pow(this Color color, double power) {
+		return color.Pow(power, "RGBA");
+	}
+	
+	static public Color Round(this Color color, double step, string channels) {
+		if (step <= 0)
+			return color;
+		if (channels.Contains("R")) {
+			color.r = (float)(Mathf.Round((float)(color.r * (1D / step))) / (1D / step));
+		}
+		if (channels.Contains("G")) {
+			color.g = (float)(Mathf.Round((float)(color.g * (1D / step))) / (1D / step));
+		}
+		if (channels.Contains("B")) {
+			color.b = (float)(Mathf.Round((float)(color.b * (1D / step))) / (1D / step));
+		}
+		if (channels.Contains("A")) {
+			color.a = (float)(Mathf.Round((float)(color.a * (1D / step))) / (1D / step));
+		}
+		return color;
+	}
+	
+	static public Color Round(this Color color, double step) {
+		return color.Round(step, "RGBA");
+	}
+	
+	static public Color Round(this Color color) {
+		return color.Round(1, "RGBA");
+	}
+	
+	static public float Average(this Color color, string channels) {
+		float average = 0;
+		int axisCount = 0;
+		if (channels.Contains("R")) {
+			average += color.r;
+			axisCount += 1;
+		}
+		if (channels.Contains("G")) {
+			average += color.g;
+			axisCount += 1;
+		}
+		if (channels.Contains("B")) {
+			average += color.b;
+			axisCount += 1;
+		}
+		if (channels.Contains("A")) {
+			average += color.a;
+			axisCount += 1;
+		}
+		return average / axisCount;
+	}
+	
+	static public float Average(this Color color) {
+		return color.Average("RGBA");
 	}
 	
 	static public Color ToHSV(this Color RGBColor) {
@@ -542,8 +927,8 @@ static public class Extensions {
 	#endregion
 	
 	#region Rect
-	static public Rect Round(this Rect rect, double step = 1) {
-		if (step == 0)
+	static public Rect Round(this Rect rect, double step) {
+		if (step <= 0)
 			return rect;
 		rect.x = (float)(Mathf.Round((float)(rect.x * (1D / step))) / (1D / step));
 		rect.y = (float)(Mathf.Round((float)(rect.y * (1D / step))) / (1D / step));
@@ -552,11 +937,8 @@ static public class Extensions {
 		return rect;
 	}
 	
-	static public void Copy(this Rect rect, Rect otherRect) {
-		rect.x = otherRect.x;
-		rect.y = otherRect.y;
-		rect.width = otherRect.width;
-		rect.height = otherRect.height;
+	static public Rect Round(this Rect rect) {
+		return rect.Round(1);
 	}
 	
 	static public bool Intersects(this Rect rect, Rect otherRect) {
@@ -776,38 +1158,38 @@ static public class Extensions {
 		transform.localScale = flippedScale;
 	}
 	
-	static public void LookAt2D(this Transform transform, Transform target) {
-		transform.LookAt2D(target.position, 0, 100);
+	static public Quaternion LookingAt2D(this Transform transform, Vector3 target, float angleOffset, float damping = 100) {
+		Vector3 targetDirection = (target - transform.position).normalized;
+		float angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg + angleOffset;
+		return Quaternion.Lerp(transform.rotation, Quaternion.AngleAxis(angle, Vector3.forward), damping * Time.deltaTime);
 	}
 	
-	static public void LookAt2D(this Transform transform, Vector3 target) {
-		transform.LookAt2D(target, 0, 100);
-	}
-	
-	static public void LookAt2D(this Transform transform, Transform target, float angleOffset = 0, float damping = 100) {
-		transform.LookAt2D(target.position, angleOffset, damping);
-	}
-	
-	static public void LookAt2D(this Transform transform, Vector3 target, float angleOffset = 0, float damping = 100) {
-		transform.rotation = transform.LookingAt2D(target, angleOffset, damping);
-	}
-	
-	static public Quaternion LookingAt2D(this Transform transform, Transform target) {
-		return transform.LookingAt2D(target.position, 0, 100);
+	static public Quaternion LookingAt2D(this Transform transform, Transform target, float angleOffset, float damping = 100) {
+		return transform.LookingAt2D(target.position, angleOffset, damping);
 	}
 	
 	static public Quaternion LookingAt2D(this Transform transform, Vector3 target) {
 		return transform.LookingAt2D(target, 0, 100);
 	}
 	
-	static public Quaternion LookingAt2D(this Transform transform, Transform target, float angleOffset = 0, float damping = 100) {
-		return transform.LookingAt2D(target.position, angleOffset, damping);
+	static public Quaternion LookingAt2D(this Transform transform, Transform target) {
+		return transform.LookingAt2D(target.position, 0, 100);
 	}
 	
-	static public Quaternion LookingAt2D(this Transform transform, Vector3 target, float angleOffset = 0, float damping = 100) {
-		Vector3 targetDirection = (target - transform.position).normalized;
-		float angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg + angleOffset;
-		return Quaternion.Lerp(transform.rotation, Quaternion.AngleAxis(angle, Vector3.forward), damping * Time.deltaTime);
+	static public void LookAt2D(this Transform transform, Vector3 target, float angleOffset, float damping = 100) {
+		transform.rotation = transform.LookingAt2D(target, angleOffset, damping);
+	}
+	
+	static public void LookAt2D(this Transform transform, Transform target, float angleOffset, float damping = 100) {
+		transform.LookAt2D(target.position, angleOffset, damping);
+	}
+	
+	static public void LookAt2D(this Transform transform, Vector3 target) {
+		transform.LookAt2D(target, 0, 100);
+	}
+	
+	static public void LookAt2D(this Transform transform, Transform target) {
+		transform.LookAt2D(target.position, 0, 100);
 	}
 	
 	static public T GetOrAddComponent<T>(this Transform transform) where T : Component {
@@ -987,11 +1369,11 @@ static public class Extensions {
 	}
 	
 	static public void DisconnectPrefab(this GameObject gameObject) {
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 		if (gameObject.transform.parent == null){
 			UnityEditor.PrefabUtility.DisconnectPrefabInstance(gameObject);
 		}
-		#endif
+#endif
 	}
 	
 	static public void RemoveComponent(this GameObject gameObject, Component component) {
@@ -1078,6 +1460,22 @@ static public class Extensions {
 		}
 		return clonedComponents.ToArray();
 	}
+	
+	static public T GetClosest<T>(this Component source, IList<T> targets) where T : Component {
+		float closestDistance = 1000000;
+		T closestTarget = default(T);
+
+		foreach (T target in targets) {
+			if (Vector3.Distance(source.transform.position, target.transform.position) < closestDistance) {
+				closestTarget = target;
+			}
+		}
+		return closestTarget;
+	}
+	
+	static public T GetClosest<T>(this IList<T> targets, Component source) where T : Component {
+		return source.GetClosest(targets);
+	}
 	#endregion
 	
 	#region MonoBehaviour
@@ -1146,7 +1544,7 @@ static public class Extensions {
 	}
 	
 	static public void SetExecutionOrder(this MonoBehaviour script, int order) {
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 		foreach (UnityEditor.MonoScript s in UnityEditor.MonoImporter.GetAllRuntimeMonoScripts()) {
 			if (s.name == script.GetType().Name){
 				if (UnityEditor.MonoImporter.GetExecutionOrder(s) != order){
@@ -1154,7 +1552,7 @@ static public class Extensions {
 				}
 			}
 		}
-		#endif
+#endif
 	}
 	
 	static public void SetHasChanged(this MonoBehaviour script, Transform transform, bool hasChanged) {

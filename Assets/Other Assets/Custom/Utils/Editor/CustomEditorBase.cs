@@ -35,22 +35,36 @@ public class CustomEditorBase : Editor {
 			EditorUtility.SetDirty(target);
 	}
 	
-	protected bool AddElementFoldOut(SerializedProperty property, bool showing, GUIContent label, AddElementCallback addElementCallback = null) {
-		label.text += string.Format(" ({0})", property.arraySize);
+	protected bool AddElementFoldOut(SerializedProperty property, bool showing, GUIContent label, int overrideArraySize, AddElementCallback addElementCallback = null) {
+		int arraySize = property.arraySize;
+		if (overrideArraySize >= 0) {
+			arraySize = overrideArraySize;
+		}
+		label.text += string.Format(" ({0})", arraySize);
 		
 		EditorGUILayout.BeginHorizontal();
-		if (showing && property.arraySize == 0)
+		if (showing && arraySize == 0) {
 			showing = false;
+		}
 		showing = EditorGUILayout.Foldout(showing, label);
-		if (showing && property.arraySize == 0)
+		if (showing && arraySize == 0) {
 			AddElement(property, addElementCallback);
+		}
 		AddElementButton(property, addElementCallback);
 		EditorGUILayout.EndHorizontal();
 		return showing;
 	}
 	
+	protected bool AddElementFoldOut(SerializedProperty property, bool showing, GUIContent label, AddElementCallback addElementCallback = null) {
+		return AddElementFoldOut(property, showing, label, -1, addElementCallback);
+	}
+	
+	protected bool AddElementFoldOut(SerializedProperty property, bool showing, string label, int overrideArraySize, AddElementCallback addElementCallback = null) {
+		return AddElementFoldOut(property, showing, new GUIContent(label), overrideArraySize, addElementCallback);
+	}
+	
 	protected bool AddElementFoldOut(SerializedProperty property, bool showing, string label, AddElementCallback addElementCallback = null) {
-		return AddElementFoldOut(property, showing, new GUIContent(label), addElementCallback);
+		return AddElementFoldOut(property, showing, new GUIContent(label), -1, addElementCallback);
 	}
 	
 	protected bool LargeAddElementButton(GUIContent label, AddElementCallback addElementCallback = null) {

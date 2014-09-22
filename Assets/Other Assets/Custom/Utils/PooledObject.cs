@@ -21,6 +21,7 @@ public class PooledObject : Hydrogen.Core.ObjectPoolItemBase {
 	}
 
 	public virtual IEnumerator Initialize() {
+		initialized = true;
 		yield return null;
 	}
 	
