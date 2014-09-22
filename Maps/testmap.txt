@@ -18,10 +18,10 @@ $03 integer 3
 |
 |
 |
-|   gravity.set($01,_$bf);
+|   gravity.set($01,_$01_);
 |
 |
 |
-|  test_=_$02;
+|  test_=_$03;
 |
 |

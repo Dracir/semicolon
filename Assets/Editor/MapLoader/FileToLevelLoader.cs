@@ -52,6 +52,7 @@ public class FileToLevelLoader {
 	private void readLevelLine(string line){
 		int x = 0;
 		int indexOfNextSpace;
+		line = line.Replace("\n","").Replace("\r","");
 		while( (indexOfNextSpace = line.IndexOf(' ',x)) != -1){
 			int lenght = indexOfNextSpace - x;
 			if(lenght > 0){
@@ -66,7 +67,7 @@ public class FileToLevelLoader {
 			}
 			
 		}
-		levelY--;
+		levelY-=1.66f;
 	}
 
 
@@ -102,6 +103,7 @@ public class FileToLevelLoader {
 		}
 
 		GameObject go = GameObjectFactory.createGameObject (line,this.statements);
+		go.layer =  LayerMask.NameToLayer("Ignore Raycast");
 		go.transform.Translate (x, y, 0);
 
 		Instruction instruction = go.AddComponent<Instruction> ();
@@ -118,7 +120,7 @@ public class FileToLevelLoader {
 		string type = param[0].ToLower();
 		string value = param[1].ToLower();
 		if(type.Equals("boolean")){
-			parameter.dataType = DataType.BOOLEAN;
+				parameter.dataType = DataType.BOOLEAN;
 			if(value.StartsWith("true")){
 				parameter.value = new SCBoolean(true);
 			}else if(value.StartsWith("false")){

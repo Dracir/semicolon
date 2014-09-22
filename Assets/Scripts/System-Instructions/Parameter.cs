@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(TextMesh))]
 [RequireComponent(typeof(TextCollider2D))]
+[System.Serializable]
 public class Parameter : MonoBehaviour {
 
 	public DataType 	dataType;
@@ -14,17 +15,17 @@ public class Parameter : MonoBehaviour {
 			reset();
 		}
 	}
-	public SCObject value;
 
-	private bool 		inDragMod = false;
-	private Transform 	oldParent;
-	private Vector3 	oldPosition;
+	[SCObjectAttribute()]
+	public SCObject value;
+	private Instruction instruction;
 
 	public List<Observer>		observers		= new List<Observer>();
-
-
+	
 	[Button(label:"Reset",methodName:"reset", NoPrefixLabel=true)]
 	public bool resetBtn;
+	[Button(label:"Refresh",methodName:"refresh", NoPrefixLabel=true)]
+	public bool refreshBtn;
 
 	protected void notifyObservers(){
 		foreach (var observer in observers) {
@@ -65,53 +66,23 @@ public class Parameter : MonoBehaviour {
 
 
 	void Start () {
-		//this.statement = this.gameObject.transform.parent.GetComponent<Statement> ();
+		this.instruction = this.gameObject.transform.parent.GetComponent<Instruction> ();
 	}
 	
 
 	void Update () {
-		if (inDragMod) {
-			Vector3 p = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			this.transform.SetPosition (new Vector3(p.x,p.y,0));		
-		}
+	
 	}
 
-	void OnMouseDown () {
-		startDragMod ();
+
+	public void swapWith(Parameter otherParameter){
+		var tmp = this.value;
+		this.value = otherParameter.value;
+		otherParameter.value = tmp;
+		this.refresh();
+		otherParameter.refresh();
+		instruction.reset ();
+		otherParameter.transform.parent.GetComponent<Instruction> ().reset ();
 	}
 	
-	void OnMouseUp () {
-		
-		this.gameObject.layer =  LayerMask.NameToLayer("Ignore Raycast");
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		RaycastHit hit;
-		if (Physics.Raycast (ray, out hit, 100)) {
-			GameObject other = hit.collider.gameObject;
-			Parameter otherParameter = other.GetComponent<Parameter> ();
-
-			stopDragMod ();
-			if (otherParameter && this.dataType.Equals(otherParameter.dataType)) {
-				//this.statement.swapParam (otherStatement);
-			}
-		} else {
-			stopDragMod ();		
-		}
-	}
-
-	
-	public void startDragMod(){
-		this.oldPosition = this.transform.position;
-		this.oldParent = this.transform.parent;
-		this.transform.parent = null;
-		inDragMod = true;
-	}
-	
-	public void stopDragMod(){
-		inDragMod = false;
-		this.transform.SetPosition (oldPosition);
-		this.transform.parent = oldParent;
-		this.gameObject.layer =  LayerMask.NameToLayer("Default");
-		
-	}
-
 }
