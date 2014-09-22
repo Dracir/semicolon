@@ -1,6 +1,9 @@
 <Params>
-%01 boolean false
-%02 boolean true
+%bt boolean false
+%bf boolean true
+%01 integer 1
+%02 integer 2
+%03 integer 3
 <Level>
 +-----------------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+----------------------+ 
 |                 v       v       v       v       v       v       v       v       v       v       v       v                      | 
@@ -11,11 +14,11 @@
 | 
 | 
 | 
-|   spikes.fall_=_%01; 
+|   spikes.fall_=_%bt; 
 | 
 | 
 | 
-| 
+|   gravity.set(%01,_%bf);
 | 
 | 
 | 

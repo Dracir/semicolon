@@ -1,15 +1,107 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
+[RequireComponent(typeof(TextMesh))]
+[RequireComponent(typeof(TextCollider2D))]
 public class Parameter : MonoBehaviour {
 
-	// Use this for initialization
+	public DataType 	dataType;
+	public DataType 	DataType{
+		get{ return dataType; }
+		set{
+			dataType = value;
+			reset();
+		}
+	}
+	public SCObject value;
+
+	private bool 		inDragMod = false;
+	private Transform 	oldParent;
+	private Vector3 	oldPosition;
+
+	public List<Observer>		observers		= new List<Observer>();
+
+
+	[Button(label:"Reset",methodName:"reset", NoPrefixLabel=true)]
+	public bool resetBtn;
+
+	protected void notifyObservers(){
+		foreach (var observer in observers) {
+			observer.update();	
+		}
+	}
+
+	public void reset(){
+		TextCollider2D tc = this.GetComponent<TextCollider2D> ();
+
+		switch (dataType) {
+		case DataType.BOOLEAN: 
+			this.value = new SCBoolean(false);
+			this.name = "Bool";
+			tc.color = GameConstantes.instance.booleanValueColor;
+			break;
+		case DataType.INTEGER:
+			this.value = new SCInteger(0);
+			this.name = "Int";
+			tc.color = GameConstantes.instance.integerValueColor;
+			break;
+		}
+
+		tc.text = this.value.ToString ();
+		this.transform.parent.GetComponent<Instruction> ().resetTexts();
+	}
+
+
+
 	void Start () {
-	
+		//this.statement = this.gameObject.transform.parent.GetComponent<Statement> ();
 	}
 	
-	// Update is called once per frame
+
 	void Update () {
-	
+		if (inDragMod) {
+			Vector3 p = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			this.transform.SetPosition (new Vector3(p.x,p.y,0));		
+		}
 	}
+
+	void OnMouseDown () {
+		startDragMod ();
+	}
+	
+	void OnMouseUp () {
+		
+		this.gameObject.layer =  LayerMask.NameToLayer("Ignore Raycast");
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit hit;
+		if (Physics.Raycast (ray, out hit, 100)) {
+			GameObject other = hit.collider.gameObject;
+			Parameter otherParameter = other.GetComponent<Parameter> ();
+
+			stopDragMod ();
+			if (otherParameter && this.dataType.Equals(otherParameter.dataType)) {
+				//this.statement.swapParam (otherStatement);
+			}
+		} else {
+			stopDragMod ();		
+		}
+	}
+
+	
+	public void startDragMod(){
+		this.oldPosition = this.transform.position;
+		this.oldParent = this.transform.parent;
+		this.transform.parent = null;
+		inDragMod = true;
+	}
+	
+	public void stopDragMod(){
+		inDragMod = false;
+		this.transform.SetPosition (oldPosition);
+		this.transform.parent = oldParent;
+		this.gameObject.layer =  LayerMask.NameToLayer("Default");
+		
+	}
+
 }

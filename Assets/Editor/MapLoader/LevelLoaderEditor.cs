@@ -13,10 +13,7 @@ public class LevelLoaderEditor : EditorWindow {
 			fileName = EditorUtility.OpenFilePanel("Open Level File","levels","txt");
 		}
 		GUILayout.EndHorizontal ();
-		
-		//MapLoader.inDebugMode = GUILayout.Toggle(MapLoader.inDebugMode, "Is in debug mod (show Plateform Gizmos)");
-		//MapLoader.verbose = GUILayout.Toggle(MapLoader.verbose, "Verbose");
-		//MapLoader.loadGameElement = !GUILayout.Toggle(!MapLoader.loadGameElement, "Load only tiles and AI");
+
 		if (fileName.Length == 0) {
 			GUI.enabled = false;
 			GUILayout.Button("Load Level");

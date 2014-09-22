@@ -4,16 +4,17 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(TextMesh))]
 [RequireComponent(typeof(TextCollider2D))]
+[System.Serializable]
 public class Instruction : MonoBehaviour {
 
-	[SerializeField]
-	public string 				instructionText;
-	public string 				textToShow;
+	public List<Observer>		observers		= new List<Observer>();
 
-	[SerializeField]
-	public List<ParameterData>  parametersData 	= new List<ParameterData>();
-	[SerializeField]
-	public List<Parameter>		parameter 		= new List<Parameter>();
+
+	public string 				instructionText;
+	private string 				textToShow;
+
+	[Button(label:"Reset",methodName:"reset", NoPrefixLabel=true)]
+	public bool resetBtn;
 
 	public void setText(string text){
 		instructionText = text;
@@ -22,16 +23,80 @@ public class Instruction : MonoBehaviour {
 	
 	public void reset(){
 		this.name = instructionText;
-		deleteAllChild ();
-		//tmpFix ();
-		createParameterGameObjects ();
-		setTextToShow ();
-		
+
+		fixChildAmount();
+		resetTexts ();
+		notifyObservers ();
 	}
 
-	void setTextToShow(){
-		TextCollider2D tc = this.GetComponent<TextCollider2D> ();
-		tc.text = textToShow;
+
+	void fixChildAmount(){
+		var children = new List<GameObject>();
+		foreach (Transform child in transform) children.Add(child.gameObject);
+		
+		int nbParam = this.instructionText.Split (new char[]{'%'}).Length - 1;
+		if (nbParam > children.Count) {
+			for (int i = children.Count; i < nbParam; i++) {
+				addChild();
+			}
+		} else if (nbParam < children.Count) {
+			for (int i = nbParam; i < children.Count; i++) {
+				GameObjectUtils.Destroy( children[i] );
+			}
+		}
+		/*
+		children.ForEach(child => GameObjectUtils.Destroy(child));*/
+	}
+
+	void addChild(){
+		GameObject go = GameObjectFactory.createGameObject ("Parameter", this.transform);
+		
+		Parameter parameter = go.AddComponent<Parameter> ();
+		parameter.reset ();
+		TextMesh textMesh = go.GetComponent<TextMesh> ();
+		
+		TextCollider2D textCollider = go.GetComponent<TextCollider2D>();
+		textCollider.textMesh = textMesh;
+		
+		//return go;
+	}
+
+	public void resetTexts (){
+		string remainingText = instructionText;
+		int indexOfValueTag = remainingText.IndexOf("%v");
+		int x = 0;
+		int childIndex = 0;
+		textToShow = "";
+		
+		while(indexOfValueTag != -1){
+			textToShow += remainingText.Substring(0,indexOfValueTag);
+			remainingText 		= remainingText.Substring(indexOfValueTag+2);
+			x += indexOfValueTag;
+			indexOfValueTag 	= remainingText.IndexOf("%v");
+			
+			GameObject go = this.GetChild(childIndex);
+			go.transform.SetPosition(new Vector3(x + this.transform.position.x,this.transform.position.y,0));
+
+			TextCollider2D tc = go.GetComponent<TextCollider2D>();
+			x+= tc.text.Length;
+			string spaces = createSpaces(tc.text.Length);
+			textToShow += spaces;
+			
+			childIndex++;
+		}
+		
+		textToShow += remainingText;
+
+		TextCollider2D instructionTC = this.GetComponent<TextCollider2D> ();
+		instructionTC.text = textToShow;
+		instructionTC.color = GameConstantes.instance.statementColor;
+	}
+
+	
+	protected void notifyObservers(){
+		foreach (var observer in observers) {
+			observer.update();	
+		}
 	}
 
 	string createSpaces(int nb){
@@ -40,107 +105,5 @@ public class Instruction : MonoBehaviour {
 			space+= " ";
 		}
 		return space;
-	}
-	
-	void deleteAllChild(){
-		var children = new List<GameObject>();
-		foreach (Transform child in transform) children.Add(child.gameObject);
-		children.ForEach(child => GameObjectUtils.Destroy(child));
-	}
-
-	/*void tmpFix(){
-		GameObject obj = GameObjectFactory.createGameObject ("TMP FIX", this.transform);
-		
-		TextMesh textMesh = obj.AddComponent<TextMesh> ();
-		
-		TextCollider2D textCollider = gameObject.GetComponent<TextCollider2D>();
-		textCollider.text = instructionText;
-		textCollider.fontSize = 166;
-		textCollider.textMesh = textMesh;
-	}*/
-
-	void createParameterGameObjects(){
-		string remainingText = instructionText;
-		int indexOfValueTag = remainingText.IndexOf("%v");
-		int x = 0;
-		int parameterIndex = 0;
-		textToShow = "";
-
-		while(indexOfValueTag != -1){
-			textToShow += remainingText.Substring(0,indexOfValueTag);
-			remainingText 		= remainingText.Substring(indexOfValueTag+2);
-			x += indexOfValueTag;
-			indexOfValueTag 	= remainingText.IndexOf("%v");
-
-			GameObject go = createParameterGameObject(parameterIndex, x);
-			TextCollider2D tc = go.GetComponent<TextCollider2D>();
-			x+= tc.text.Length;
-			string spaces = createSpaces(tc.text.Length);
-			textToShow += spaces;
-
-			parameterIndex++;
-
-		}
-
-		textToShow += remainingText;
-	}
-
-	GameObject createParameterGameObject (int parameterIndex, int x){
-		if (parameterIndex >= parametersData.Count) {
-			Debug.LogError("Pas assez de parameters NO00b");
-			return null;
-		}
-		GameObject go = null;
-		switch(parametersData[parameterIndex].datatype){
-			case DataType.BOOLEAN:
-			go = createBooleanParameter(parametersData[parameterIndex]);
-			break;
-			case DataType.INTEGER:
-			go = createIntegerParameter(parametersData[parameterIndex]);
-			break;
-		}
-		if(go != null){
-			go.transform.Translate(x,0,0);                                       
-		}
-		return go;
-	}
-
-	GameObject createBooleanParameter(ParameterData data){
-		GameObject go = GameObjectFactory.createGameObject ("Boolean", this.transform);
-		
-		TextMesh textMesh = go.AddComponent<TextMesh> ();
-		
-		TextCollider2D textCollider = go.AddComponent<TextCollider2D>();
-		textCollider.text = "TRUE";
-		textCollider.fontSize = 166;
-		textCollider.textMesh = textMesh;
-
-		return go;
-	}
-	
-	GameObject createIntegerParameter(ParameterData data){
-		GameObject go = GameObjectFactory.createGameObject ("Integer", this.transform);
-	
-		TextMesh textMesh = go.AddComponent<TextMesh> ();
-		
-		TextCollider2D textCollider = go.AddComponent<TextCollider2D>();
-		textCollider.text = "1";
-		textCollider.fontSize = 166;
-		textCollider.textMesh = textMesh;
-		
-		return go;
-	}
-
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-
-
-	
-	// Update is called once per frame
-	void Update () {
-	
 	}
 }

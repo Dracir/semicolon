@@ -7,7 +7,6 @@ public class MoveableArgument : MonoBehaviour {
 
 	private Transform oldParent;
 	private Vector3 oldPosition;
-	// Use this for initialization
 
 	private Statement statement;
 	void Start () {
