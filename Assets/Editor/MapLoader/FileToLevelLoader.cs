@@ -25,7 +25,7 @@ public class FileToLevelLoader {
 				switch(readingMod){
 					case ReadingMod.PARAM: readParam(line); 
 						break;
-					case ReadingMod.LEVEL : readLevelLine(line);
+					case ReadingMod.LEVEL : readLevelLine(line + " ");
 						break;
 				}
 			}
@@ -56,7 +56,7 @@ public class FileToLevelLoader {
 			int lenght = indexOfNextSpace - x;
 			if(lenght > 0){
 				string nextStatement = line.Substring(x,lenght);
-				createStatement(nextStatement,x,levelY);
+				createInstruction(nextStatement,x,levelY);
 				x += lenght;
 			}else{
 				x += 1;
@@ -65,7 +65,46 @@ public class FileToLevelLoader {
 		}
 		levelY--;
 	}
-	
+
+
+	private void createInstruction(string line, float x, float y){
+		line = line.Replace('_',' ');
+
+		Instruction instruction = createInstructionObject(line,x,y);
+
+		int indexOfArgument = line.IndexOf ('%');
+		int indexOfWhereImAt = 0;
+		while (indexOfArgument != -1) {
+			string argumentKey 	= line.Substring(indexOfArgument,3);
+			if(parameters.ContainsKey(argumentKey)){
+				string param 		= parameters[argumentKey];
+				Debug.Log(param);
+			}else{
+				Debug.LogError("Unknown parameter key\"" + argumentKey + "\"");
+			}
+			indexOfWhereImAt+= indexOfArgument + 1;
+			indexOfArgument = line.IndexOf ('%',indexOfArgument+1);
+		}
+	}
+
+	private Instruction createInstructionObject(string line, float x, float y){
+		int indexOfArgument = line.IndexOf ('%');
+		while (indexOfArgument != -1) {
+			string argumentKey 	= line.Substring(indexOfArgument,3);
+			line.Replace(argumentKey,"%v");
+			indexOfArgument = line.IndexOf ('%',indexOfArgument+1);
+		}
+
+		GameObject go = GameObjectFactory.createGameObject (line,this.statements);
+		Instruction instruction = go.AddComponent<Instruction> ();
+		instruction.setText (line);
+
+		TextCollider2D tc = go.GetComponent<TextCollider2D> ();
+		tc.font = GameConstantes.instance.statementFont;
+
+		return instruction;
+	}
+
 	private void createStatement(string line, float x, float y){
 		line = line.Replace('_',' ');
 		GameObject obj = null;
