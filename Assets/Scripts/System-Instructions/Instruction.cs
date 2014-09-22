@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(TextCollider2D))]
 [RequireComponent(typeof(TextMesh))]
+[RequireComponent(typeof(TextCollider2D))]
 [System.Serializable]
 public class Instruction : MonoBehaviour {
 

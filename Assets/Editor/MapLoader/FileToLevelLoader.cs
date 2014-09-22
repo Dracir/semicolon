@@ -116,6 +116,10 @@ public class FileToLevelLoader {
 	}
 
 	private void setParameterData(Parameter parameter, string paramData){
+		if (parameter == null) {
+			Debug.LogWarning("WIERD");
+			return;		
+		}
 		string[] param = paramData.Split(' ');
 		string type = param[0].ToLower();
 		string value = param[1].ToLower();

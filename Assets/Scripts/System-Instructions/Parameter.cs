@@ -17,6 +17,7 @@ public class Parameter : MonoBehaviour {
 	}
 
 	[SCObjectAttribute()]
+	[SerializeField]
 	public SCObject value;
 	private Instruction instruction;
 
@@ -60,7 +61,12 @@ public class Parameter : MonoBehaviour {
 			break;
 		}
 
-		tc.text = this.value.ToString ();
+		if (this.value != null) {
+			tc.text = this.value.ToString ();		
+		} else {
+			tc.text = "!NUULLLL!!!";		
+		}
+
 	}
 
 
