@@ -56,8 +56,11 @@ public class FileToLevelLoader {
 			int lenght = indexOfNextSpace - x;
 			if(lenght > 0){
 				string nextStatement = line.Substring(x,lenght);
-				createInstruction(nextStatement,x,levelY);
-				x += lenght;
+				if(nextStatement.Length != 0){
+					createInstruction(nextStatement,x,levelY);
+					x += lenght;
+				}
+
 			}else{
 				x += 1;
 			}
@@ -78,7 +81,6 @@ public class FileToLevelLoader {
 			string argumentKey 	= line.Substring(indexOfArgument,3);
 			if(parameters.ContainsKey(argumentKey)){
 				string param 		= parameters[argumentKey];
-				Debug.Log(param);
 			}else{
 				Debug.LogError("Unknown parameter key\"" + argumentKey + "\"");
 			}
