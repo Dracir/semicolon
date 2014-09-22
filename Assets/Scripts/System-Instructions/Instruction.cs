@@ -32,12 +32,18 @@ public class Instruction : MonoBehaviour {
 
 	void fixChildAmount(){
 		var children = new List<GameObject>();
+
 		foreach (Transform child in transform) children.Add(child.gameObject);
 		
 		int nbParam = this.instructionText.Split (new char[]{'%'}).Length - 1;
 		if (nbParam > children.Count) {
+			var newchildren = new List<Parameter>();
 			for (int i = children.Count; i < nbParam; i++) {
-				addChild();
+				var newChild = addChild();
+				newchildren.Add(newChild);
+ 			}
+			foreach (Parameter newC in newchildren) {
+				newC.reset();
 			}
 		} else if (nbParam < children.Count) {
 			for (int i = nbParam; i < children.Count; i++) {
@@ -48,17 +54,16 @@ public class Instruction : MonoBehaviour {
 		children.ForEach(child => GameObjectUtils.Destroy(child));*/
 	}
 
-	void addChild(){
+	Parameter addChild(){
 		GameObject go = GameObjectFactory.createGameObject ("Parameter", this.transform);
 		
 		Parameter parameter = go.AddComponent<Parameter> ();
-		parameter.reset ();
 		TextMesh textMesh = go.GetComponent<TextMesh> ();
 		
 		TextCollider2D textCollider = go.GetComponent<TextCollider2D>();
 		textCollider.textMesh = textMesh;
-		
-		//return go;
+
+		return parameter;
 	}
 
 	public void resetTexts (){

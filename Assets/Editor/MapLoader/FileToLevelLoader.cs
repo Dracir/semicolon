@@ -93,7 +93,7 @@ public class FileToLevelLoader {
 		int indexOfArgument = line.IndexOf ('%');
 		while (indexOfArgument != -1) {
 			string argumentKey 	= line.Substring(indexOfArgument,3);
-			line.Replace(argumentKey,"%v");
+			line = line.Replace(argumentKey,"%v");
 			indexOfArgument = line.IndexOf ('%',indexOfArgument+1);
 		}
 
