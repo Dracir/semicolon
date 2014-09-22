@@ -38,6 +38,7 @@ public static class Tether {
 		target = new Vector3(target.x, target.y, body.position.z);
 		Vector3 diff = target - body.position;
 		tetherTarget = diff.normalized * tetherLength + body.position;
+		Semicolon.instance.UpdateTetherPosition((Vector2) tetherTarget);
 	}
 	
 	public static void EndStep() {

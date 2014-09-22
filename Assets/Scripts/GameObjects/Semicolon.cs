@@ -9,6 +9,9 @@ public class Semicolon : Movable {
 	public float hopAfter = 0.16f;
 	
 	private float jumpParamModifier = 1f;
+	
+	public ArgumentSensor tetherObject;
+	
 	public static Semicolon instance;
 	
 	protected override float GetMaxSpeed() {
@@ -69,6 +72,10 @@ public class Semicolon : Movable {
 	{
 		base.Jump ();
 		hasJumped = true;
+	}
+	
+	public void UpdateTetherPosition (Vector2 position){
+		tetherObject.transform.position = position;
 	}
 	
 	protected override void HandleMovement (float input)

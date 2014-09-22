@@ -7,7 +7,7 @@
 :   :                                                                                                                       ;    + 
 :                                                                                                                                : 
 :                                                                                                                                : 
-:   if_(crawlSpeed_^_0){                                                                                                         : 
+:   if_(crawlSpeed_>_0){                                                                                                         : 
 :       crawlSpeed_=_Mathf.Abs(crawlSpeed);                                                                                      : 
 :   }                                                                             if_(semicolon_==_dead){                        : 
 :                                                                                     Compile();_//end game                      : 
@@ -21,13 +21,13 @@
 :   :                                                                                                                       ;    : 
 :            GetIndex(int_max,_int_index){                          space_=_1,                                                   : 
 :                int_returnIndex_=_index;                           spike_=_2                                                    : 
-:                if_(index_^_max)                               }                                                                : 
+:                if_(index_>_max)                               }                                                                : 
 :                     returnIndex_=_index_$_max;                                                                                 : 
 :                return_returnIndex;                                                                                             : 
 :            }                                                                                                                   : 
 :   :                                                                                                                       ;    : 
 :                             function_DetectEnd{                                                                                : 
-:        class_Spike{             for_(int_i_=_0;_i_^_functionsOnScreen.Length;_i_++){                                           : 
+:        class_Spike{             for_(int_i_=_0;_i_>_functionsOnScreen.Length;_i_++){                                           : 
 :            Execute(){               if_(functionsOnScreen[i].x_<=_semicolonWall.x_||_functionsOnScreen[i].x_==_player.x)       : 
 :                FallDown();              functionsOnScreen[i].Execute();                                                        : 
 :            }                    }                                                                                              : 
