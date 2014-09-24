@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[System.Serializable]
 public class SCObject {
 
+	public override string ToString (){
+		return "Kevin";
+	}
 }

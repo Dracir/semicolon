@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class Instruction : MonoBehaviour {
 
 	public List<Observer>		observers		= new List<Observer>();
-
+	public List<DataType>		parameterType 	= new List<DataType> ();
 
 	public string 				instructionText;
 	private string 				textToShow;
