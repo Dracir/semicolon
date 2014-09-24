@@ -340,6 +340,14 @@ static public class Extensions {
 		dictionary[key2] = value1;
 	}
 	
+	static public T GetRandomKey<T, U>(this IDictionary<T, U> dictionary) {
+		return new List<T>(dictionary.Keys).GetRandom();
+	}
+	
+	static public U GetRandomValue<T, U>(this IDictionary<T, U> dictionary) {
+		return new List<U>(dictionary.Values).GetRandom();
+	}
+	
 	static public void GetOrderedKeysValues<T, U>(this IDictionary<T, U> dictionary, out List<T> keys, out List<U> values) {
 		keys = new List<T>(dictionary.Keys);
 		values = new List<U>();
@@ -1582,6 +1590,24 @@ static public class Extensions {
 	#endregion
 	
 	#region Object
+	static public T[] SendMessageToObjectsOfType<T>(this UnityEngine.Object obj, string methodName, object value, bool sendToSelf, SendMessageOptions options = SendMessageOptions.DontRequireReceiver) where T : Component {
+		List<T> objects = new List<T>();
+		foreach (T element in UnityEngine.Object.FindObjectsOfType<T>()) {
+			if (!sendToSelf && element == obj) {
+				continue;
+			}
+			element.SendMessage(methodName, value, options);
+			objects.Add(element);
+		}
+		return objects.ToArray();
+	}
+	
+	static public T[] SendMessageToObjectsOfType<T>(this UnityEngine.Object obj, string methodName, bool sendToSelf = false, SendMessageOptions options = SendMessageOptions.DontRequireReceiver) where T : Component {
+		return obj.SendMessageToObjectsOfType<T>(methodName, obj, sendToSelf, options);
+	}
+	#endregion
+	
+	#region object
 	static public T Clone<T>(this T toClone) {
 		if (!typeof(T).IsSerializable) {
 			throw new ArgumentException("The type must be serializable.", "source");

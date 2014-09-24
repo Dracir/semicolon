@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 static public class Logger {
-
+	static Dictionary<System.Type, int> instanceDict = new Dictionary<System.Type, int>();
+	
 	static public double RoundPrecision = 0.001;
 	
 	static public void Log(params object[] toLog){
@@ -41,6 +43,18 @@ static public class Logger {
 		Debug.LogError(log);
 	}
 		
+	static public void LogSingleInstance(Object instanceToLog, params object[] toLog){
+		if (instanceDict.ContainsKey(instanceToLog.GetType())){
+			if (instanceDict[instanceToLog.GetType()] == instanceToLog.GetInstanceID()){
+				Log(toLog);
+			}
+		}
+		else {
+			instanceDict[instanceToLog.GetType()] = instanceToLog.GetInstanceID();
+			Log(toLog);
+		}
+	}
+	
 	static public string ObjectToString(object obj){
 		string str = "";
 		
