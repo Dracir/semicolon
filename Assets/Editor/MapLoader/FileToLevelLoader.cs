@@ -83,8 +83,7 @@ public class FileToLevelLoader {
 			string argumentKey 	= line.Substring(indexOfArgument,3);
 			if(parameters.ContainsKey(argumentKey)){
 				string paramData 	= parameters[argumentKey];
-				Parameter parameter = instruction.gameObject.GetChild(indexOfChild++).GetComponent<Parameter>();
-				setParameterData(parameter, paramData);
+				setParameterData(instruction, indexOfChild++, paramData);
 			}else{
 				Debug.LogError("Unknown parameter key\"" + argumentKey + "\"");
 			}
@@ -114,31 +113,29 @@ public class FileToLevelLoader {
 
 		return instruction;
 	}
-
-	private void setParameterData(Parameter parameter, string paramData){
-		if (parameter == null) {
-			Debug.LogWarning("WIERD");
-			return;		
-		}
+	
+	private void setParameterData(Instruction instruction, int childIndex, string paramData){
 		string[] param = paramData.Split(' ');
 		string type = param[0].ToLower();
 		string value = param[1].ToLower();
+		
 		if(type.Equals("boolean")){
-				parameter.dataType = DataType.BOOLEAN;
+			instruction.setParameterTo(childIndex, DataType.BOOLEAN);
+			BooleanParameter boolean = instruction.GetChild(childIndex).GetComponent<BooleanParameter>();
 			if(value.StartsWith("true")){
-				parameter.value = new SCBoolean(true);
+				boolean.Value = true;
 			}else if(value.StartsWith("false")){
-				parameter.value = new SCBoolean(false);
+				boolean.Value = false;
 			}else{
 				Debug.LogError("MAPLOADER - ERROR : Unknown parameter value for " + paramData);
 			}
 		}else if(type.Equals("integer")){
-			parameter.dataType = DataType.INTEGER;
-			parameter.value = new SCInteger(int.Parse(value));
+			instruction.setParameterTo(childIndex, DataType.INTEGER);
+			IntegerParameter integer = instruction.GetChild(childIndex).GetComponent<IntegerParameter>();
+			integer.Value = int.Parse(value);
 		}else{
 			Debug.LogError("MAPLOADER - ERROR : Unknown parameter type for " + paramData);
 		}
-		parameter.refresh();
 	}
 
 }

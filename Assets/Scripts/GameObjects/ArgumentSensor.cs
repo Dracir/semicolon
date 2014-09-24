@@ -19,9 +19,9 @@ public class ArgumentSensor : MonoBehaviour {
 		Parameter param = other.GetComponent<Parameter>();
 		if (param){
 			//swap
-			var temp = myParam.value;
-			myParam.value = param.value;
-			param.value = temp;
+			//var temp = myParam.value;
+			//myParam.value = param.value;
+			//param.value = temp;
 		}
 	}
 }

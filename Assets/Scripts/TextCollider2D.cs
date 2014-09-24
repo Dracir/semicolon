@@ -8,7 +8,7 @@ public class TextCollider2D : MonoBehaviour {
 	[HideInInspector] public TextMesh[] childrenTextMesh;
 	[PopupSelector("childrenTextMesh")] public TextMesh textMesh;
 	
-	[TextArea] public string text;
+	[TextArea] public string text = ""	;
 	[Min] public int fontSize = 166;
 	public FontStyle fontStyle;
 	public Font font;
@@ -29,11 +29,7 @@ public class TextCollider2D : MonoBehaviour {
 
 	void OnEnable() {
 		if (textMesh == null) {
-			if (gameObject.GetComponentsInChildren<TextMesh>().Length == 0) {
-				GameObject textMeshObject = gameObject.AddChild("TextMesh");
-				textMeshObject.transform.Reset();
-				textMeshObject.AddComponent<TextMesh>();
-			}
+			this.GetOrAddComponent<TextMesh>();
 		}
 		else {
 			meshRenderer = textMesh.GetOrAddComponent<MeshRenderer>();

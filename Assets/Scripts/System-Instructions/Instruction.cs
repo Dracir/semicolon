@@ -24,6 +24,12 @@ public class Instruction : MonoBehaviour {
 	public void reset(){
 		this.name = instructionText;
 		fixChildAmount();
+		checkChildTypes();
+		resetTexts ();
+		notifyObservers ();
+	}
+	
+	public void refresh(){
 		resetTexts ();
 		notifyObservers ();
 	}
@@ -35,30 +41,63 @@ public class Instruction : MonoBehaviour {
 		int nbParam = this.instructionText.Split (new char[]{'$'}).Length - 1;
 		if (nbParam > childCount) {
 			var newchildren = new List<Parameter>();
+			for (int i = this.parameterType.Count; i < nbParam; i++) {
+				this.parameterType.Add(DataType.BOOLEAN);
+			}
 			for (int i = childCount; i < nbParam; i++) {
-				var newChild = addChild();
+				var newChild = addChild(this.parameterType[i]);
 				newchildren.Add(newChild);
  			}
-			foreach (Parameter newC in newchildren) {
-				newC.reset();
+			foreach (var newC in newchildren) {
+				newC.refresh();
 			}
 		} else if (nbParam < childCount) {
 			GameObject[] children = this.GetChildren();
+			for (int i = this.parameterType.Count -1; i >= nbParam; i--) {
+				this.parameterType.RemoveAt(i);
+			}
 			for (int i = nbParam; i < childCount; i++) {
-
 				GameObjectUtils.Destroy( children[i] );
 			}
 		}
-		/*
-		children.ForEach(child => GameObjectUtils.Destroy(child));*/
+	}
+	
+	void checkChildTypes(){
+		var children = this.GetChildren();
+		int index = 0;
+		foreach(var child in children){
+			Parameter p = child.GetComponent<Parameter>();
+			DataType dataType = this.parameterType[index];
+			if(!p.isOfType(dataType)){
+				changeDataTypeOfChild(child, dataType);
+			}
+			p = child.GetComponent<Parameter>();
+			p.refresh();
+			index++;
+		}
+	}
+	
+	public void setParameterTo(int index, DataType dataType){
+		this.parameterType[index] = dataType;
+		GameObject child = this.GetChild(index);
+		changeDataTypeOfChild(child,dataType);
 	}
 
+	void changeDataTypeOfChild(GameObject child, DataType dataType){
+		child.RemoveComponent<BooleanParameter>();
+		child.RemoveComponent<IntegerParameter>();
+		switch(dataType){
+				case DataType.BOOLEAN : child.AddComponent<BooleanParameter>();
+				break;
+				case DataType.INTEGER : child.AddComponent<IntegerParameter>();
+				break;
+		}
+	}
 
-	Parameter addChild(){
+	Parameter addChild(DataType datatype){
 		GameObject go = GameObjectFactory.createGameObject ("Parameter", this.transform);
-		Parameter parameter = go.AddComponent<Parameter> ();
-		TextMesh textMesh = go.GetComponent<TextMesh> ();
-		
+		TextMesh textMesh = go.AddComponent<TextMesh> ();
+		Parameter parameter = go.AddComponent<BooleanParameter>();
 		TextCollider2D textCollider = go.GetComponent<TextCollider2D>();
 		textCollider.textMesh = textMesh;
 

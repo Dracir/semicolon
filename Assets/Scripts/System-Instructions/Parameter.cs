@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(TextMesh))]
 [RequireComponent(typeof(TextCollider2D))]
 [System.Serializable]
 public class Parameter : MonoBehaviour {
@@ -22,5 +21,6 @@ public class Parameter : MonoBehaviour {
 
 
 	public virtual void swapWith(Parameter otherParameter){}
+	public virtual bool isOfType(DataType dataType){ return false;}
 	
 }

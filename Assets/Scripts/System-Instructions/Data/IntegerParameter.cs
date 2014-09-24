@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class BooleanParameter : Parameter {
+public class IntegerParameter : Parameter {
 
-	public bool value;
-	public bool Value{
+	public int value;
+	public int Value{
 		get{return value;}
 		set{
 			this.value = value;
@@ -15,21 +15,21 @@ public class BooleanParameter : Parameter {
 	
 	[Button(label:"refresh",methodName:"refresh", NoPrefixLabel=true)]
 	public bool resetBtn;
-
+	
 
 	public override void refresh(){
 		TextCollider2D tc = this.GetComponent<TextCollider2D> ();
 
-		tc.color = GameConstantes.instance.booleanValueColor;
-		tc.text = this.value ? "TRUE" : "FALSE";
-		this.name = "Bool";
+		tc.color = GameConstantes.instance.integerValueColor;
+		tc.text = "" + this.value;
+		this.name = "Int";
 		
 		this.transform.parent.GetComponent<Instruction>().refresh();
 	}
 
 	public override void swapWith(Parameter otherParameter){
-		if (otherParameter is BooleanParameter) {
-			BooleanParameter other = (BooleanParameter) otherParameter;
+		var other = otherParameter as IntegerParameter;
+		if (other != null) {
 
 			var tmp = this.value;
 			this.value = other.value;
@@ -44,6 +44,6 @@ public class BooleanParameter : Parameter {
 	}
 	
 	public override bool isOfType(DataType dataType){
-		return dataType.Equals(DataType.BOOLEAN);
+		return dataType.Equals(DataType.INTEGER);
 	}
 }
