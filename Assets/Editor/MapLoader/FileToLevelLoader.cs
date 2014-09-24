@@ -7,6 +7,7 @@ public enum ReadingMod{ PARAM, LEVEL}
 public class FileToLevelLoader {
 
 	private ReadingMod readingMod;
+	private GameObject world;
 	private GameObject statements;
 
 	private float levelY;
@@ -16,6 +17,7 @@ public class FileToLevelLoader {
 	public void load(string mapText, GameObject world){	
 		this.parameters = new Dictionary<string, string>();
 		this.statements = GameObjectFactory.createGameObject ("Statements", world);
+		this.world 		= world;
 
 		string[] lines = mapText.Split (new char[]{'\n'});
 		foreach (var line in lines) {
@@ -115,7 +117,7 @@ public class FileToLevelLoader {
 	}
 	
 	private void setParameterData(Instruction instruction, int childIndex, string paramData){
-		string[] param = paramData.Split(' ');
+		string[] param = paramData.TrimEnd(new char[]{'\n','\r'}).Split(' ');
 		string type = param[0].ToLower();
 		string value = param[1].ToLower();
 		
@@ -133,6 +135,14 @@ public class FileToLevelLoader {
 			instruction.setParameterTo(childIndex, DataType.INTEGER);
 			IntegerParameter integer = instruction.GetChild(childIndex).GetComponent<IntegerParameter>();
 			integer.Value = int.Parse(value);
+			if(param.Length >= 3){
+				if(param[2].StartsWith("setPlayerJumpHeight")){
+					Debug.Log("CARO ENCORE");
+					GravityChanger gc = world.AddComponent<GravityChanger>();
+					gc.gravityValue = integer;
+					integer.observers.Add(gc);
+				}
+			}
 		}else{
 			Debug.LogError("MAPLOADER - ERROR : Unknown parameter type for " + paramData);
 		}

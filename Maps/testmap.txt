@@ -4,6 +4,7 @@ $bf boolean false
 $01 integer 1
 $02 integer 2
 $03 integer 3
+$gs integer 5 setPlayerJumpHeight
 <Level>
 +-----------------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+----------------------+
 |                 v       v       v       v       v       v       v       v       v       v       v       v                      |
@@ -18,7 +19,7 @@ $03 integer 3
 |
 |
 |
-|   gravity.set($01,_$01_);
+|   gravity.set($gs,_$01_);
 |
 |
 |
