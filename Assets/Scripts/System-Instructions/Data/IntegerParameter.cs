@@ -25,6 +25,7 @@ public class IntegerParameter : Parameter {
 		this.name = "Int";
 		
 		this.transform.parent.GetComponent<Instruction>().refresh();
+		this.notifyObservers();
 	}
 
 	public override void swapWith(Parameter otherParameter){

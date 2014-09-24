@@ -25,6 +25,7 @@ public class BooleanParameter : Parameter {
 		this.name = "Bool";
 		
 		this.transform.parent.GetComponent<Instruction>().refresh();
+		this.notifyObservers();
 	}
 
 	public override void swapWith(Parameter otherParameter){

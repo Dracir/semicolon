@@ -5,7 +5,7 @@ public class ChangeColorObject : Observer {
 
 	//public BooleanStatement booleanStatement;
 
-	public override void update(){
+	public override void notify(){
 		TextMesh tm = gameObject.GetComponentInChildren<TextMesh>();
 
 	//	if (booleanStatement.BooleanValue.Equals (BooleanValues.TRUE)) {

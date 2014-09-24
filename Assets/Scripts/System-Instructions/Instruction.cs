@@ -141,7 +141,7 @@ public class Instruction : MonoBehaviour {
 	
 	protected void notifyObservers(){
 		foreach (var observer in observers) {
-			observer.update();	
+			observer.notify();	
 		}
 	}
 
