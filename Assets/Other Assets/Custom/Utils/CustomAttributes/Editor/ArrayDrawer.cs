@@ -6,8 +6,8 @@ using UnityEditor;
 public class ArrayDrawer : CustomPropertyDrawerBase {
 
 	public override void OnGUI(Rect position, SerializedProperty property, GUIContent label){
-		if (!fieldInfo.FieldType.IsArray || !validGetHeightTypes.Contains(property.type)){
-			Debug.LogError("ArrayAttribute does not support type: " + property.type);
+		if (!fieldInfo.FieldType.IsArray){
+			Debug.LogError("ArrayAttribute can only be applied to arrays.");
 			return;
 		}
 		drawPrefixLabel = false;

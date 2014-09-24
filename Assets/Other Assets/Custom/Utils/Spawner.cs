@@ -80,6 +80,14 @@ public class Spawner : MonoBehaviour {
 		return Spawn(spawnDict[nameToSpawn], position, rotation);
 	}
 	
+	public virtual GameObject SpawnRandom(Vector3 position, Quaternion rotation){
+		return Spawn(spawnDict.GetRandomValue(), position, rotation);
+	}
+	
+	public virtual GameObject SpawnRandom(){
+		return SpawnRandom(transform.position, Quaternion.identity);
+	}
+	
 	public virtual GameObject[] Spawn(){
 		List<GameObject> gameObjects = new List<GameObject>();
 		
