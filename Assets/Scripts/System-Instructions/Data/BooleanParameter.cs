@@ -1,27 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Candlelight;
+
 
 public class BooleanParameter : Parameter {
 
-	public bool value;
-	public bool Value{
-		get{return value;}
+	[SerializeField, PropertyBackingField(typeof(BooleanParameter), "Valeur")]
+	private bool valeur;
+	public bool Valeur{
+		get{return valeur;}
 		set{
-			this.value = value;
+			this.valeur = value;
 			refresh();
 		}
 	}
-	
-	[Button(label:"refresh",methodName:"refresh", NoPrefixLabel=true)]
-	public bool resetBtn;
-
 
 	public override void refresh(){
 		TextCollider2D tc = this.GetComponent<TextCollider2D> ();
 
 		tc.color = GameConstantes.instance.booleanValueColor;
-		tc.text = this.value ? "TRUE" : "FALSE";
+		tc.text = this.valeur ? "TRUE" : "FALSE";
 		this.name = "Bool";
 		
 		this.transform.parent.GetComponent<Instruction>().refresh();
@@ -32,9 +31,9 @@ public class BooleanParameter : Parameter {
 		if (otherParameter is BooleanParameter) {
 			BooleanParameter other = (BooleanParameter) otherParameter;
 
-			var tmp = this.value;
-			this.value = other.value;
-			other.value = tmp;
+			var tmp = this.valeur;
+			this.valeur = other.valeur;
+			other.valeur = tmp;
 			
 			this.refresh();
 			other.refresh();

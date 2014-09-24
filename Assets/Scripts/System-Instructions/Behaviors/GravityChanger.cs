@@ -17,8 +17,8 @@ public class GravityChanger : Observer {
 	}
 	
 	public override void notify(){
-		if(gravityValue != null){
-			Semicolon.instance.SetJumpHeight(gravityValue.value * 10);
+		if(gravityValue != null && Semicolon.instance != null){
+			Semicolon.instance.SetJumpHeight(gravityValue.Valeur * 10);
 		}
 		
 	}
