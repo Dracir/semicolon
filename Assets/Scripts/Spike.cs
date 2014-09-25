@@ -35,7 +35,7 @@ public class Spike : StateMachine {
 		
 		if (spikeManager != null) {
 			transform.position = spikeManager.transform.position + new Vector3(0, 2, 0);
-			colorEffect = new ColorChangeEffect(textCollider2D, new Color(textCollider2D.Color.r, textCollider2D.Color.g, textCollider2D.Color.b, 1), 2);
+			colorEffect = new ColorChangeEffect(textCollider2D, textCollider2D.Color, new Color(textCollider2D.Color.r, textCollider2D.Color.g, textCollider2D.Color.b, 1), 2);
 			EffectManager.AddGameEffect(colorEffect);
 			moveEffect = new MoveEffect(textCollider2D, spikeManager.transform.position, 2, true);
 			EffectManager.AddGameEffect(moveEffect);
