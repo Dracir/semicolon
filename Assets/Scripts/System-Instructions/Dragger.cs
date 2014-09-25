@@ -65,11 +65,20 @@ public class Dragger : MonoBehaviour {
 		this.parameterInDrag.gameObject.layer =  LayerMask.NameToLayer("Parameter");
 	}
 
-	void swap(Parameter hitedParameter, Parameter parameterInDrag){
-		hitedParameter.swapWith(parameterInDrag);
-		int clickedX = (int) Camera.main.camera.ScreenToWorldPoint(Input.mousePosition).x;
-		int x = clickedX - (int) hitedParameter.transform.parent.transform.position.x;
-		var effect = new WaveDeleteTextEffect(hitedParameter.transform.parent.GetComponent<Instruction>(),1,x);
-		EffectMenager.AddGameEffect(effect);
+	void swap(Parameter hitedParameter, Parameter parameterDragged){
+		
+		//int clickedX = (int) Camera.main.camera.ScreenToWorldPoint(Input.mousePosition).x;
+		//int x = clickedX - (int) hitedParameter.transform.parent.transform.position.x;
+		//var effect = new WaveDeleteTextEffect(hitedParameter.transform.parent.GetComponent<Instruction>(),1,x);
+		
+		TextCollider2D textColliderHited = hitedParameter.GetComponent<TextCollider2D>();
+		TextCollider2D textColliderInDrag = parameterDragged.GetComponent<TextCollider2D>();
+		Color c1 = textColliderHited.Color;
+		Color c2 = textColliderInDrag.Color;
+		
+		EffectManager.AddGameEffect( new ColorChangeEffect(textColliderHited	,c2, 1) );
+		EffectManager.AddGameEffect( new ColorChangeEffect(textColliderInDrag	,c1, 1) );
+		
+		hitedParameter.swapWith(parameterDragged);
 	}
 }

@@ -44,10 +44,10 @@ public class WaveDeleteTextEffect : Effect {
 			if(this.centerCharacter + distanceFromCenter <= text.Length){
 				this.nSpaces++;
 			}
-			string beforeStr	= text.Substring(0,beforelenght);
-			string centerStr 	= createSpace(nSpaces);
-			string afterStr 	= text.Substring(afterStartIndex);
-			this.textCollider.Text = beforeStr + centerStr + afterStr;
+			string beforeStr		= text.Substring(0,beforelenght);
+			string centerStr 		= createSpace(nSpaces);
+			string afterStr 		= text.Substring(afterStartIndex);
+			this.textCollider.Text 	= beforeStr + centerStr + afterStr;
 		}
 	}
 	
