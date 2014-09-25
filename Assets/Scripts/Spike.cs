@@ -15,19 +15,29 @@ public class Spike : StateMachine {
 	
 	TextCollider2D textCollider2D;
 	GameObject target;
+	GameObject textMesh;
+	ColorChangeEffect colorEffect;
+	MoveEffect moveEffect;
 	
 	public override void Awake() {
 		base.Awake();
 		
 		textCollider2D = GetComponent<TextCollider2D>();
 		target = gameObject.FindChild("Target");
+		textMesh = gameObject.FindChild("TextMesh");
 	}
 	
 	public override IEnumerator Initialize() {
 		yield return new WaitForSeconds(0);
 		initialized = true;
 		
-		transform.position = spikeManager.transform.position - new Vector3(0, 2, 0);
+		if (spikeManager != null) {
+			transform.position = spikeManager.transform.position + new Vector3(0, 2, 0);
+			colorEffect = new ColorChangeEffect(textCollider2D, new Color(textCollider2D.Color.r, textCollider2D.Color.g, textCollider2D.Color.b, 1), 2);
+			EffectManager.AddGameEffect(colorEffect);
+			moveEffect = new MoveEffect(textCollider2D, spikeManager.transform.position, 2, true);
+			EffectManager.AddGameEffect(moveEffect);
+		}
 	}
 	
 	public virtual void Fall() {
@@ -41,16 +51,19 @@ public class Spike : StateMachine {
 		}
 		spikeManager.fallingSpikes.Add(this);
 		
+		if (colorEffect != null) {
+			colorEffect.isDone = true;
+		}
+		
 		CurrentState = Falling;
 	}
 	
 	#region States
 	public virtual void Spawning() {
-		if (initialized) {
-			textCollider2D.Color = Color.Lerp(textCollider2D.Color, new Color(textCollider2D.Color.r, textCollider2D.Color.g, textCollider2D.Color.b, 1), spawnAnimationSpeed * Time.deltaTime);
-			transform.position = Vector3.Lerp(transform.position, spikeManager.transform.position, spawnAnimationSpeed);
+		if (initialized && spikeManager != null) {
+			transform.position = Vector3.Lerp(transform.position, spikeManager.transform.position, spawnAnimationSpeed * Time.deltaTime);
 		
-			if ((spikeManager.transform.position.magnitude - transform.position.magnitude).Round(0.05) <= 0) {
+			if (colorEffect.isDone && moveEffect.isDone) {
 				CurrentState = WaitingToFall;
 			}
 		}
@@ -60,7 +73,7 @@ public class Spike : StateMachine {
 	}
 	
 	public virtual void Falling() {
-		rigidbody2D.MovePosition((transform.position + (target.transform.position - transform.position).Round(1.66F)).Round(1.66F));
+		rigidbody2D.MovePosition(new Vector3(target.transform.position.x.Round(1), target.transform.position.y.Round(1.66), target.transform.position.z));
 		lifeCounter += Time.deltaTime;
 		if (lifeCounter >= lifeTime) {
 			Despawn();
@@ -73,11 +86,13 @@ public class Spike : StateMachine {
 		base.OnSpawned();
 		
 		lifeCounter = 0;
-		target.transform.localPosition = Vector3.zero;
+		target.transform.localPosition = textMesh.transform.localPosition;
 		target.rigidbody2D.isKinematic = true;
 		target.rigidbody2D.gravityScale = fallSpeed;
+		
 		textCollider2D.ColliderIsTrigger = true;
 		textCollider2D.Color = new Color(textCollider2D.Color.r, textCollider2D.Color.g, textCollider2D.Color.b, 0);
+		
 		CurrentState = Spawning;
 	}
 	

@@ -128,7 +128,7 @@ public class TextCollider2D : MonoBehaviour {
 		}
 	}
 	
-	List<BoxCollider2D> boxColliders;
+	List<BoxCollider2D> boxColliders = new List<BoxCollider2D>();
 	MeshRenderer meshRenderer;
 
 	void OnEnable() {
@@ -145,23 +145,6 @@ public class TextCollider2D : MonoBehaviour {
 		Preview();
 	}
 
-//	public void Update() {
-//		if (!Application.isPlaying)
-//			Preview();
-//		else {
-//			if (pText != Text || pFont != Font || pFontSize != FontSize || pFontStyle != FontStyle || pColor != Color || pColliderSize != ColliderSize || pTrigger != ColliderIsTrigger) {
-//				pText = Text;
-//				pFont = Font;
-//				pFontSize = FontSize;
-//				pFontStyle = FontStyle;
-//				pColor = Color;
-//				pColliderSize = ColliderSize;
-//				pTrigger = ColliderIsTrigger;
-//				UpdateTextMesh();
-//			}
-//		}
-//	}
-
 	void UpdateTextMesh() {
 		if (string.IsNullOrEmpty(Text) || FontSize == 0) {
 			foreach (BoxCollider2D boxCollider in boxColliders) {
@@ -171,7 +154,7 @@ public class TextCollider2D : MonoBehaviour {
 			textMesh.fontSize = FontSize;
 			textMesh.fontStyle = FontStyle;
 			textMesh.font = Font;
-			if (Font != null)
+			if (Font != null && meshRenderer != null)
 				meshRenderer.material = Font.material;
 			textMesh.color = Color;
 		}
