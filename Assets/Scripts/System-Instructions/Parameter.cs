@@ -16,7 +16,7 @@ public class Parameter : MonoBehaviour {
 
 	public virtual void refresh(){
 		TextCollider2D tc = this.GetComponent<TextCollider2D> ();
-		tc.text = "!NUULLLL!!!";
+		tc.Text = "!NUULLLL!!!";
 	}
 
 

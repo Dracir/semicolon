@@ -20,8 +20,8 @@ public class IntegerParameter : Parameter {
 	public override void refresh(){
 		TextCollider2D tc = this.GetComponent<TextCollider2D> ();
 
-		tc.color = GameConstantes.instance.integerValueColor;
-		tc.text = "" + this.value;
+		tc.Color = GameConstantes.instance.integerValueColor;
+		tc.Text = "" + this.value;
 		this.name = "Int";
 		
 		this.transform.parent.GetComponent<Instruction>().refresh();

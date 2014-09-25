@@ -1498,7 +1498,7 @@ public class AudioPlayer : MonoBehaviour {
 	
 	static void SetIconReferences() {
 		#if UNITY_EDITOR
-		if (System.Array.TrueForAll(UnityEditor.EditorApplication.hierarchyWindowItemOnGUI.GetInvocationList(), invoker => invoker.Method.Name != "ShowIcons")){
+		if (System.Array.TrueForAll(UnityEditor.EditorApplication.hierarchyWindowItemOnGUI.GetInvocationList(), invoker => invoker.Method.DeclaringType != typeof(AudioPlayer) || invoker.Method.Name != "ShowIcons")){
 			UnityEditor.EditorApplication.hierarchyWindowItemOnGUI += ShowIcons;
 			audioPlayerIcon = audioPlayerIcon ?? UnityEditor.EditorGUIUtility.ObjectContent(null, typeof(AudioSource)).image;
 			audioInfoIcon = audioInfoIcon ?? UnityEditor.EditorGUIUtility.ObjectContent(null, typeof(AudioClip)).image;

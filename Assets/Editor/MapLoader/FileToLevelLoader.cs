@@ -109,7 +109,7 @@ public class FileToLevelLoader {
 		instruction.setText (line);
 
 		TextCollider2D tc = go.GetComponent<TextCollider2D> ();
-		tc.font = GameConstantes.instance.statementFont;
+		tc.Font = GameConstantes.instance.statementFont;
 
 		return instruction;
 	}
