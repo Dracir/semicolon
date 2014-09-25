@@ -12,7 +12,6 @@ public class ColorChangeEffect : Effect {
 		this.fromColor = textCollider.Color;
 		this.toColor = color;
 		this.finalTime = time;
-		Debug.Log(fromColor + " - " + toColor);
 	}
 	
 	public override void onStart(){

@@ -13,12 +13,18 @@ public class SpikeManager : Spawner {
 	
 	float spawnDelay;
 	MTRandom randomGenerator;
+	TextCollider2D textCollider2D;
 	
 	public override void Awake() {
 		objectsToSpawn = new [] { References.Prefabs.Spike };
 		base.Awake();
 		
-		randomGenerator = new MTRandom();
+		textCollider2D = GetComponent<TextCollider2D>();
+		if (textCollider2D != null){
+			textCollider2D.Text = string.Empty;
+		}
+		
+		randomGenerator = new MTRandom(Random.value.ToString());
 		spawnDelay = randomGenerator.Range(spawnMinDelay, spawnMaxDelay);
 		Invoke("SpawnSpike", spawnDelay);
 	}
