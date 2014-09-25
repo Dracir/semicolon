@@ -1,6 +1,5 @@
 E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\Assembly-CSharp-Editor.dll
 E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\Assembly-CSharp-Editor.pdb
-E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\Assembly-Boo.dll
 E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\HOEditorGUIFramework.dll
 E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\HOEditorUtils.dll
 E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\HOTween.dll
@@ -19,3 +18,7 @@ E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\HOTween.xml
 E:\Projects\Unity\Semi Colon\semicolon\obj\Debug\Assembly-CSharp-Editor-vs.csprojResolveAssemblyReference.cache
 E:\Projects\Unity\Semi Colon\semicolon\obj\Debug\Assembly-CSharp-Editor.dll
 E:\Projects\Unity\Semi Colon\semicolon\obj\Debug\Assembly-CSharp-Editor.pdb
+E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\Assembly-UnityScript.dll
+E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\UnityEditor.UI.dll
+E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\UnityEngine.UI.dll
+E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
