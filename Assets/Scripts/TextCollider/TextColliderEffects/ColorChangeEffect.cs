@@ -30,7 +30,7 @@ public class ColorChangeEffect : Effect {
 	}
 	
 	public override void onStop(){
-	
+		textCollider.Color = toColor;
 	}
 
 }

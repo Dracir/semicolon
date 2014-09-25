@@ -79,6 +79,17 @@ public class Dragger : MonoBehaviour {
 		EffectManager.AddGameEffect( new ColorChangeEffect(textColliderHited	,c2, 1) );
 		EffectManager.AddGameEffect( new ColorChangeEffect(textColliderInDrag	,c1, 1) );
 		
+		
+		//EffectManager.AddGameEffect( new MoveEffect(textColliderHited	,textColliderInDrag.transform.position, 0.5f, false) );
+		//EffectManager.AddGameEffect( new MoveEffect(textColliderInDrag	,textColliderHited.transform.position , 0.5f, false) );
+		
+		
+		TextCollider2D parentColiderHited = hitedParameter.transform.parent.GetComponent<TextCollider2D>();
+		TextCollider2D parentColiderDraged = parameterDragged.transform.parent.GetComponent<TextCollider2D>();
+		
+		EffectManager.AddGameEffect( new GradientEffet(parentColiderHited ,GameConstantes.instance.instructionFlash, 1) );
+		EffectManager.AddGameEffect( new GradientEffet(parentColiderDraged,GameConstantes.instance.instructionFlash, 1) );
+		
 		hitedParameter.swapWith(parameterDragged);
 	}
 }
