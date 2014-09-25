@@ -20,7 +20,7 @@ public class IntegerParameter : Parameter {
 		TextCollider2D tc = this.GetComponent<TextCollider2D> ();
 
 		tc.Color = GameConstantes.instance.integerValueColor;
-		tc.Text = "" + this.value;
+		tc.Text = "" + this.valeur;
 		this.name = "Int";
 		
 		this.transform.parent.GetComponent<Instruction>().refresh();

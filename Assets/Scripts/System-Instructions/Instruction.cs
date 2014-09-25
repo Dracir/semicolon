@@ -156,8 +156,8 @@ public class Instruction : MonoBehaviour {
 
 			TextCollider2D tc = go.GetComponent<TextCollider2D>();
 			if(tc != null){
-				fullText += tc.text;
-				x+= tc.text.Length;
+				fullText += tc.Text;
+				x+= tc.Text.Length;
 			}else{
 				Debug.LogWarning("Instruction wierd stuff");
 			}

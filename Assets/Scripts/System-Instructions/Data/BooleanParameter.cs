@@ -20,7 +20,7 @@ public class BooleanParameter : Parameter {
 		TextCollider2D tc = this.GetComponent<TextCollider2D> ();
 
 		tc.Color = GameConstantes.instance.booleanValueColor;
-		tc.Text = this.value ? "TRUE" : "FALSE";
+		tc.Text = this.Valeur ? "TRUE" : "FALSE";
 		this.name = "Bool";
 		
 		this.transform.parent.GetComponent<Instruction>().refresh();

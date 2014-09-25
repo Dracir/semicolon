@@ -19,7 +19,7 @@ public class WaveDeleteTextEffect : Effect {
 	public override void onStart(){
 		string fullText = this.instruction.getFullText();
 		this.instruction.Remove();
-		this.textCollider.text = fullText;
+		this.textCollider.Text = fullText;
 	}
 
 	public override void update(float deltaTime){
@@ -31,7 +31,7 @@ public class WaveDeleteTextEffect : Effect {
 	}
 	
 	void removeCharacter(){
-		string text = this.textCollider.text;
+		string text = this.textCollider.Text;
 		distanceFromCenter++;
 		int beforelenght = Mathf.Max(this.centerCharacter - distanceFromCenter,0);
 		int afterStartIndex = Mathf.Min(this.centerCharacter + distanceFromCenter,text.Length);
@@ -47,7 +47,7 @@ public class WaveDeleteTextEffect : Effect {
 			string beforeStr	= text.Substring(0,beforelenght);
 			string centerStr 	= createSpace(nSpaces);
 			string afterStr 	= text.Substring(afterStartIndex);
-			this.textCollider.text = beforeStr + centerStr + afterStr;
+			this.textCollider.Text = beforeStr + centerStr + afterStr;
 		}
 	}
 	
