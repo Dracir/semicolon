@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class EffectMenager : MonoBehaviour {
+public class EffectManager : MonoBehaviour {
 
 	private static List<Effect> gameEffects;
 	private static List<Effect> gameEffectsToAdd;
@@ -10,9 +10,9 @@ public class EffectMenager : MonoBehaviour {
 	
 	
 	void Start () {
-		EffectMenager.gameEffects = new List<Effect> ();
-		EffectMenager.gameEffectsToAdd = new List<Effect> ();
-		EffectMenager.GameEffectsToRemove = new List<Effect> ();
+		EffectManager.gameEffects = new List<Effect> ();
+		EffectManager.gameEffectsToAdd = new List<Effect> ();
+		EffectManager.GameEffectsToRemove = new List<Effect> ();
 	}
 
 	public static void AddGameEffect(Effect gameEffect){
