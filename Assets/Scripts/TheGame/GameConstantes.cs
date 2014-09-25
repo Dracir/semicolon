@@ -9,6 +9,7 @@ public class GameConstantes : MonoBehaviour {
 	public Color statementColor;
 	public Color booleanValueColor;
 	public Color integerValueColor;
+	public Gradient instructionFlash;
 
 	public static GameConstantes instance;
 
