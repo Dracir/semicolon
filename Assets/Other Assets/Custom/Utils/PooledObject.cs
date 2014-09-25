@@ -21,8 +21,8 @@ public class PooledObject : Hydrogen.Core.ObjectPoolItemBase {
 	}
 
 	public virtual IEnumerator Initialize() {
-		initialized = true;
 		yield return null;
+		initialized = true;
 	}
 	
 	public virtual IEnumerator DespawnAfterDelay(float delay) {

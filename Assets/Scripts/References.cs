@@ -21,12 +21,6 @@ public class References : MonoBehaviour {
 		set { Instance.mainCameraFollow = value; }
 	}
 
-	public SpikeManager spikeManager;
-	static public SpikeManager SpikeManager {
-		get { return Instance.spikeManager; }
-		set { Instance.spikeManager = value; }
-	}
-
 	public Prefabs prefabs;
 	public Fonts fonts;
 
