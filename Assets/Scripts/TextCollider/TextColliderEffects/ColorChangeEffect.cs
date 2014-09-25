@@ -8,9 +8,9 @@ public class ColorChangeEffect : Effect {
 	
 	private float time = 0;
 	private float finalTime;
-	public ColorChangeEffect(TextCollider2D textCollider, Color color, float time):base(textCollider){
-		this.fromColor = textCollider.Color;
-		this.toColor = color;
+	public ColorChangeEffect(TextCollider2D textCollider, Color fromColor, Color toColor, float time):base(textCollider){
+		this.fromColor = fromColor;
+		this.toColor = toColor;
 		this.finalTime = time;
 	}
 	
