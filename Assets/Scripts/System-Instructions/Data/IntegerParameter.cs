@@ -1,20 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Candlelight;
 
 public class IntegerParameter : Parameter {
 
-	public int value;
-	public int Value{
-		get{return value;}
+	[SerializeField, PropertyBackingField(typeof(IntegerParameter), "Valeur")]
+	private int valeur;
+	public int Valeur{
+		get{return valeur;}
 		set{
-			this.value = value;
+			this.valeur = value;
 			refresh();
 		}
 	}
-	
-	[Button(label:"refresh",methodName:"refresh", NoPrefixLabel=true)]
-	public bool resetBtn;
 	
 
 	public override void refresh(){
@@ -32,9 +31,9 @@ public class IntegerParameter : Parameter {
 		var other = otherParameter as IntegerParameter;
 		if (other != null) {
 
-			var tmp = this.value;
-			this.value = other.value;
-			other.value = tmp;
+			var tmp = this.valeur;
+			this.valeur = other.valeur;
+			other.valeur = tmp;
 			
 			this.refresh();
 			other.refresh();

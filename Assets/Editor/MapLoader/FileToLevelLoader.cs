@@ -2,20 +2,27 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public enum ReadingMod{ PARAM, LEVEL}
+public enum ReadingMod{ PARAM, LEVEL, SPECIAL_CHARACTER}
 
 public class FileToLevelLoader {
 
 	private ReadingMod readingMod;
+	private GameObject world;
 	private GameObject statements;
 
 	private float levelY;
 
 	private Dictionary<string,string> parameters;
+	
+	private Dictionary<string,string> specialCharacter;
+	private Dictionary<string,GameObject> specialCharacterGameObject;
 
 	public void load(string mapText, GameObject world){	
-		this.parameters = new Dictionary<string, string>();
-		this.statements = GameObjectFactory.createGameObject ("Statements", world);
+		this.parameters 				= new Dictionary<string, string>();
+		this.statements 				= GameObjectFactory.createGameObject ("Statements", world);
+		this.specialCharacter 			= new Dictionary<string, string>();
+		this.specialCharacterGameObject = new Dictionary<string, GameObject>();
+		this.world 						= world;
 
 		string[] lines = mapText.Split (new char[]{'\n'});
 		foreach (var line in lines) {
@@ -27,6 +34,8 @@ public class FileToLevelLoader {
 						break;
 					case ReadingMod.LEVEL : readLevelLine(line + " ");
 						break;
+					case ReadingMod.SPECIAL_CHARACTER: readSpecialCharacter(line);
+						break;
 				}
 			}
 
@@ -34,11 +43,22 @@ public class FileToLevelLoader {
 
 	}
 
+	
+	void readSpecialCharacter(string line){
+		int indexOfFirstSpace = line.IndexOf (' ');
+		string key = line.Substring (0, indexOfFirstSpace);
+		string param = line.Substring (indexOfFirstSpace + 1);
+		this.specialCharacter.Add (key, param);
+	}
+	
+	
 	private void changeReadingMod(string line){
 		if (line.Contains("<Params>")) {
 			readingMod = ReadingMod.PARAM;
 		} else if (line.Contains("<Level>")) {
 			readingMod = ReadingMod.LEVEL;
+		} else if (line.Contains("<SpecialCharacter>")) {
+			readingMod = ReadingMod.SPECIAL_CHARACTER;
 		}
 	}
 
@@ -100,8 +120,14 @@ public class FileToLevelLoader {
 			line = line.Replace(argumentKey,"$v");
 			indexOfArgument = line.IndexOf ('$',indexOfArgument+1);
 		}
+		GameObject parent = this.statements;
+		if(this.specialCharacter.ContainsKey(line)){
+			string[] sp = this.specialCharacter[line].TrimEnd(new char[]{'\n','\r'}).Split(' ');
+			parent = addOrGetParent(sp[0]);
+			
+		}
 
-		GameObject go = GameObjectFactory.createGameObject (line,this.statements);
+		GameObject go = GameObjectFactory.createGameObject (line,parent);
 		go.layer =  LayerMask.NameToLayer("Ignore Raycast");
 		go.transform.Translate (x, y, 0);
 
@@ -113,9 +139,18 @@ public class FileToLevelLoader {
 
 		return instruction;
 	}
-	
+
+	GameObject addOrGetParent(string parentName){
+		if(this.specialCharacterGameObject.ContainsKey(parentName)){
+			return this.specialCharacterGameObject[parentName];
+		}else{
+			GameObject parent = GameObjectFactory.createGameObject(parentName, this.world);
+			this.specialCharacterGameObject.Add(parentName,parent);
+			return parent;
+		}
+	}
 	private void setParameterData(Instruction instruction, int childIndex, string paramData){
-		string[] param = paramData.Split(' ');
+		string[] param = paramData.TrimEnd(new char[]{'\n','\r'}).Split(' ');
 		string type = param[0].ToLower();
 		string value = param[1].ToLower();
 		
@@ -123,16 +158,23 @@ public class FileToLevelLoader {
 			instruction.setParameterTo(childIndex, DataType.BOOLEAN);
 			BooleanParameter boolean = instruction.GetChild(childIndex).GetComponent<BooleanParameter>();
 			if(value.StartsWith("true")){
-				boolean.Value = true;
+				boolean.Valeur = true;
 			}else if(value.StartsWith("false")){
-				boolean.Value = false;
+				boolean.Valeur = false;
 			}else{
 				Debug.LogError("MAPLOADER - ERROR : Unknown parameter value for " + paramData);
 			}
 		}else if(type.Equals("integer")){
 			instruction.setParameterTo(childIndex, DataType.INTEGER);
 			IntegerParameter integer = instruction.GetChild(childIndex).GetComponent<IntegerParameter>();
-			integer.Value = int.Parse(value);
+			integer.Valeur = int.Parse(value);
+			if(param.Length >= 3){
+				if(param[2].StartsWith("setPlayerJumpHeight")){
+					GravityChanger gc = world.AddComponent<GravityChanger>();
+					gc.gravityValue = integer;
+					integer.observers.Add(gc);
+				}
+			}
 		}else{
 			Debug.LogError("MAPLOADER - ERROR : Unknown parameter type for " + paramData);
 		}
