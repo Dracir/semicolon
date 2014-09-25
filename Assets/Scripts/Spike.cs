@@ -46,8 +46,7 @@ public class Spike : StateMachine {
 	
 	#region States
 	public virtual void Spawning() {
-		Logger.Log("Spawning");
-		if (initialized) {
+		if (initialized && spikeManager != null) {
 			textCollider2D.Color = Color.Lerp(textCollider2D.Color, new Color(textCollider2D.Color.r, textCollider2D.Color.g, textCollider2D.Color.b, 1), spawnAnimationSpeed * Time.deltaTime);
 			transform.position = Vector3.Lerp(transform.position, spikeManager.transform.position, spawnAnimationSpeed);
 		
