@@ -5,10 +5,10 @@ public class GravityChanger : Observer {
 
 	public IntegerParameter gravityValue;
 
-	private Player player;
+	//private Player player;
 	
 	void Start () {
-		this.player = GameObject.Find("Player").GetComponent<Player>();
+		//this.player = GameObject.Find("Player").GetComponent<Player>();
 	}
 	
 	

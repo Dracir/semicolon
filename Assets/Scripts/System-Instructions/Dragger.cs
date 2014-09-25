@@ -56,12 +56,20 @@ public class Dragger : MonoBehaviour {
 			Parameter hitedParameter = hitedObject.GetComponent<Parameter> ();
 			
 			if(hitedParameter){
-				hitedParameter.swapWith(parameterInDrag);
+				swap(hitedParameter,parameterInDrag);
 			}
 
 		}else{
 			parameterInDrag.transform.SetPosition(this.parameterOldPosition);
 		}
 		this.parameterInDrag.gameObject.layer =  LayerMask.NameToLayer("Parameter");
+	}
+
+	void swap(Parameter hitedParameter, Parameter parameterInDrag){
+		hitedParameter.swapWith(parameterInDrag);
+		int clickedX = (int) Camera.main.camera.ScreenToWorldPoint(Input.mousePosition).x;
+		int x = clickedX - (int) hitedParameter.transform.parent.transform.position.x;
+		var effect = new WaveDeleteTextEffect(hitedParameter.transform.parent.GetComponent<Instruction>(),1,x);
+		EffectMenager.AddGameEffect(effect);
 	}
 }
