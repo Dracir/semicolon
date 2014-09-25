@@ -137,6 +137,36 @@ public class Instruction : MonoBehaviour {
 		instructionTC.Text = textToShow;
 		instructionTC.Color = GameConstantes.instance.statementColor;
 	}
+	
+	public string getFullText(){
+		string remainingText = instructionText;
+		int indexOfValueTag = remainingText.IndexOf("$v");
+		int x = 0;
+		int childIndex = 0;
+		string fullText = "";
+		
+		while(indexOfValueTag != -1){
+			fullText += remainingText.Substring(0,indexOfValueTag);
+			remainingText 		= remainingText.Substring(indexOfValueTag+2);
+			x += indexOfValueTag;
+			indexOfValueTag 	= remainingText.IndexOf("$v");
+			
+			GameObject go = this.GetChild(childIndex);
+			go.transform.SetPosition(new Vector3(x + this.transform.position.x,this.transform.position.y,0));
+
+			TextCollider2D tc = go.GetComponent<TextCollider2D>();
+			if(tc != null){
+				fullText += tc.Text;
+				x+= tc.Text.Length;
+			}else{
+				Debug.LogWarning("Instruction wierd stuff");
+			}
+			childIndex++;
+		}
+		
+		fullText += remainingText;
+		return fullText;
+	}
 
 	
 	protected void notifyObservers(){
@@ -151,5 +181,10 @@ public class Instruction : MonoBehaviour {
 			space+= " ";
 		}
 		return space;
+	}
+	
+	
+	void OnDestroy(){
+		Extensions.DestroyChildren(transform);
 	}
 }
