@@ -17,6 +17,7 @@ public class Spike : StateMachine {
 	GameObject target;
 	GameObject textMesh;
 	ColorChangeEffect colorEffect;
+	MoveEffect moveEffect;
 	
 	public override void Awake() {
 		base.Awake();
@@ -31,7 +32,11 @@ public class Spike : StateMachine {
 		initialized = true;
 		
 		if (spikeManager != null) {
-			transform.position = spikeManager.transform.position - new Vector3(0, 2, 0);
+			transform.position = spikeManager.transform.position + new Vector3(0, 2, 0);
+			colorEffect = new ColorChangeEffect(textCollider2D, new Color(textCollider2D.Color.r, textCollider2D.Color.g, textCollider2D.Color.b, 1), 2);
+			EffectManager.AddGameEffect(colorEffect);
+			moveEffect = new MoveEffect(textCollider2D, spikeManager.transform.position, 2, true);
+			EffectManager.AddGameEffect(moveEffect);
 		}
 	}
 	
@@ -58,7 +63,7 @@ public class Spike : StateMachine {
 		if (initialized && spikeManager != null) {
 			transform.position = Vector3.Lerp(transform.position, spikeManager.transform.position, spawnAnimationSpeed * Time.deltaTime);
 		
-			if (colorEffect.isDone) {
+			if (colorEffect.isDone && moveEffect.isDone) {
 				CurrentState = WaitingToFall;
 			}
 		}
@@ -87,8 +92,6 @@ public class Spike : StateMachine {
 		
 		textCollider2D.ColliderIsTrigger = true;
 		textCollider2D.Color = new Color(textCollider2D.Color.r, textCollider2D.Color.g, textCollider2D.Color.b, 0);
-		colorEffect = new ColorChangeEffect(textCollider2D, new Color(textCollider2D.Color.r, textCollider2D.Color.g, textCollider2D.Color.b, 1), 2);
-		EffectManager.AddGameEffect(colorEffect);
 		
 		CurrentState = Spawning;
 	}
