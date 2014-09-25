@@ -3,5 +3,5 @@ using System.Collections;
 
 public interface IDeletable {
 
-	void Delete();
+	void Delete(Spike spike);
 }

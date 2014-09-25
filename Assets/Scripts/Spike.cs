@@ -23,6 +23,8 @@ public class Spike : StateMachine {
 		base.Awake();
 		
 		textCollider2D = GetComponent<TextCollider2D>();
+		textCollider2D.Color = GameConstantes.instance.statementColor;
+		textCollider2D.Font = GameConstantes.instance.statementFont;
 		target = gameObject.FindChild("Target");
 		textMesh = gameObject.FindChild("TextMesh");
 	}
@@ -110,7 +112,7 @@ public class Spike : StateMachine {
 	public virtual void OnCollisionEnter2D(Collision2D collision) {
 		IDeletable deletable = collision.gameObject.GetComponent(typeof(IDeletable)) as IDeletable;
 		if (deletable != null) {
-			deletable.Delete();
+			deletable.Delete(this);
 		}
 		Despawn();
 	}
