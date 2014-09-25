@@ -122,8 +122,8 @@ public class Instruction : MonoBehaviour {
 
 			TextCollider2D tc = go.GetComponent<TextCollider2D>();
 			if(tc != null){
-				x+= tc.text.Length;
-				string spaces = createSpaces(tc.text.Length);
+				x+= tc.Text.Length;
+				string spaces = createSpaces(tc.Text.Length);
 				textToShow += spaces;
 			}else{
 				Debug.LogWarning("Instruction wierd stuff");
@@ -134,8 +134,8 @@ public class Instruction : MonoBehaviour {
 		textToShow += remainingText;
 
 		TextCollider2D instructionTC = this.GetComponent<TextCollider2D> ();
-		instructionTC.text = textToShow;
-		instructionTC.color = GameConstantes.instance.statementColor;
+		instructionTC.Text = textToShow;
+		instructionTC.Color = GameConstantes.instance.statementColor;
 	}
 	
 	public string getFullText(){

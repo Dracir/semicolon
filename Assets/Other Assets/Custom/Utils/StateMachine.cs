@@ -3,14 +3,43 @@ using System.Collections;
 
 public class StateMachine : PooledObject {
 
-	public string currentState;
-	public string fixedCurrentState;
-	public string lateCurrentState;
+	public string state;
+	public string fixedState;
+	public string lateState;
 	
 	public delegate void State();
-	public State CurrentState;
-	public State FixedCurrentState;
-	public State LateCurrentState;
+	State currentState;
+	public State CurrentState {
+		get {
+			return currentState;
+		}
+		set {
+			currentState = value;
+			state = currentState.Method.Name;
+		}
+	}
+
+	State fixedCurrentState;
+	public State FixedCurrentState {
+		get {
+			return fixedCurrentState;
+		}
+		set {
+			fixedCurrentState = value;
+			fixedState = fixedCurrentState.Method.Name;
+		}
+	}
+	
+	State lateCurrentState;
+	public State LateCurrentState {
+		get {
+			return lateCurrentState;
+		}
+		set {
+			lateCurrentState = value;
+			lateState = lateCurrentState.Method.Name;
+		}
+	}
 	
 	public virtual void Awake() {
 		CurrentState = Normal;
@@ -19,17 +48,14 @@ public class StateMachine : PooledObject {
 	}
 	
 	public virtual void Update() {
-		currentState = CurrentState.Method.Name;
 		CurrentState();
 	}
 	
 	public virtual void FixedUpdate() {
-		fixedCurrentState = FixedCurrentState.Method.Name;
 		FixedCurrentState();
 	}
 	
 	public virtual void LateUpdate() {
-		lateCurrentState = LateCurrentState.Method.Name;
 		LateCurrentState();
 	}
 	

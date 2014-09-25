@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
-public class SpikeManager : MonoBehaviour
-{
+public class SpikeManager : Spawner {
+	
 	[Min] public int spawnRangeX = 5;
 	[Min] public int spawnSpacing = 5;
 	[Min] public float spawnMinDelay = 1;
@@ -11,19 +11,20 @@ public class SpikeManager : MonoBehaviour
 	float spawnDelay;
 	MTRandom randomGenerator;
 	
-	void Awake()
-	{
+	public override void Awake() {
+		base.Awake();
+		
 		spikes = new Spike[spawnRangeX * 2 + 1];
-		randomGenerator = new MTRandom(System.DateTime.Now.ToString());
+		randomGenerator = new MTRandom();
 		spawnDelay = randomGenerator.Range(spawnMinDelay, spawnMaxDelay);
 		Invoke("SpawnSpike", spawnDelay);
 	}
 	
-	void SpawnSpike()
-	{
+	void SpawnSpike() {
 		int xPosition = randomGenerator.Range(-spawnRangeX, spawnRangeX);
-		spikes[xPosition + spawnRangeX] = hObjectPool.Instance.Spawn(References.Prefabs.Spike, new Vector3(transform.position.x + xPosition * spawnSpacing, transform.position.y, 0), Quaternion.identity).GetComponent<Spike>();
+		spikes[xPosition + spawnRangeX] = Spawn("Spike", new Vector3(transform.position.x + xPosition * spawnSpacing, transform.position.y, 0), Quaternion.identity).GetComponent<Spike>();
 		spikes[xPosition + spawnRangeX].index = xPosition + spawnRangeX;
+		
 		spawnDelay = randomGenerator.Range(spawnMinDelay, spawnMaxDelay);
 		Invoke("SpawnSpike", spawnDelay);
 	}
