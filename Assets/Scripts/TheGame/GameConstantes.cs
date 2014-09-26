@@ -3,16 +3,7 @@ using System.Collections;
 
 public class GameConstantes : MonoBehaviour {
 
-	public Font statementFont;
-	public Material statementMaterial;
-
-	public Color statementColor;
-	public Color booleanValueColor;
-	public Color integerValueColor;
-	public Gradient instructionFlash;
-	public float effetTimeOnInstructionSwap;
-	
-	public Color background;
+	public GameCodeTheme currentTheme;
 	
 	public static GameConstantes instance;
 
@@ -25,6 +16,6 @@ public class GameConstantes : MonoBehaviour {
 	}
 	
 	void Update(){
-		Camera.main.camera.backgroundColor = background;
+		Camera.main.camera.backgroundColor = currentTheme.background;
 	}
 }

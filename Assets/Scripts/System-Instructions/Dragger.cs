@@ -66,11 +66,9 @@ public class Dragger : MonoBehaviour {
 	}
 
 	void swap(Parameter hitedParameter, Parameter parameterDragged){
-		
-		//int clickedX = (int) Camera.main.camera.ScreenToWorldPoint(Input.mousePosition).x;
-		//int x = clickedX - (int) hitedParameter.transform.parent.transform.position.x;
-		//var effect = new WaveDeleteTextEffect(hitedParameter.transform.parent.GetComponent<Instruction>(),1,x);
-		
+		if(!hitedParameter.isSameType(parameterDragged)){
+			return;
+		}
 		TextCollider2D textColliderHited = hitedParameter.GetComponent<TextCollider2D>();
 		TextCollider2D textColliderInDrag = parameterDragged.GetComponent<TextCollider2D>();
 		Color c1t1 = textColliderHited.Color;
@@ -78,8 +76,8 @@ public class Dragger : MonoBehaviour {
 		Color c2t1 = textColliderInDrag.Color;
 		Color c2t0 = new Color(c1t1.r, c1t1.g, c1t1.b, 0);
 		
-		EffectManager.AddGameEffect( new ColorChangeEffect(textColliderHited	,c1t0,c1t1, GameConstantes.instance.effetTimeOnInstructionSwap) );
-		EffectManager.AddGameEffect( new ColorChangeEffect(textColliderInDrag	,c2t0,c2t1, GameConstantes.instance.effetTimeOnInstructionSwap) );
+		EffectManager.AddGameEffect( new ColorChangeEffect(textColliderHited	,c1t0,c1t1, GameConstantes.instance.currentTheme.effetTimeOnInstructionSwap) );
+		EffectManager.AddGameEffect( new ColorChangeEffect(textColliderInDrag	,c2t0,c2t1, GameConstantes.instance.currentTheme.effetTimeOnInstructionSwap) );
 		
 		
 		//EffectManager.AddGameEffect( new MoveEffect(textColliderHited	,textColliderInDrag.transform.position, 0.5f, false) );
@@ -89,8 +87,8 @@ public class Dragger : MonoBehaviour {
 		TextCollider2D parentColiderHited = hitedParameter.transform.parent.GetComponent<TextCollider2D>();
 		TextCollider2D parentColiderDraged = parameterDragged.transform.parent.GetComponent<TextCollider2D>();
 		
-		EffectManager.AddGameEffect( new GradientEffet(parentColiderHited ,GameConstantes.instance.instructionFlash, GameConstantes.instance.effetTimeOnInstructionSwap) );
-		EffectManager.AddGameEffect( new GradientEffet(parentColiderDraged,GameConstantes.instance.instructionFlash, GameConstantes.instance.effetTimeOnInstructionSwap) );
+		EffectManager.AddGameEffect( new GradientEffet(parentColiderHited ,GameConstantes.instance.currentTheme.instructionFlash, GameConstantes.instance.currentTheme.effetTimeOnInstructionSwap) );
+		EffectManager.AddGameEffect( new GradientEffet(parentColiderDraged,GameConstantes.instance.currentTheme.instructionFlash, GameConstantes.instance.currentTheme.effetTimeOnInstructionSwap) );
 		
 		hitedParameter.swapWith(parameterDragged);
 	}

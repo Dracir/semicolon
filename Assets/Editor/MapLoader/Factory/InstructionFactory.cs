@@ -42,7 +42,7 @@ public static class InstructionFactory  {
 		instruction.setText (line);
 
 		TextCollider2D tc = go.GetComponent<TextCollider2D> ();
-		tc.Font = GameConstantes.instance.statementFont;
+		tc.Font = GameConstantes.instance.currentTheme.statementFont;
 
 		return instruction;
 	}

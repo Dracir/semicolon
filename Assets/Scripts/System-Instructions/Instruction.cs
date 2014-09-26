@@ -135,7 +135,7 @@ public class Instruction : MonoBehaviour {
 
 		TextCollider2D instructionTC = this.GetComponent<TextCollider2D> ();
 		instructionTC.Text = textToShow;
-		instructionTC.Color = GameConstantes.instance.statementColor;
+		instructionTC.Color = GameConstantes.instance.currentTheme.statementColor;
 	}
 	
 	public string getFullText(){

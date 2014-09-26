@@ -13,7 +13,7 @@ public static class SpecialCharacterFactory  {
 		TextCollider2D tc = go.AddComponent<TextCollider2D> ();
 		tc.textMesh = tm;
 		tc.Text = character;
-		tc.Font = GameConstantes.instance.statementFont;
+		tc.Font = GameConstantes.instance.currentTheme.statementFont;
 		
 		addCharacterSpecifiqueFeature(go, character, param, parent);
 		
