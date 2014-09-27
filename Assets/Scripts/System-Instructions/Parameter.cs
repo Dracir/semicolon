@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(TextCollider2D))]
 [System.Serializable]
-public class Parameter : MonoBehaviour {
+public class Parameter : MonoBehaviour, IDeletable {
 
 	public List<Observer>		observers		= new List<Observer>();
 	
@@ -19,8 +19,21 @@ public class Parameter : MonoBehaviour {
 		tc.Text = "!NUULLLL!!!";
 	}
 
+	void IDeletable.Delete(){
+		//int clickedX = (int) Camera.main.camera.ScreenToWorldPoint(Input.mousePosition).x;
+		//int x = clickedX - (int) hitedParameter.transform.parent.transform.position.x;
+		Instruction instruction = this.transform.parent.GetComponent<Instruction>();
+		EffectManager.AddGameEffect(new WaveDeleteTextEffect(instruction,1,0));
+	}
 
 	public virtual void swapWith(Parameter otherParameter){}
-	public virtual bool isOfType(DataType dataType){ return false;}
+	public virtual DataType getType(){ return DataType.BOOLEAN ;}
+	
+	public bool isOfType(DataType dataType){ 
+		return getType().Equals(dataType);
+	}
+	public bool isSameType(Parameter parameter){ 
+		return this.isOfType( parameter.getType() );
+	}
 	
 }

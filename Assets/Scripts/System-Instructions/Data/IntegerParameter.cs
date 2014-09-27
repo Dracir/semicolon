@@ -19,7 +19,7 @@ public class IntegerParameter : Parameter {
 	public override void refresh(){
 		TextCollider2D tc = this.GetComponent<TextCollider2D> ();
 
-		tc.Color = GameConstantes.instance.integerValueColor;
+		tc.Color = GameConstantes.instance.currentTheme.integerValueColor;
 		tc.Text = "" + this.valeur;
 		this.name = "Int";
 		
@@ -43,7 +43,7 @@ public class IntegerParameter : Parameter {
 		}
 	}
 	
-	public override bool isOfType(DataType dataType){
-		return dataType.Equals(DataType.INTEGER);
+	public override DataType getType(){ 
+		return DataType.INTEGER ;
 	}
 }

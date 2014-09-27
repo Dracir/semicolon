@@ -19,7 +19,7 @@ public class BooleanParameter : Parameter {
 	public override void refresh(){
 		TextCollider2D tc = this.GetComponent<TextCollider2D> ();
 
-		tc.Color = GameConstantes.instance.booleanValueColor;
+		tc.Color = GameConstantes.instance.currentTheme.booleanValueColor;
 		tc.Text = this.Valeur ? "TRUE" : "FALSE";
 		this.name = "Bool";
 		
@@ -41,9 +41,9 @@ public class BooleanParameter : Parameter {
 			this.transform.parent.GetComponent<Instruction> ().reset ();
 			other.transform.parent.GetComponent<Instruction> ().reset ();
 		}
-	}
+	}	
 	
-	public override bool isOfType(DataType dataType){
-		return dataType.Equals(DataType.BOOLEAN);
+	public override DataType getType(){ 
+		return DataType.BOOLEAN ;
 	}
 }

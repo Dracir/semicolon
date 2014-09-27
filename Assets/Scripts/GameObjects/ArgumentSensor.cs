@@ -3,11 +3,11 @@ using System.Collections;
 
 public class ArgumentSensor : MonoBehaviour {
 	
-	Parameter myParam;
+	//Parameter myParam;
 	
 	// Use this for initialization
 	void Start () {
-		myParam = GetComponent<Parameter>();
+		//myParam = GetComponent<Parameter>();
 	}
 	
 	// Update is called once per frame
