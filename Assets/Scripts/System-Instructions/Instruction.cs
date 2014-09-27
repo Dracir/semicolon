@@ -99,7 +99,7 @@ public class Instruction : MonoBehaviour {
 		TextMesh textMesh = go.AddComponent<TextMesh> ();
 		Parameter parameter = go.AddComponent<BooleanParameter>();
 		TextCollider2D textCollider = go.GetComponent<TextCollider2D>();
-		textCollider.textMesh = textMesh;
+		textCollider.TextMesh = textMesh;
 
 		return parameter;
 	}

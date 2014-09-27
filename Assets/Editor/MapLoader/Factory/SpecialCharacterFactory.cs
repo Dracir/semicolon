@@ -11,7 +11,7 @@ public static class SpecialCharacterFactory  {
 		TextMesh tm = go.AddComponent<TextMesh>();
 		
 		TextCollider2D tc = go.AddComponent<TextCollider2D> ();
-		tc.textMesh = tm;
+		tc.TextMesh = tm;
 		tc.Text = character;
 		tc.Font = GameConstantes.instance.statementFont;
 		
@@ -23,10 +23,11 @@ public static class SpecialCharacterFactory  {
 	static void addCharacterSpecifiqueFeature(GameObject go, string character, string paramData, GameObject parent){
 		string[] param = paramData.TrimEnd(new char[]{'\n','\r'}).Split(' ');
 		string arg = param[1];
-		int bob = int.Parse(param[2]);
+		int spawnDelay = int.Parse(param[2]);
 		if(arg.ToLower().Equals("isaspike")){
-			var spikeMenager = go.AddComponent<SpikeManager>();
-			spikeMenager.spawnInterval = bob;
+			var spikeManager = go.AddComponent<SpikeManager>();
+			spikeManager.spawnMinDelay = spawnDelay;
+			spikeManager.spawnMaxDelay = spawnDelay * 4;
 		}
 	}
 }

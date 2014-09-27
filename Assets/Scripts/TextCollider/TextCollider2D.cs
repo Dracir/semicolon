@@ -7,7 +7,22 @@ using System.Collections.Generic;
 public class TextCollider2D : MonoBehaviour {
 
 	[HideInInspector] public TextMesh[] childrenTextMesh;
-	[PopupSelector("childrenTextMesh")] public TextMesh textMesh;
+	[SerializeField, PropertyBackingField(typeof(TextCollider2D), "Text", typeof(PopupSelectorAttribute), "childrenTextMesh")]
+	TextMesh textMesh;
+	public TextMesh TextMesh {
+		get {
+			return textMesh;
+		}
+		set {
+			textMesh = value;
+			if (Application.isPlaying) {
+				UpdateTextMesh();
+			}
+			else {
+				Preview();
+			}
+		}
+	}
 	
 	[SerializeField, PropertyBackingField(typeof(TextCollider2D), "Text", typeof(TextAreaAttribute))]
 	string text = "";
@@ -132,12 +147,12 @@ public class TextCollider2D : MonoBehaviour {
 	MeshRenderer meshRenderer;
 
 	void OnEnable() {
-		if (textMesh == null) {
+		if (TextMesh == null) {
 			this.GetOrAddComponent<TextMesh>();
 		}
 		else {
-			meshRenderer = textMesh.GetOrAddComponent<MeshRenderer>();
-			boxColliders = new List<BoxCollider2D>(textMesh.GetComponents<BoxCollider2D>());
+			meshRenderer = TextMesh.GetOrAddComponent<MeshRenderer>();
+			boxColliders = new List<BoxCollider2D>(TextMesh.GetComponents<BoxCollider2D>());
 			if (Font == null)
 				Font = References.Fonts.LucidiaConsole;
 			UpdateTextMesh();
@@ -150,21 +165,23 @@ public class TextCollider2D : MonoBehaviour {
 			foreach (BoxCollider2D boxCollider in boxColliders) {
 				boxCollider.Remove();
 			}
-			textMesh.text = Text;
-			textMesh.fontSize = FontSize;
-			textMesh.fontStyle = FontStyle;
-			textMesh.font = Font;
+			TextMesh.text = Text;
+			TextMesh.fontSize = FontSize;
+			TextMesh.fontStyle = FontStyle;
+			TextMesh.font = Font;
 			if (Font != null && meshRenderer != null)
 				meshRenderer.material = Font.material;
-			textMesh.color = Color;
+			TextMesh.color = Color;
 		}
 		else if (Font != null) {
-			textMesh.text = Text;
-			textMesh.fontSize = FontSize;
-			textMesh.fontStyle = FontStyle;
-			textMesh.font = Font;
-			meshRenderer.material = Font.material;
-			textMesh.color = Color;
+			TextMesh.text = Text;
+			TextMesh.fontSize = FontSize;
+			TextMesh.fontStyle = FontStyle;
+			TextMesh.font = Font;
+			TextMesh.color = Color;
+			if (Font != null && meshRenderer != null) {
+				meshRenderer.material = Font.material;
+			}
 
 			string[] lines = Text.Split('\n');
 
@@ -176,7 +193,7 @@ public class TextCollider2D : MonoBehaviour {
 			float heightSum = 0;
 			for (int i = 0; i < lines.Length; i++) {
 				if (i >= boxColliders.Count)
-					boxColliders.Add(textMesh.AddComponent<BoxCollider2D>());
+					boxColliders.Add(TextMesh.AddComponent<BoxCollider2D>());
 				BoxCollider2D boxCollider = boxColliders[i];
 				boxCollider.isTrigger = ColliderIsTrigger;
 
@@ -214,15 +231,15 @@ public class TextCollider2D : MonoBehaviour {
 		}                         
 		childrenTextMesh = childrenTextMeshList.ToArray();
 		
-		if (textMesh == null){
-			textMesh = ownTextMesh;
+		if (TextMesh == null){
+			TextMesh = ownTextMesh;
 		}
 		
-		if (textMesh != null) {
-			textMesh.anchor = TextAnchor.UpperLeft;
-			textMesh.characterSize = 0.1F;
-			meshRenderer = textMesh.GetOrAddComponent<MeshRenderer>();
-			boxColliders = new List<BoxCollider2D>(textMesh.GetComponents<BoxCollider2D>());
+		if (TextMesh != null) {
+			TextMesh.anchor = TextAnchor.UpperLeft;
+			TextMesh.characterSize = 0.1F;
+			meshRenderer = TextMesh.GetOrAddComponent<MeshRenderer>();
+			boxColliders = new List<BoxCollider2D>(TextMesh.GetComponents<BoxCollider2D>());
 			if (Font == null)
 				Font = References.Fonts.LucidiaConsole;
 

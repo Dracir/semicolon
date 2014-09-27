@@ -11,7 +11,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 static public class Extensions {
 
 	#region Int
-	static public float Pow(this int i, double power = 2){
+	static public float Pow(this int i, double power = 2) {
 		return Mathf.Pow(i, (float)power);
 	}
 	
@@ -21,7 +21,7 @@ static public class Extensions {
 	#endregion
 	
 	#region Float
-	static public float Pow(this float f, double power = 2){
+	static public float Pow(this float f, double power = 2) {
 		return Mathf.Pow(f, (float)power);
 	}
 	
@@ -31,7 +31,7 @@ static public class Extensions {
 	#endregion
 			
 	#region Double
-	static public float Pow(this double d, double power = 2){
+	static public float Pow(this double d, double power = 2) {
 		return Mathf.Pow((float)d, (float)power);
 	}
 	
@@ -364,7 +364,7 @@ static public class Extensions {
 		values = valueList.ToArray();
 	}
 	
-	static public string SerializeXml<T, U>(this IDictionary<T, U> dictionary){
+	static public string SerializeXml<T, U>(this IDictionary<T, U> dictionary) {
 		T[] keys;
 		U[] values;
 		dictionary.GetOrderedKeysValues(out keys, out values);
@@ -1200,10 +1200,6 @@ static public class Extensions {
 		transform.LookAt2D(target.position, 0, 100);
 	}
 	
-	static public T GetOrAddComponent<T>(this Transform transform) where T : Component {
-		return transform.gameObject.GetOrAddComponent<T>();
-	}
-	
 	static public Transform[] GetChildren(this Transform parent) {
 		var children = new List<Transform>();
 		if (parent != null) {
@@ -1292,18 +1288,6 @@ static public class Extensions {
 		}
 	}
 	
-	static public int GetHierarchyDepth(this Transform transform) {
-		int depth = 0;
-		Transform currentTransform = transform;
-		
-		while (currentTransform.parent != null) {
-			currentTransform = currentTransform.parent;
-			depth += 1;
-		}
-		
-		return depth;
-	}
-	
 	static public void Reset(this Transform transform) {
 		transform.localPosition = Vector3.zero;
 		transform.rotation = Quaternion.identity;
@@ -1384,31 +1368,20 @@ static public class Extensions {
 #endif
 	}
 	
-	static public void RemoveComponent(this GameObject gameObject, Component component) {
-		if (Application.isPlaying)
-			UnityEngine.Object.Destroy(component);
-		else
-			UnityEngine.Object.DestroyImmediate(component);
-	}
-	
-	static public void RemoveComponent<T>(this GameObject gameObject) where T : Component {
-		if (Application.isPlaying)
-			UnityEngine.Object.Destroy(gameObject.GetComponent<T>());
-		else
-			UnityEngine.Object.DestroyImmediate(gameObject.GetComponent<T>());
-	}
-	
 	static public T GetOrAddComponent<T>(this GameObject gameObject) where T : Component {
-		T component = gameObject.GetComponent<T>() ?? gameObject.AddComponent<T>();
+		T component = gameObject.GetComponent<T>();
+		if (component == null) {
+			component = gameObject.AddComponent<T>();
+		}
 		return component;
 	}
 	
-	static public Component AddCopiedComponent(this GameObject copyTo, Component copyFrom) {
-		Component component = copyTo.AddComponent(copyFrom.GetType());
-		component.Copy(copyFrom);
+	static public T AddCopiedComponent<T>(this GameObject copyTo, T copyFrom) where T : Component {
+		T component = copyTo.AddComponent<T>();
+		component.Copy((T)copyFrom);
 		return component;
 	}
-	
+
 	static public Component[] AddCopiedComponents(this GameObject copyTo, params Component[] copyFrom) {
 		var components = new List<Component>();
 		foreach (Component component in copyFrom) {
@@ -1468,89 +1441,30 @@ static public class Extensions {
 		}
 		return clonedComponents.ToArray();
 	}
+		
+	static public void RemoveComponent<T>(this GameObject gameObject) where T : Component {
+		T toRemove = gameObject.GetComponent<T>();
+		if (toRemove != null) {
+			toRemove.Remove();
+		}
+	}
 	
-	static public T GetClosest<T>(this Component source, IList<T> targets) where T : Component {
+	static public T GetClosest<T>(this GameObject source, IList<T> targets) where T : Component {
 		float closestDistance = 1000000;
 		T closestTarget = default(T);
 
 		foreach (T target in targets) {
-			if (Vector3.Distance(source.transform.position, target.transform.position) < closestDistance) {
+			float distance = Vector3.Distance(source.transform.position, target.transform.position);
+			if (distance < closestDistance) {
 				closestTarget = target;
+				closestDistance = distance;
 			}
 		}
 		return closestTarget;
 	}
-	
-	static public T GetClosest<T>(this IList<T> targets, Component source) where T : Component {
-		return source.GetClosest(targets);
-	}
 	#endregion
 	
 	#region MonoBehaviour
-	static public T GetOrAddComponent<T>(this MonoBehaviour monoBehaviour) where T : Component {
-		return monoBehaviour.gameObject.GetOrAddComponent<T>();
-	}
-	
-	static public GameObject[] GetChildren(this MonoBehaviour parent) {
-		var children = new List<GameObject>();
-		foreach (var child in parent.transform.GetChildren()) {
-			children.Add(child.gameObject);
-		}
-		return children.ToArray();
-	}
-	
-	static public GameObject[] GetChildrenRecursive(this MonoBehaviour parent) {
-		var children = new List<GameObject>();
-		foreach (var child in parent.transform.GetChildrenRecursive()) {
-			children.Add(child.gameObject);
-		}
-		return children.ToArray();
-	}
-	
-	static public int GetChildCount(this MonoBehaviour parent) {
-		return parent.transform.childCount;
-	}
-	
-	static public GameObject GetChild(this MonoBehaviour parent, int index) {
-		return parent.transform.GetChild(index).gameObject;
-	}
-	
-	static public GameObject FindChild(this MonoBehaviour parent, string childName) {
-		foreach (var child in parent.transform.GetChildren()) {
-			if (child.name == childName)
-				return child.gameObject;
-		}
-		return null;
-	}
-
-	static public GameObject FindChildRecursive(this MonoBehaviour parent, string childName) {
-		foreach (var child in parent.transform.GetChildrenRecursive()) {
-			if (child.name == childName)
-				return child.gameObject;
-		}
-		return null;
-	}
-
-	static public GameObject AddChild(this MonoBehaviour parent) {
-		return parent.transform.AddChild().gameObject;
-	}
-	
-	static public GameObject AddChild(this MonoBehaviour parent, string childName) {
-		return parent.transform.AddChild(childName).gameObject;
-	}
-	
-	static public GameObject FindOrAddChild(this MonoBehaviour parent, string childName) {
-		return parent.transform.FindOrAddChild(childName).gameObject;
-	}
-	
-	static public void SortChildren(this MonoBehaviour parent) {
-		parent.transform.SortChildren();
-	}
-	
-	static public void SortChildrenRecursive(this MonoBehaviour parent) {
-		parent.transform.SortChildrenRecursive();
-	}
-	
 	static public void SetExecutionOrder(this MonoBehaviour script, int order) {
 #if UNITY_EDITOR
 		foreach (UnityEditor.MonoScript s in UnityEditor.MonoImporter.GetAllRuntimeMonoScripts()) {
@@ -1563,7 +1477,7 @@ static public class Extensions {
 #endif
 	}
 	
-	static public void SetHasChanged(this MonoBehaviour script, Transform transform, bool hasChanged) {
+	static public void SetTransformHasChanged(this MonoBehaviour script, Transform transform, bool hasChanged) {
 		script.StartCoroutine(SetHasChanged(transform, hasChanged));
 	}
 	static IEnumerator SetHasChanged(Transform transform, bool hasChanged) {
@@ -1581,15 +1495,110 @@ static public class Extensions {
 		return component.gameObject.GetOrAddComponent<T>();
 	}
 	
-	static public void Remove(this Component component) {
-		if (Application.isPlaying)
-			UnityEngine.Object.Destroy(component);
-		else
-			UnityEngine.Object.DestroyImmediate(component);
+	static public int GetHierarchyDepth(this Component component) {
+		int depth = 0;
+		Transform currentTransform = component.transform;
+		
+		while (currentTransform.parent != null) {
+			currentTransform = currentTransform.parent;
+			depth += 1;
+		}
+		
+		return depth;
+	}
+	
+	static public GameObject[] GetChildren(this Component parent) {
+		var children = new List<GameObject>();
+		foreach (var child in parent.transform.GetChildren()) {
+			children.Add(child.gameObject);
+		}
+		return children.ToArray();
+	}
+	
+	static public GameObject[] GetChildrenRecursive(this Component parent) {
+		var children = new List<GameObject>();
+		foreach (var child in parent.transform.GetChildrenRecursive()) {
+			children.Add(child.gameObject);
+		}
+		return children.ToArray();
+	}
+	
+	static public int GetChildCount(this Component parent) {
+		return parent.transform.childCount;
+	}
+	
+	static public void SortChildren(this Component parent) {
+		parent.transform.SortChildren();
+	}
+	
+	static public void SortChildrenRecursive(this Component parent) {
+		parent.transform.SortChildrenRecursive();
+	}
+
+	static public GameObject GetChild(this Component parent, int index) {
+		return parent.transform.GetChild(index).gameObject;
+	}
+	
+	static public GameObject FindChild(this Component parent, string childName) {
+		foreach (var child in parent.transform.GetChildren()) {
+			if (child.name == childName)
+				return child.gameObject;
+		}
+		return null;
+	}
+
+	static public GameObject FindChildRecursive(this Component parent, string childName) {
+		foreach (var child in parent.transform.GetChildrenRecursive()) {
+			if (child.name == childName)
+				return child.gameObject;
+		}
+		return null;
+	}
+
+	static public GameObject AddChild(this Component parent) {
+		return parent.transform.AddChild().gameObject;
+	}
+	
+	static public GameObject AddChild(this Component parent, string childName) {
+		return parent.transform.AddChild(childName).gameObject;
+	}
+	
+	static public GameObject FindOrAddChild(this Component parent, string childName) {
+		return parent.transform.FindOrAddChild(childName).gameObject;
+	}
+		
+	static public void RemoveComponent<T>(this Component component) where T : Component {
+		T toRemove = component.GetComponent<T>();
+		if (toRemove != null) {
+			toRemove.Remove();
+		}
+	}
+	
+	static public T GetClosest<T>(this Component source, IList<T> targets) where T : Component {
+		float closestDistance = 1000000;
+		T closestTarget = default(T);
+
+		foreach (T target in targets) {
+			float distance = Vector3.Distance(source.transform.position, target.transform.position);
+			if (distance < closestDistance) {
+				closestTarget = target;
+				closestDistance = distance;
+			}
+		}
+		return closestTarget;
 	}
 	#endregion
 	
 	#region Object
+	static public void Remove(this UnityEngine.Object obj) {
+		if (obj != null) {
+			if (Application.isPlaying)
+				UnityEngine.Object.Destroy(obj);
+			else
+				UnityEngine.Object.DestroyImmediate(obj);
+		}
+	}
+		
 	static public T[] SendMessageToObjectsOfType<T>(this UnityEngine.Object obj, string methodName, object value, bool sendToSelf, SendMessageOptions options = SendMessageOptions.DontRequireReceiver) where T : Component {
 		List<T> objects = new List<T>();
 		foreach (T element in UnityEngine.Object.FindObjectsOfType<T>()) {
@@ -1627,7 +1636,7 @@ static public class Extensions {
 	}
 	
 	static public void Copy<T>(this T copyTo, T copyFrom, params string[] parametersToIgnore) where T : class {
-		if (typeof(T) == typeof(Component) || typeof(T).IsSubclassOf(typeof(Component))) {
+		if (typeof(Component).IsAssignableFrom(typeof(T))) {
 			List<string> parametersToIgnoreList = new List<string>(parametersToIgnore);
 			parametersToIgnoreList.Add("name");
 			parametersToIgnoreList.Add("tag");

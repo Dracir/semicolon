@@ -428,8 +428,8 @@ public class PDPlayer : MonoBehaviour {
 			}
 			if (source != null && (source.transform.hasChanged || Instance.listenerTransform.hasChanged)) {
 				changed = true;
-				Instance.SetHasChanged(source.transform, false);
-				Instance.SetHasChanged(Instance.listenerTransform, false);
+				Instance.SetTransformHasChanged(source.transform, false);
+				Instance.SetTransformHasChanged(Instance.listenerTransform, false);
 			}
 		}
 

@@ -14,8 +14,8 @@ public class Spike : StateMachine {
 	const float spawnAnimationSpeed = 5;
 	
 	TextCollider2D textCollider2D;
-	GameObject target;
-	GameObject textMesh;
+	SpikeTarget target;
+	BoxCollider2D targetCollider;
 	ColorChangeEffect colorEffect;
 	MoveEffect moveEffect;
 	
@@ -25,8 +25,9 @@ public class Spike : StateMachine {
 		textCollider2D = GetComponent<TextCollider2D>();
 		textCollider2D.Color = GameConstantes.instance.statementColor;
 		textCollider2D.Font = GameConstantes.instance.statementFont;
-		target = gameObject.FindChild("Target");
-		textMesh = gameObject.FindChild("TextMesh");
+		target = gameObject.FindChild("Target").GetComponent<SpikeTarget>();
+		target.parent = this;
+		targetCollider = target.gameObject.AddCopiedComponent(GetComponent<BoxCollider2D>());
 	}
 	
 	public override IEnumerator Initialize() {
@@ -46,7 +47,7 @@ public class Spike : StateMachine {
 		textCollider2D.Color = new Color(textCollider2D.Color.r, textCollider2D.Color.g, textCollider2D.Color.b, 1);
 		transform.position = spikeManager.transform.position;
 		target.rigidbody2D.isKinematic = false;
-		textCollider2D.ColliderIsTrigger = false;
+		targetCollider.isTrigger = false;
 		
 		if (spikeManager.waitingSpike == this) {
 			spikeManager.waitingSpike = null;
@@ -56,21 +57,14 @@ public class Spike : StateMachine {
 		if (colorEffect != null) {
 			colorEffect.isDone = true;
 		}
+		if (moveEffect != null){
+			moveEffect.isDone = true;
+		}
 		
 		CurrentState = Falling;
 	}
 	
 	#region States
-	public virtual void Spawning() {
-		if (initialized && spikeManager != null) {
-			transform.position = Vector3.Lerp(transform.position, spikeManager.transform.position, spawnAnimationSpeed * Time.deltaTime);
-		
-			if (colorEffect.isDone && moveEffect.isDone) {
-				CurrentState = WaitingToFall;
-			}
-		}
-	}
-	
 	public virtual void WaitingToFall() {
 	}
 	
@@ -88,14 +82,14 @@ public class Spike : StateMachine {
 		base.OnSpawned();
 		
 		lifeCounter = 0;
-		target.transform.localPosition = textMesh.transform.localPosition;
+		target.transform.localPosition = Vector3.zero;
 		target.rigidbody2D.isKinematic = true;
 		target.rigidbody2D.gravityScale = fallSpeed;
 		
-		textCollider2D.ColliderIsTrigger = true;
+		targetCollider.isTrigger = true;
 		textCollider2D.Color = new Color(textCollider2D.Color.r, textCollider2D.Color.g, textCollider2D.Color.b, 0);
 		
-		CurrentState = Spawning;
+		CurrentState = WaitingToFall;
 	}
 	
 	public override void OnDespawned() {
@@ -106,15 +100,7 @@ public class Spike : StateMachine {
 			spikeManager.fallingSpikes.Remove(this);
 		}
 		target.rigidbody2D.isKinematic = true;
-		textCollider2D.ColliderIsTrigger = true;
-	}
-	
-	public virtual void OnCollisionEnter2D(Collision2D collision) {
-		IDeletable deletable = collision.gameObject.GetComponent(typeof(IDeletable)) as IDeletable;
-		if (deletable != null) {
-			deletable.Delete(this);
-		}
-		Despawn();
+		targetCollider.isTrigger = true;
 	}
 	#endregion
 }

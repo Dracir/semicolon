@@ -32,10 +32,11 @@ public class SpikeManager : Spawner {
 	void SpawnSpike() {
 		if (spawningSpike != null) {
 			waitingSpike = spawningSpike;
-			waitingSpike.Invoke("Fall", 2.5F);
+			waitingSpike.Invoke("Fall", 1.5F);
 		}
 		
 		spawningSpike = Spawn("Spike", transform.position, Quaternion.identity).GetComponent<Spike>();
+		spawningSpike.transform.parent = transform;
 		spawningSpike.spikeManager = this;
 		
 		spawnDelay = randomGenerator.Range(spawnMinDelay, spawnMaxDelay);
