@@ -10,7 +10,7 @@ public class Parameter : MonoBehaviour {
 	
 	protected void notifyObservers(){
 		foreach (var observer in observers) {
-			observer.notify();	
+			observer.notify();
 		}
 	}
 

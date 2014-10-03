@@ -31,15 +31,12 @@ public class IntegerParameter : Parameter {
 		var other = otherParameter as IntegerParameter;
 		if (other != null) {
 
-			var tmp = this.valeur;
-			this.valeur = other.valeur;
-			other.valeur = tmp;
+			var tmp = this.Valeur;
+			this.Valeur = other.Valeur;
+			other.Valeur = tmp;
 			
-			this.refresh();
-			other.refresh();
-			
-			this.transform.parent.GetComponent<Instruction> ().reset ();
-			other.transform.parent.GetComponent<Instruction> ().reset ();
+			this.transform.parent.GetComponent<Instruction> ().refresh ();
+			other.transform.parent.GetComponent<Instruction> ().refresh();
 		}
 	}
 	

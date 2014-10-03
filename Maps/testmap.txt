@@ -5,6 +5,10 @@ $01 integer 1
 $02 integer 2
 $03 integer 3
 $gs integer 5 setPlayerJumpHeight
+$as integer 0 addScore
+$rs integer 0 removeScore
+$at integer 0 addTime
+$rt integer 0 removeTime
 <SpecialCharacter>
 v Spikes IsASpike 1
 <Level>
@@ -14,8 +18,8 @@ v Spikes IsASpike 1
 |
 |             //nonononnon_$01
 |                   //lalalala
-|
-|
+| addTime($at);
+| remTime($rt);
 |   spikes.fall_=_$bt;
 |
 |                                 ttoto.toto_;
