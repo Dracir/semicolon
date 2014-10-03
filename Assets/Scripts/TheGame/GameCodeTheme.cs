@@ -4,12 +4,14 @@ using System.Collections;
 [System.Serializable]
 public class GameCodeTheme  {
 
-	public Font statementFont;
-	public Material statementMaterial;
+	public Font instructionFont;
+	public Material instructionMaterial;
 
-	public Color statementColor;
+	public Color instructionColor;
+	public Color commentColor;
 	public Color booleanValueColor;
 	public Color integerValueColor;
+	
 	public Gradient instructionFlash;
 	public float effetTimeOnInstructionSwap;
 	

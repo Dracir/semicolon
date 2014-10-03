@@ -11,6 +11,7 @@ public class Instruction : MonoBehaviour, IDeletable {
 	public List<DataType>		parameterType 	= new List<DataType> ();
 
 	public string 				instructionText;
+	private bool 				isComment;
 	private string 				textToShow;
 
 	[Button(label:"Reset",methodName:"reset", NoPrefixLabel=true)]
@@ -23,6 +24,7 @@ public class Instruction : MonoBehaviour, IDeletable {
 	
 	public void reset(){
 		this.name = instructionText;
+		isComment = instructionText.StartsWith("//") || instructionText.StartsWith("/*");
 		fixChildAmount();
 		checkChildTypes();
 		resetTexts ();
@@ -135,7 +137,12 @@ public class Instruction : MonoBehaviour, IDeletable {
 
 		TextCollider2D instructionTC = this.GetComponent<TextCollider2D> ();
 		instructionTC.Text = textToShow;
-		instructionTC.Color = GameConstantes.instance.currentTheme.statementColor;
+		if(isComment){
+			instructionTC.Color = GameConstantes.instance.currentTheme.commentColor;
+		}else{
+			instructionTC.Color = GameConstantes.instance.currentTheme.instructionColor;
+		}
+		
 	}
 	
 	public string getFullText(){

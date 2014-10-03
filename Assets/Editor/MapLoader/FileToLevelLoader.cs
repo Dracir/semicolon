@@ -9,6 +9,7 @@ public class FileToLevelLoader {
 	private ReadingMod readingMod;
 	private GameObject world;
 	private GameObject instructions;
+	private GameObject levelCharacters;
 
 	private float levelY;
 
@@ -20,6 +21,7 @@ public class FileToLevelLoader {
 	public void load(string mapText, GameObject world){	
 		this.parameters 				= new Dictionary<string, string>();
 		this.instructions 				= GameObjectFactory.createGameObject ("Instruction", world);
+		this.levelCharacters			= GameObjectFactory.createGameObject ("Level Character", world);
 		this.specialCharacter 			= new Dictionary<string, string>();
 		this.specialCharacterGameObject = new Dictionary<string, GameObject>();
 		this.world 						= world;
@@ -89,13 +91,17 @@ public class FileToLevelLoader {
 	}
 
 	void create(string line, int x, float y){
-		GameObject parent = this.instructions;
 		if(this.specialCharacter.ContainsKey(line)){
 			string[] sp = this.specialCharacter[line].TrimEnd(new char[]{'\n','\r'}).Split(' ');
-			parent = addOrGetParent(sp[0]);
+			GameObject parent = addOrGetParent(sp[0]);
 			SpecialCharacterFactory.createSpecialCharacter(parent, line, this.specialCharacter[line], x, y);
+			
 		}else{
-			InstructionFactory.createInstruction(line, x, y, this.instructions, this.parameters);
+			GameObject parent = this.levelCharacters;
+			if(line.Contains("$")){
+				parent = this.instructions;
+			}
+			InstructionFactory.createInstruction(line, x, y, parent, this.parameters);
 		}
 	}
 	
