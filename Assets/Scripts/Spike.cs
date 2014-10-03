@@ -23,8 +23,8 @@ public class Spike : StateMachine {
 		base.Awake();
 		
 		textCollider2D = GetComponent<TextCollider2D>();
-		textCollider2D.Color = GameConstantes.instance.statementColor;
-		textCollider2D.Font = GameConstantes.instance.statementFont;
+		textCollider2D.Color = GameConstantes.instance.currentTheme.statementColor;
+		textCollider2D.Font = GameConstantes.instance.currentTheme.statementFont;
 		target = gameObject.FindChild("Target").GetComponent<SpikeTarget>();
 		target.parent = this;
 		targetCollider = target.gameObject.AddCopiedComponent(GetComponent<BoxCollider2D>());
