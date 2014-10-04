@@ -98,6 +98,7 @@ public class Instruction : MonoBehaviour, IDeletable {
 
 	Parameter addChild(DataType datatype){
 		GameObject go = GameObjectFactory.createGameObject ("Parameter", this.transform);
+		go.layer =  LayerMask.NameToLayer("Parameter");
 		TextMesh textMesh = go.AddComponent<TextMesh> ();
 		Parameter parameter = go.AddComponent<BooleanParameter>();
 		TextCollider2D textCollider = go.GetComponent<TextCollider2D>();

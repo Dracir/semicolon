@@ -38,7 +38,7 @@ public static class InstructionFactory  {
 		}
 
 		GameObject go = GameObjectFactory.createGameObject (line,parent);
-		go.layer =  LayerMask.NameToLayer("Ignore Raycast");
+		go.layer =  LayerMask.NameToLayer("Default");
 		go.transform.Translate (x, y, 0);
 
 		Instruction instruction = go.AddComponent<Instruction> ();
