@@ -26,8 +26,12 @@ public static class InstructionFactory  {
 			indexOfWhereImAt+= indexOfArgument + 1;
 			indexOfArgument = line.IndexOf ('$',indexOfArgument+1);
 		}
+		if(instruction.hasCompileSpot){
+			addCompileSpotMethod(instruction,parameters);
+		}
 		instruction.reset ();
 	}
+
 
 	private static Instruction createInstructionObject(GameObject parent, string line, float x, float y){
 		int indexOfArgument = line.IndexOf ('$');
@@ -41,10 +45,11 @@ public static class InstructionFactory  {
 		go.layer =  LayerMask.NameToLayer("Default");
 		go.transform.Translate (x, y, 0);
 
+		TextCollider2D tc = go.AddComponent<TextCollider2D> ();
 		Instruction instruction = go.AddComponent<Instruction> ();
 		instruction.setText (line);
 
-		TextCollider2D tc = go.GetComponent<TextCollider2D> ();
+		
 		tc.Font = GameConstantes.instance.currentTheme.instructionFont;
 
 		return instruction;
@@ -108,6 +113,29 @@ public static class InstructionFactory  {
 			TimeRemover tr = parent.AddComponent<TimeRemover>();
 			tr.integerParameter = integer;
 			integer.observers.Add(tr);
-		} 
+		} else{
+			Debug.LogError("MAPLOADER - ERROR : Unknown Function type for " + methode);
+		}
+	}
+
+	static void addCompileSpotMethod(Instruction instruction, Dictionary<string, string> parameters){
+		string key = instruction.instructionText.Substring(instruction.instructionText.IndexOf("¶"));
+		if(parameters.ContainsKey(key)){
+			string[] splited = parameters[key].Split(new char[]{' '});
+			string method = splited[0];
+			addCompileSpotMethod(instruction,method,parameters[key]);
+		} else{
+			Debug.LogError("MAPLOADER - ERROR : Unknown Key " + key);
+		}
+	}
+	
+	static void addCompileSpotMethod(Instruction instruction, string method, string arguments){
+		if(method.Equals("debuglog")){
+			string debugText = arguments.Substring(arguments.IndexOf(" "));
+			debugText = debugText.Replace("\"", " ").Trim();
+			DebugLog dl = instruction.AddComponent<DebugLog>();
+			dl.textToLog = debugText;
+			instruction.observers.Add(dl);
+		}
 	}
 }

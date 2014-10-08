@@ -98,7 +98,7 @@ public class FileToLevelLoader {
 			
 		}else{
 			GameObject parent = this.levelCharacters;
-			if(line.Contains("$")){
+			if(line.Contains("$") || line.Contains("¶")){
 				parent = this.instructions;
 			}
 			InstructionFactory.createInstruction(line, x, y, parent, this.parameters);

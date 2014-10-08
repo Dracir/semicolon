@@ -9,7 +9,7 @@ public class TimeAdder : Observer {
 		if(LevelTime.instance != null){
 			LevelTime.instance.time += integerParameter.Valeur;
 		}else{
-			Debug.LogWarning("Pas d'instance de GameTime ?!!? :O");
+			//Debug.LogWarning("Pas d'instance de GameTime ?!!? :O");
 		}		
 	}
 }

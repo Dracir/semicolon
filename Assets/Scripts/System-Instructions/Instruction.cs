@@ -12,6 +12,7 @@ public class Instruction : MonoBehaviour, IDeletable {
 
 	public string 				instructionText;
 	private bool 				isComment;
+	public bool					hasCompileSpot{get;private set;}
 	private string 				textToShow;
 
 	[Button(label:"Reset",methodName:"reset", NoPrefixLabel=true)]
@@ -62,12 +63,31 @@ public class Instruction : MonoBehaviour, IDeletable {
 				GameObjectUtils.Destroy( children[i] );
 			}
 		}
+		
+		hasCompileSpot = this.instructionText.Contains("¶");
+		if(hasCompileSpot){
+			addCompileSpot();
+		}
+	}
+
+	void addCompileSpot(){
+		GameObject go = GameObjectFactory.createGameObject("Compile Spot", this.transform);
+		go.layer =  LayerMask.NameToLayer("Parameter");
+		TextCollider2D tc2d = go.AddComponent<TextCollider2D>();
+		tc2d.Text = ";";
+		tc2d.Color = GameConstantes.instance.currentTheme.compileSpotColor;
+		tc2d.ColliderIsTrigger = true;
+		tc2d.ColliderSize = Vector2.one * 2;
+		go.AddComponent<CompileSpot>();
 	}
 	
 	void checkChildTypes(){
 		var children = this.GetChildren();
 		int index = 0;
 		foreach(var child in children){
+			if(hasCompileSpot && index == children.Length - 1){
+				break;
+			}
 			Parameter p = child.GetComponent<Parameter>();
 			DataType dataType = this.parameterType[index];
 			if(!p.isOfType(dataType)){
@@ -76,6 +96,7 @@ public class Instruction : MonoBehaviour, IDeletable {
 			p = child.GetComponent<Parameter>();
 			p.refresh();
 			index++;
+			
 		}
 	}
 	
@@ -135,6 +156,16 @@ public class Instruction : MonoBehaviour, IDeletable {
 		}
 		
 		textToShow += remainingText;
+		x+= remainingText.Length;
+		
+		if(hasCompileSpot){
+			textToShow = textToShow.Substring(0,textToShow.IndexOf("¶"));
+			x -= 3;
+			GameObject compileSpot = this.GetChild(this.GetChildCount()-1);
+			compileSpot.transform.SetPosition(new Vector3(x + this.transform.position.x,this.transform.position.y,0));
+			
+		}
+		
 
 		TextCollider2D instructionTC = this.GetComponent<TextCollider2D> ();
 		instructionTC.Text = textToShow;
@@ -177,7 +208,7 @@ public class Instruction : MonoBehaviour, IDeletable {
 	}
 
 	
-	protected void notifyObservers(){
+	public void notifyObservers(){
 		foreach (var observer in observers) {
 			observer.notify();	
 		}
@@ -203,5 +234,19 @@ public class Instruction : MonoBehaviour, IDeletable {
 		int parentX	= (int) this.transform.position.x;
 		int x		= spikeX - parentX;
 		EffectManager.AddGameEffect(new WaveDeleteTextEffect(this,1,x));
+	}
+	
+	public void flashCompileEffect(){
+		/*TextCollider2D textColliderHited = hitedParameter.GetComponent<TextCollider2D>();
+		TextCollider2D textColliderInDrag = parameterDragged.GetComponent<TextCollider2D>();
+		Color c1t1 = textColliderHited.Color;
+		Color c1t0 = new Color(c1t1.r, c1t1.g, c1t1.b, 0);
+		Color c2t1 = textColliderInDrag.Color;
+		Color c2t0 = new Color(c1t1.r, c1t1.g, c1t1.b, 0);*/
+		
+		//EffectManager.AddGameEffect( new ColorChangeEffect(textColliderHited	,c1t0,c1t1, GameConstantes.instance.currentTheme.effetTimeOnInstructionSwap) );
+		TextCollider2D instructionTC = this.GetComponent<TextCollider2D> ();
+		
+		EffectManager.AddGameEffect( new GradientEffet(instructionTC ,GameConstantes.instance.currentTheme.instructionFlash, GameConstantes.instance.currentTheme.effetTimeOnInstructionSwap) );
 	}
 }

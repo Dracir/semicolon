@@ -14,6 +14,9 @@ public class Semicolon : Movable {
 	
 	public static Semicolon instance;
 	
+	public bool igniorePlayerInput = false;
+	public bool ignioreVelocity = false;
+	
 	protected override float GetMaxSpeed() {
 		if (grounded){
 			return maxGroundSpeed;
@@ -37,14 +40,16 @@ public class Semicolon : Movable {
 	protected void Awake () {
 		instance = this;
 	}
-	// Use this for initialization
+
+	
 	protected override void Start () {
 		base.Start();
-		
 	}
 	
-	// Update is called once per frame
+
 	protected override void Update () {
+		if(ignioreVelocity) return;
+		
 		controller.GetInputs();
 		
 		if (hasGravity){
@@ -70,6 +75,7 @@ public class Semicolon : Movable {
 	
 	protected override void Jump ()
 	{
+		if(igniorePlayerInput) return ; 
 		base.Jump ();
 		hasJumped = true;
 	}
@@ -80,6 +86,8 @@ public class Semicolon : Movable {
 	
 	protected override void HandleMovement (float input)
 	{
+		if(igniorePlayerInput) return ; 
+		
 		base.HandleMovement (input);
 		
 		if (grounded && input != 0){
@@ -98,5 +106,4 @@ public class Semicolon : Movable {
 	public void SetJumpHeight (int param){
 		jumpForce = param * jumpParamModifier;
 	}
-	
 }

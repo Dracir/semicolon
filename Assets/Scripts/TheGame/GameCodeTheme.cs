@@ -9,6 +9,7 @@ public class GameCodeTheme  {
 
 	public Color instructionColor;
 	public Color commentColor;
+	public Color compileSpotColor;
 	public Color booleanValueColor;
 	public Color integerValueColor;
 	

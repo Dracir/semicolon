@@ -13,3 +13,17 @@ E:\Projects\Unity\Semi Colon\semicolon\obj\Debug\Assembly-CSharp.dll
 E:\Projects\Unity\Semi Colon\semicolon\obj\Debug\Assembly-CSharp.pdb
 E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\UnityEngine.UI.dll
 E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\Assembly-CSharp.dll
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\Assembly-CSharp.pdb
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\HOTween.dll
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\UnityEditor.dll
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\UnityEngine.dll
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\Mono.Cecil.dll
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\nunit.framework.dll
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\Unity.DataContract.dll
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\HOTween.xml
+G:\Workspaces\unity\semicolon\obj\Debug\Assembly-CSharp-vs.csprojResolveAssemblyReference.cache
+G:\Workspaces\unity\semicolon\obj\Debug\Assembly-CSharp.dll
+G:\Workspaces\unity\semicolon\obj\Debug\Assembly-CSharp.pdb
