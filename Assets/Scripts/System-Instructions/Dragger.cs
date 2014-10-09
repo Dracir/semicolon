@@ -32,7 +32,8 @@ public class Dragger : MonoBehaviour {
 
 	void startDrag(){
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+		LayerMask mask = new LayerMask().AddToMask("Parameter");
+		RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction,1000,mask);
 		if(hit.collider != null){
 			GameObject hitedObject = hit.collider.gameObject;
 			Parameter hitedParameter = hitedObject.GetComponent<Parameter> ();
@@ -50,7 +51,8 @@ public class Dragger : MonoBehaviour {
 		this.parameterInDrag.gameObject.layer =  LayerMask.NameToLayer("Ignore Raycast");
 		parameterInDrag.transform.SetPosition(this.parameterOldPosition);
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction,1000, 1 >> LayerMask.NameToLayer("Parameter"));
+		LayerMask mask = new LayerMask().AddToMask("Parameter");
+		RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction,1000, mask);
 		if(hit.collider != null){
 			Debug.Log(hit.collider.gameObject.name);
 			GameObject hitedObject = hit.collider.gameObject;
