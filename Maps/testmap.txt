@@ -1,16 +1,16 @@
-<Params>
+﻿<Params>
 $bt boolean true
 $bf boolean false
 $01 integer 1
 $02 integer 2
 $03 integer 3
-$gs integer 5 setPlayerJumpHeight
-$as integer 0 addScore
-$rs integer 0 removeScore
-$at integer 0 addTime
-$rt integer 0 removeTime
+$gs integer 5 setPlayerJumpHeight false
+$as integer 0 addScore false
+$rs integer 0 removeScore false
+$at integer 0 addTime false
+$rt integer 0 removeTime false
 ¶01 debuglog "Hello World"
-¶02 debuglog "Banana"
+¶02 debuglog "Kevin"
 <SpecialCharacter>
 v Spikes IsASpike 1
 <Level>
@@ -22,7 +22,8 @@ v Spikes IsASpike 1
 | sayThing()¶01                 //lalalala
 |
 |
-|
+| multiplyDivide($01,_$02);
+| multiply($01_/_$02)
 |
 | addTime($at);
 | remTime($rt);

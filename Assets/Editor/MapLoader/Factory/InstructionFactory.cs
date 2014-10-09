@@ -7,7 +7,18 @@ public static class InstructionFactory  {
 	public static LevelScore levelScore;
 	public static LevelTime levelTime;
 	
-	public static void createInstruction(string line, float x, float y, GameObject parent, Dictionary<string,string> parameters){
+	public static Instruction createInstruction(string line, float x, float y, GameObject parent, List<string> parameterList){
+		Dictionary<string,string> parameters = new Dictionary<string, string>();
+		foreach (var paramItem in parameterList) {
+			int indexOfFirstSpace 	= paramItem.IndexOf (' ');
+			string key 				= paramItem.Substring (0, indexOfFirstSpace);
+			string paramValue 		= paramItem.Substring (indexOfFirstSpace + 1);
+			parameters.Add (key, paramValue);
+		}
+		return InstructionFactory.createInstruction(line,x,y,parent,parameters);
+	}
+	
+	public static Instruction createInstruction(string line, float x, float y, GameObject parent, Dictionary<string,string> parameters){
 		line = line.Replace('_',' ');
 
 		Instruction instruction = createInstructionObject(parent, line,x,y);
@@ -30,6 +41,8 @@ public static class InstructionFactory  {
 			addCompileSpotMethod(instruction,parameters);
 		}
 		instruction.reset ();
+		
+		return instruction;
 	}
 
 
@@ -73,8 +86,10 @@ public static class InstructionFactory  {
 		}else if(type.Equals("integer")){
 			IntegerParameter integer = addIntegerParam(instruction, childIndex, value);
 			if(param.Length >= 3){
-				
-				addIntegerMethod(integer,param[2], parent);
+				addIntegerMethod(integer,param[2], instruction.gameObject);
+			}
+			if(param.Length >= 4){
+				integer.autoCompile = param[3].StartsWith("true");
 			}
 		}else{
 			Debug.LogError("MAPLOADER - ERROR : Unknown parameter type for " + paramData);
@@ -95,22 +110,22 @@ public static class InstructionFactory  {
 			integer.observers.Add(gc);
 			
 		}else if(methode.StartsWith("addScore")){
-			ScoreAdder sa = parent.AddComponent<ScoreAdder>();
+			ScoreAdder sa = integer.gameObject.AddComponent<ScoreAdder>();
 			sa.integerParameter = integer;
 			integer.observers.Add(sa);
 			
 		}else if(methode.StartsWith("removeScore")){
-			ScoreRemover sr = parent.AddComponent<ScoreRemover>();
+			ScoreRemover sr = integer.gameObject.AddComponent<ScoreRemover>();
 			sr.integerParameter = integer;
 			integer.observers.Add(sr);
 			
 		}else if(methode.StartsWith("addTime")){
-			TimeAdder ta = parent.AddComponent<TimeAdder>();
+			TimeAdder ta = integer.gameObject.AddComponent<TimeAdder>();
 			ta.integerParameter = integer;
 			integer.observers.Add(ta);
 			
 		}else if(methode.StartsWith("removeTime")){
-			TimeRemover tr = parent.AddComponent<TimeRemover>();
+			TimeRemover tr = integer.gameObject.AddComponent<TimeRemover>();
 			tr.integerParameter = integer;
 			integer.observers.Add(tr);
 		} else{
