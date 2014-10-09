@@ -13,21 +13,12 @@ public class zTest : MonoBehaviour, ITickable {
 	public AudioSource beatSource;
 	public AudioSource measureSource;
 
-	MetronomeUpdater metronomeUpdater;
-	
 	void Test() {
 		
 	}
 	
 	void Start() {
-		metronomeUpdater = gameObject.AddComponent<MetronomeUpdater>();
-		metronomeUpdater.metronome.Subscribe(this);
-		metronomeUpdater.metronome.Start();
-	}
-	
-	void Update() {
-		metronomeUpdater.metronome.BeatsPerMinute = beatsPerMinute;
-		metronomeUpdater.metronome.BeatsPerMeasure = beatsPerMeasure;
+		References.MetronomeUpdater.metronome.Subscribe(this);
 	}
 	
 	public void BeatEvent(int currentBeat) {

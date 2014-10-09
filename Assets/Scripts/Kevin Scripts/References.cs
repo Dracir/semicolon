@@ -21,6 +21,12 @@ public class References : MonoBehaviour {
 		set { Instance.mainCameraFollow = value; }
 	}
 
+	public MetronomeUpdater metronomeUpdater;
+	static public MetronomeUpdater MetronomeUpdater {
+		get { return Instance.metronomeUpdater; }
+		set { Instance.metronomeUpdater = value; }
+	}
+
 	public Prefabs prefabs;
 	public Fonts fonts;
 
