@@ -20,7 +20,7 @@ public class Movable : MonoBehaviour {
 	//-----------------Global Properties-----------------\\
 	//---------------------------------------------------\\
 	
-	public const float gravity = 22f;
+	public const float gravity = 28f;
 	
 	//---------------------------------------------------\\
 	//------------------Component Vars-------------------\\
@@ -276,7 +276,7 @@ public class Movable : MonoBehaviour {
 		}
 		
 		//apply deceleration if I'm not pressing anything or if I'm pressing the opposite from where I'm going (turning around)
-		if ((input == 0 && Mathf.Abs(newXVelocity) > stopLeeway && grounded) || ((input > 0 && newXVelocity < 0) || (input < 0 && newXVelocity > 0))){
+		if ((input == 0 && Mathf.Abs(newXVelocity) > stopLeeway) || ((input > 0 && newXVelocity < 0) || (input < 0 && newXVelocity > 0))){
 			newXVelocity = Decelerate(newXVelocity);
 		} else if (Mathf.Abs(newXVelocity) <= stopLeeway){
 			newXVelocity = 0;
