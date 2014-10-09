@@ -30,6 +30,7 @@ public class IntegerParameter : Parameter {
 		this.transform.parent.GetComponent<Instruction>().refresh();
 		if(autoCompile){
 			this.notifyObservers();
+			this.GetComponentInParent<Instruction>().compile();
 		}
 		
 	}

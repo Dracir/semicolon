@@ -36,7 +36,11 @@ public class Instruction : MonoBehaviour, IDeletable {
 		resetTexts ();
 		notifyObservers ();
 	}
-
+	
+	public void compile(){
+		refresh();
+		EffectManager.AddGameEffect( GameConstantes.instance.currentTheme.createInstructionFlashEffect(this.GetComponent<TextCollider2D>()) );
+	}
 
 	void fixChildAmount(){
 
