@@ -128,7 +128,11 @@ public static class InstructionFactory  {
 			TimeRemover tr = integer.gameObject.AddComponent<TimeRemover>();
 			tr.integerParameter = integer;
 			integer.observers.Add(tr);
-		} else{
+			
+		} else if(methode.StartsWith("showScore")){
+			integer.gameObject.AddComponent<ScoreShower>();
+			
+		} else {
 			Debug.LogError("MAPLOADER - ERROR : Unknown Function type for " + methode);
 		}
 	}
@@ -151,6 +155,8 @@ public static class InstructionFactory  {
 			DebugLog dl = instruction.AddComponent<DebugLog>();
 			dl.textToLog = debugText;
 			instruction.observers.Add(dl);
+		}else if(method.Equals("compileInstruction")){
+			
 		}
 	}
 }

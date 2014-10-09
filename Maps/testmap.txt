@@ -4,29 +4,31 @@ $bf boolean false
 $01 integer 1
 $02 integer 2
 $03 integer 3
-$gs integer 5 setPlayerJumpHeight false
-$as integer 0 addScore false
-$rs integer 0 removeScore false
-$at integer 0 addTime false
-$rt integer 0 removeTime false
+$gs integer 5 setPlayerJumpHeight
+$as integer 0 addScore
+$rs integer 0 removeScore
+$at integer 0 addTime
+$rt integer 0 removeTime
+$ss integer 0 showScore
 ¶01 debuglog "Hello World"
 ¶02 debuglog "Kevin"
+¶ci compileInstruction
 <SpecialCharacter>
 v Spikes IsASpike 1
 <Level>
 +-----------------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+----------------------+ 
 :                 v       v       v       v       v       v       v       v       v       v       v       v                      :
 |
-|
+| score:_$ss
 |                //nonononnon_$01
-| sayThing()¶01                 //lalalala
+| sayThing()¶ci                 //lalalala
 |
 |
 | multiplyDivide($01,_$02);
 | multiply($01_/_$02)
 |
-| addTime($at);
-| remTime($rt);
+| addTime($as);
+| remTime($rs);
 |   spikes.fall_=_$bt;
 |
 |                                 ttoto.toto_;

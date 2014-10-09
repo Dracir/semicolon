@@ -27,8 +27,7 @@ public class MoveToMagical : MonoBehaviour {
 			}else {
 				if(!flashedOnce){
 					flashedOnce = true;
-					callingInstruction.flashCompileEffect();
-					callingInstruction.notifyObservers();
+					callingInstruction.compile();
 				}
 				if(t >= timeFrozen + timeToMove){
 					moveToActive= false;

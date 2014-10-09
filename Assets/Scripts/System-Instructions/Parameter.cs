@@ -8,7 +8,7 @@ public class Parameter : MonoBehaviour {
 
 	public List<Observer>		observers		= new List<Observer>();
 	
-	protected void notifyObservers(){
+	public void notifyObservers(){
 		foreach (var observer in observers) {
 			observer.notify();
 		}

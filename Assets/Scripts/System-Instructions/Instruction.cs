@@ -40,6 +40,11 @@ public class Instruction : MonoBehaviour, IDeletable {
 	public void compile(){
 		refresh();
 		EffectManager.AddGameEffect( GameConstantes.instance.currentTheme.createInstructionFlashEffect(this.GetComponent<TextCollider2D>()) );
+		int childCount = this.GetChildCount();
+		if(this.hasCompileSpot) childCount--;
+		for (int i = 0; i < childCount; i++) {
+			this.GetChild(i).GetComponent<Parameter>().notifyObservers();
+		}
 	}
 
 	void fixChildAmount(){
@@ -241,14 +246,6 @@ public class Instruction : MonoBehaviour, IDeletable {
 	}
 	
 	public void flashCompileEffect(){
-		/*TextCollider2D textColliderHited = hitedParameter.GetComponent<TextCollider2D>();
-		TextCollider2D textColliderInDrag = parameterDragged.GetComponent<TextCollider2D>();
-		Color c1t1 = textColliderHited.Color;
-		Color c1t0 = new Color(c1t1.r, c1t1.g, c1t1.b, 0);
-		Color c2t1 = textColliderInDrag.Color;
-		Color c2t0 = new Color(c1t1.r, c1t1.g, c1t1.b, 0);*/
-		
-		//EffectManager.AddGameEffect( new ColorChangeEffect(textColliderHited	,c1t0,c1t1, GameConstantes.instance.currentTheme.effetTimeOnInstructionSwap) );
 		TextCollider2D instructionTC = this.GetComponent<TextCollider2D> ();
 		
 		EffectManager.AddGameEffect( new GradientEffet(instructionTC ,GameConstantes.instance.currentTheme.instructionFlash, GameConstantes.instance.currentTheme.effetTimeOnInstructionSwap) );

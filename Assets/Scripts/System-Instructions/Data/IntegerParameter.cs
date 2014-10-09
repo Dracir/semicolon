@@ -17,7 +17,7 @@ public class IntegerParameter : Parameter {
 	}
 	
 
-	public bool autoCompile = true;
+	public bool autoCompile = false;
 	
 	
 	public override void refresh(){
@@ -30,7 +30,6 @@ public class IntegerParameter : Parameter {
 		this.transform.parent.GetComponent<Instruction>().refresh();
 		if(autoCompile){
 			this.notifyObservers();
-			this.GetComponentInParent<Instruction>().compile();
 		}
 		
 	}

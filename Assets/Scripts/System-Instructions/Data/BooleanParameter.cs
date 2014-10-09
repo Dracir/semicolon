@@ -16,7 +16,7 @@ public class BooleanParameter : Parameter {
 		}
 	}
 	
-	public bool autoCompile = true;
+	public bool autoCompile = false;
 
 	public override void refresh(){
 		TextCollider2D tc = this.GetComponent<TextCollider2D> ();
@@ -28,7 +28,6 @@ public class BooleanParameter : Parameter {
 		this.transform.parent.GetComponent<Instruction>().refresh();
 		if(autoCompile){
 			this.GetComponentInParent<Instruction>().compile();
-			this.notifyObservers();
 		}
 	}
 
