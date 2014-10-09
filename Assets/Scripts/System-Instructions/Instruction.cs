@@ -43,7 +43,10 @@ public class Instruction : GameText {
 		int childCount = this.GetChildCount();
 		if(this.hasCompileSpot) childCount--;
 		for (int i = 0; i < childCount; i++) {
-			this.GetChild(i).GetComponent<Parameter>().notifyObservers();
+			Parameter childParam = this.GetChild(i).GetComponent<Parameter>();
+			if(childParam){
+				childParam.notifyObservers();
+			}
 		}
 	}
 
