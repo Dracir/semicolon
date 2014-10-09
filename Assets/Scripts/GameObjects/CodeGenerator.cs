@@ -4,6 +4,15 @@ using System.Collections.Generic;
 
 public class CodeGenerator : MonoBehaviour {
 	
+	private string[] instructionLines = new string[] {
+		"$as integer 0 addScore",
+		"$rs integer 0 removeScore",
+		"$at integer 0 addTime",
+		"$rt integer 0 removeTime"
+	};
+	
+	private int[] values = new int[] { 1, 2, 3, 5, 8, 13, 21, 34 };
+	
 	private float generatorTimer = 0;
 	private float maxRange = 6f;
 	private float minRange = 4f;
@@ -56,7 +65,16 @@ public class CodeGenerator : MonoBehaviour {
 		
 		int instIndex = timeRand.Range (0, instructions.Length - 1);
 		
-		Instantiate(instructions[instIndex], nodes[nodeIndex].position, nodes[nodeIndex].rotation);
+		//Instantiate(instructions[instIndex], nodes[nodeIndex].position, nodes[nodeIndex].rotation);
+		
+		string instruction = "addTime($at, $bt);";
+		Dictionary<string,string> param = new Dictionary<string, string>();
+		param.Add(instructionLines[instIndex]);
+		GameObject parent = null;
+		InstructionFactory.createInstruction(instruction, 1,1, parent, param);
+		
 		generatorTimer = GetNewTime();
 	}
+	
+	
 }
