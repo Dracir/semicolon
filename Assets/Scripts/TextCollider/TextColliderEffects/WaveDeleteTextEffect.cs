@@ -9,6 +9,7 @@ public class WaveDeleteTextEffect : Effect {
 	private int distanceFromCenter = 0;
 	private int centerCharacter;
 	private int nSpaces = 0;
+	
 	public WaveDeleteTextEffect(Instruction instruction, float speed, int startingCharacter) : base(instruction.GetComponent<TextCollider2D>()){
 		this.instruction = instruction;
 		this.speed = speed / Mathf.Max(startingCharacter, instruction.getFullText().Length - startingCharacter);

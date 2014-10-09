@@ -5,7 +5,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(TextMesh))]
 [RequireComponent(typeof(TextCollider2D))]
 [System.Serializable]
-public class Instruction : MonoBehaviour, IDeletable {
+public class Instruction : GameText {
 
 	public List<Observer>		observers		= new List<Observer>();
 	public List<DataType>		parameterType 	= new List<DataType> ();
@@ -234,15 +234,6 @@ public class Instruction : MonoBehaviour, IDeletable {
 	
 	void OnDestroy(){
 		transform.DestroyChildren();
-	}
-	
-	
-
-	void IDeletable.Delete(Spike spike){
-		int spikeX 	= (int) spike.transform.position.x;
-		int parentX	= (int) this.transform.position.x;
-		int x		= spikeX - parentX;
-		EffectManager.AddGameEffect(new WaveDeleteTextEffect(this,1,x));
 	}
 	
 	public void flashCompileEffect(){
