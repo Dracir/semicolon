@@ -3,8 +3,8 @@
 [ExecuteInEditMode]
 public class References : MonoBehaviour {
 
-	public Player player;
-	static public Player Player {
+	public Semicolon player;
+	static public Semicolon Player {
 		get { return Instance.player; }
 		set { Instance.player = value; }
 	}

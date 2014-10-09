@@ -32,7 +32,8 @@ public class Dragger : MonoBehaviour {
 
 	void startDrag(){
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+		LayerMask mask = new LayerMask().AddToMask("Parameter");
+		RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction,1000,mask);
 		if(hit.collider != null){
 			GameObject hitedObject = hit.collider.gameObject;
 			Parameter hitedParameter = hitedObject.GetComponent<Parameter> ();
@@ -50,9 +51,9 @@ public class Dragger : MonoBehaviour {
 		this.parameterInDrag.gameObject.layer =  LayerMask.NameToLayer("Ignore Raycast");
 		parameterInDrag.transform.SetPosition(this.parameterOldPosition);
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction,1000, 1 >> LayerMask.NameToLayer("Parameter"));
+		LayerMask mask = new LayerMask().AddToMask("Parameter");
+		RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction,1000, mask);
 		if(hit.collider != null){
-			Debug.Log(hit.collider.gameObject.name);
 			GameObject hitedObject = hit.collider.gameObject;
 			Parameter hitedParameter = hitedObject.GetComponent<Parameter> ();
 			
@@ -79,17 +80,6 @@ public class Dragger : MonoBehaviour {
 		
 		EffectManager.AddGameEffect( new ColorChangeEffect(textColliderHited	,c1t0,c1t1, GameConstantes.instance.currentTheme.effetTimeOnInstructionSwap) );
 		EffectManager.AddGameEffect( new ColorChangeEffect(textColliderInDrag	,c2t0,c2t1, GameConstantes.instance.currentTheme.effetTimeOnInstructionSwap) );
-		
-		
-		//EffectManager.AddGameEffect( new MoveEffect(textColliderHited	,textColliderInDrag.transform.position, 0.5f, false) );
-		//EffectManager.AddGameEffect( new MoveEffect(textColliderInDrag	,textColliderHited.transform.position , 0.5f, false) );
-		
-		
-		TextCollider2D parentColiderHited = hitedParameter.transform.parent.GetComponent<TextCollider2D>();
-		TextCollider2D parentColiderDraged = parameterDragged.transform.parent.GetComponent<TextCollider2D>();
-		
-		EffectManager.AddGameEffect( new GradientEffet(parentColiderHited ,GameConstantes.instance.currentTheme.instructionFlash, GameConstantes.instance.currentTheme.effetTimeOnInstructionSwap) );
-		EffectManager.AddGameEffect( new GradientEffet(parentColiderDraged,GameConstantes.instance.currentTheme.instructionFlash, GameConstantes.instance.currentTheme.effetTimeOnInstructionSwap) );
 		
 		hitedParameter.swapWith(parameterDragged);
 	}

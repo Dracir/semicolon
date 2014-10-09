@@ -4,6 +4,22 @@ using System.Collections.Generic;
 
 public class CodeGenerator : MonoBehaviour {
 	
+	private List<string>[] instructionLines = new List<string>[4] {
+		new List<string>(){"$as integer 0 addScore"},
+		new List<string>(){"$rs integer 0 removeScore"},
+		new List<string>(){"$at integer 0 addTime"},
+		new List<string>(){"$rt integer 0 removeTime"}
+	};
+	
+//	private Dictionary<string, string> instructionLines = new Dictionary<string, string>() {
+//		{"$as", "integer 0 addScore"},
+//		{"$rs", "integer 0 removeScore"},
+//		{"$at", "integer 0 addTime"},
+//		{"$rt", "integer 0 removeTime"}
+//	}
+	
+	private int[] values = new int[] { 1, 2, 3, 5, 8, 13, 21, 34 };
+	
 	private float generatorTimer = 0;
 	private float maxRange = 6f;
 	private float minRange = 4f;
@@ -44,9 +60,13 @@ public class CodeGenerator : MonoBehaviour {
 	}
 	
 	void Spawn () {
-		int nodeIndex = nodeRand.Range (0, nodes.Length - 1);
+		if (nodes.Length <= 0 || instructions.Length <= 0){
+			Debug.LogWarning ("There's no nodes! or maybe instructions.");
+			return;
+		}
+		int nodeIndex = nodeRand.Range (0, nodes.Length - 1, true);
 		while (nodeList.Contains (nodeIndex)){
-			nodeIndex = nodeRand.Range (0, nodes.Length - 1);
+			nodeIndex = nodeRand.Range (0, nodes.Length - 1, true);
 		}
 		nodeList.Add (nodeIndex);
 		if (nodeList.Count >= nodes.Length - 1){
@@ -54,9 +74,18 @@ public class CodeGenerator : MonoBehaviour {
 			nodeList.RemoveAt (0);
 		}
 		
-		int instIndex = timeRand.Range (0, instructions.Length - 1);
+		int instIndex = timeRand.Range (0, instructions.Length - 1, true);
 		
-		Instantiate(instructions[instIndex], nodes[nodeIndex].position, nodes[nodeIndex].rotation);
+		//Instantiate(instructions[instIndex], nodes[nodeIndex].position, nodes[nodeIndex].rotation);
+		
+		string instruction = "addTime($at, $bt);";
+//		Dictionary<string,string> param = new Dictionary<string, string>();
+//		param.Add(instructionLines[instIndex]);
+		
+		InstructionFactoryRuntime.createInstruction(instruction, 1,1, gameObject, instructionLines[instIndex]);
+		
 		generatorTimer = GetNewTime();
 	}
+	
+	
 }

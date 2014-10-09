@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public static class InstructionFactory  {
+public static class InstructionFactoryRuntime  {
 
 	public static LevelScore levelScore;
 	public static LevelTime levelTime;
@@ -15,7 +15,7 @@ public static class InstructionFactory  {
 			string paramValue 		= paramItem.Substring (indexOfFirstSpace + 1);
 			parameters.Add (key, paramValue);
 		}
-		return InstructionFactory.createInstruction(line,x,y,parent,parameters);
+		return InstructionFactoryRuntime.createInstruction(line,x,y,parent,parameters);
 	}
 	
 	public static Instruction createInstruction(string line, float x, float y, GameObject parent, Dictionary<string,string> parameters){

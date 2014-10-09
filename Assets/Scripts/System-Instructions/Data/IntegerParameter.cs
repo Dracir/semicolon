@@ -7,6 +7,7 @@ public class IntegerParameter : Parameter {
 
 	[SerializeField, PropertyBackingField(typeof(IntegerParameter), "Valeur")]
 	private int valeur;
+	
 	public int Valeur{
 		get{return valeur;}
 		set{
@@ -16,6 +17,9 @@ public class IntegerParameter : Parameter {
 	}
 	
 
+	public bool autoCompile = true;
+	
+	
 	public override void refresh(){
 		TextCollider2D tc = this.GetComponent<TextCollider2D> ();
 
@@ -24,7 +28,11 @@ public class IntegerParameter : Parameter {
 		this.name = "Int";
 		
 		this.transform.parent.GetComponent<Instruction>().refresh();
-		this.notifyObservers();
+		if(autoCompile){
+			this.notifyObservers();
+			this.GetComponentInParent<Instruction>().compile();
+		}
+		
 	}
 
 	public override void swapWith(Parameter otherParameter){
