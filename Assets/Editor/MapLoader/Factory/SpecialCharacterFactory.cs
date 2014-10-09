@@ -23,14 +23,15 @@ public static class SpecialCharacterFactory  {
 	static void addCharacterSpecifiqueFeature(GameObject go, string character, string paramData, GameObject parent){
 		string[] param = paramData.TrimEnd(new char[]{'\n','\r'}).Split(' ');
 		string arg = param[1];
-		int spawnDelay = int.Parse(param[2]);
 		if(arg.ToLower().Equals("isaspike")){
 			var spikeManager = go.AddComponent<SpikeManager>();
+			int spawnDelay = int.Parse(param[2]);
 			spikeManager.spawnMinDelay = spawnDelay;
 			spikeManager.spawnMaxDelay = spawnDelay * 4;
 		} else if (arg.ToLower ().Equals ("isaspawner")){
 			go.AddComponent<InstructionSpawner>();
-		} else if (arg.ToLower ().Equals ("compilespot")){
+		} else if (arg.ToLower ().Equals ("compiles")){
+			go.AddComponent<CompileSemiColon>();
 			Rigidbody2D rb = go.AddComponent<Rigidbody2D>();
 			rb.gravityScale = 0;
 			rb.isKinematic = true;

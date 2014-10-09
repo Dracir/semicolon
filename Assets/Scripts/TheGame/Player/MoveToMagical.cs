@@ -28,6 +28,7 @@ public class MoveToMagical : MonoBehaviour {
 				if(!flashedOnce){
 					flashedOnce = true;
 					callingInstruction.compile();
+					callingInstruction.Remove();
 				}
 				if(t >= timeFrozen + timeToMove){
 					moveToActive= false;

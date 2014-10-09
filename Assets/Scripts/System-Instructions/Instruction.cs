@@ -39,7 +39,7 @@ public class Instruction : GameText {
 	
 	public void compile(){
 		refresh();
-		EffectManager.AddGameEffect( GameConstantes.instance.currentTheme.createInstructionFlashEffect(this.GetComponent<TextCollider2D>()) );
+		flashCompileEffect();
 		int childCount = this.GetChildCount();
 		if(this.hasCompileSpot) childCount--;
 		for (int i = 0; i < childCount; i++) {
@@ -241,7 +241,7 @@ public class Instruction : GameText {
 	
 	public void flashCompileEffect(){
 		TextCollider2D instructionTC = this.GetComponent<TextCollider2D> ();
-		
-		EffectManager.AddGameEffect( new GradientEffet(instructionTC ,GameConstantes.instance.currentTheme.instructionFlash, GameConstantes.instance.currentTheme.effetTimeOnInstructionSwap) );
+		Effect effect = GameConstantes.instance.currentTheme.createInstructionFlashEffect(instructionTC, true);
+		EffectManager.AddGameEffect( effect );
 	}
 }

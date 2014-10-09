@@ -7,10 +7,11 @@ public class GradientEffet : Effect {
 	
 	private float time = 0;
 	private float finalTime;
+	private bool removeInstructionAfterEffect;
 	
-	
-	public GradientEffet(TextCollider2D textCollider, Gradient gradient, float time):base(textCollider){
+	public GradientEffet(TextCollider2D textCollider, Gradient gradient, float time, bool removeInstructionAfterEffect):base(textCollider){
 		this.gradient = gradient;
+		this.removeInstructionAfterEffect = removeInstructionAfterEffect;
 		this.finalTime = time;
 	}
 	
@@ -29,5 +30,8 @@ public class GradientEffet : Effect {
 	
 	public override void onStop(){
 		textCollider.Color = gradient.Evaluate(1);
+		if(removeInstructionAfterEffect){
+			textCollider.gameObject.Remove();
+		}
 	}
 }
