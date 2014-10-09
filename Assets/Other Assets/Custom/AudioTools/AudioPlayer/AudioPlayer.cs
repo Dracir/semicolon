@@ -97,7 +97,8 @@ public class AudioPlayer : MonoBehaviour {
 				DestroyImmediate(gameObject);
 			}
 		}
-		else StartMetronome();
+		else
+			StartMetronome();
 	}
 	
 	void Update() {
@@ -111,7 +112,8 @@ public class AudioPlayer : MonoBehaviour {
 			
 			if (audioClips != null) {
 				foreach (AudioClip audioClip in audioClips) {
-					if (audioClip != null) CreateHierarchy(audioClip, audioClip.name, transform);
+					if (audioClip != null)
+						CreateHierarchy(audioClip, audioClip.name, transform);
 				}
 				FreezeHierarchy();
 			}
@@ -134,7 +136,8 @@ public class AudioPlayer : MonoBehaviour {
 		if (!Application.isPlaying) {
 			SetReferences();
 		}
-		else ToPlayCounter = 0;
+		else
+			ToPlayCounter = 0;
 	}
 	
 	void UpdateBuses() {
@@ -167,7 +170,8 @@ public class AudioPlayer : MonoBehaviour {
 				}
 			}
 		}
-		if (updateBusVolume) UpdateBusVolume();
+		if (updateBusVolume)
+			UpdateBusVolume();
 	}
 	
 	void UpdateRTPCs() {
@@ -237,7 +241,8 @@ public class AudioPlayer : MonoBehaviour {
 		if (!string.IsNullOrEmpty(audioClipsPath)) {
 			AudioClip[] clips;
 			clips = Resources.LoadAll<AudioClip>(audioClipsPath);
-			if (audioClips != clips && clips.Length != 0) audioClips = clips;
+			if (audioClips != clips && clips.Length != 0)
+				audioClips = clips;
 			audioClips = Sort(audioClips);
 		}
 		
@@ -252,8 +257,10 @@ public class AudioPlayer : MonoBehaviour {
 		while (ActiveVoices.Count > maxVoices) {
 			for (int i = 0; i < ActiveVoices.Count; i++) {
 				AudioSource audioSource = ActiveVoices[i];
-				if (audioSource == null) continue;
-				if (!AudioInfos.ContainsKey(audioSource.clip.name)) continue;
+				if (audioSource == null)
+					continue;
+				if (!AudioInfos.ContainsKey(audioSource.clip.name))
+					continue;
 				
 				AudioInfoOld audioInfo = AudioInfos[audioSource.clip.name];
 				if (!audioInfo.doNotKill) {
@@ -273,9 +280,12 @@ public class AudioPlayer : MonoBehaviour {
 		string gameObjectName;
 		string[] splitName = name.Split('_');
 
-		if (!string.IsNullOrEmpty(splitName[0])) gameObjectName = splitName[0];
-		else if (!string.IsNullOrEmpty(name)) gameObjectName = name;
-		else return;
+		if (!string.IsNullOrEmpty(splitName[0]))
+			gameObjectName = splitName[0];
+		else if (!string.IsNullOrEmpty(name))
+			gameObjectName = name;
+		else
+			return;
 		
 		foreach (Transform child in parent.GetChildren()) {
 			if (child.name == gameObjectName) {
@@ -413,10 +423,13 @@ public class AudioPlayer : MonoBehaviour {
 		AudioInfoOld audioInfo = null;
 		
 		if (audioSource.clip != null) {
-			if (AudioInfos.ContainsKey(audioSource.clip.name)) audioInfo = AudioInfos[audioSource.clip.name];
+			if (AudioInfos.ContainsKey(audioSource.clip.name))
+				audioInfo = AudioInfos[audioSource.clip.name];
 		}
-		if (audioInfo != null) delay = (float)(GetDelayToSync(syncMode) + GetAdjustedDelay(audioInfo.delay, audioInfo.syncMode) + GetAdjustedDelay(delay, syncMode));
-		else delay = (float)(GetDelayToSync(syncMode) + GetAdjustedDelay(delay, syncMode));
+		if (audioInfo != null)
+			delay = (float)(GetDelayToSync(syncMode) + GetAdjustedDelay(audioInfo.delay, audioInfo.syncMode) + GetAdjustedDelay(delay, syncMode));
+		else
+			delay = (float)(GetDelayToSync(syncMode) + GetAdjustedDelay(delay, syncMode));
 		
 		if (ActiveAudioSources.ContainsKey(audioSource.gameObject)) {
 			SchedulePlay(audioSource, audioInfo, delay);
@@ -447,7 +460,8 @@ public class AudioPlayer : MonoBehaviour {
 				return Play(audioSource, delay, syncMode);
 			}
 		}
-		else return null;
+		else
+			return null;
 	}
 	
 	public static AudioSource Play(AudioInfoOld audioInfo, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
@@ -466,14 +480,16 @@ public class AudioPlayer : MonoBehaviour {
 				return Play(audioSource, delay, syncMode);
 			}
 		}
-		else return null;
+		else
+			return null;
 	}
 	
 	public static List<AudioSource> Play(AudioInfoOld[] audioInfos, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
 		List<AudioSource> audioSources = new List<AudioSource>();
 		for (int i = 0; i < audioInfos.Length; i++) {
 			AudioSource audioSource = Play(audioInfos[i], sourceObject, delay, syncMode);
-			if (audioSource != null) audioSources.Add(audioSource);
+			if (audioSource != null)
+				audioSources.Add(audioSource);
 		}
 		return audioSources;
 	}
@@ -490,7 +506,8 @@ public class AudioPlayer : MonoBehaviour {
 		List<AudioSource> audioSources = new List<AudioSource>();
 		for (int i = 0; i < soundNames.Length; i++) {
 			AudioSource audioSource = Play(soundNames[i], sourceObject, delay, syncMode);
-			if (audioSource != null) audioSources.Add(audioSource);
+			if (audioSource != null)
+				audioSources.Add(audioSource);
 		}
 		return audioSources;
 	}
@@ -599,8 +616,10 @@ public class AudioPlayer : MonoBehaviour {
 			if (audioSource.clip != null) {
 				if (audioSource.gameObject.activeSelf) {
 					AudioInfoOld audioInfo;
-					if (AudioInfos.ContainsKey(audioSource.clip.name)) audioInfo = AudioInfos[audioSource.clip.name];
-					else audioInfo = new AudioInfoOld();
+					if (AudioInfos.ContainsKey(audioSource.clip.name))
+						audioInfo = AudioInfos[audioSource.clip.name];
+					else
+						audioInfo = new AudioInfoOld();
 					ActiveAudioSources[audioSource.gameObject].AddCoroutine("StopAfterDelay", StopAfterDelay(audioSource, audioInfo, delay, true));
 				}
 			}
@@ -631,8 +650,10 @@ public class AudioPlayer : MonoBehaviour {
 		if (audioSource != null) {
 			if (audioSource.clip != null) {
 				AudioInfoOld audioInfo;
-				if (AudioInfos.ContainsKey(audioSource.clip.name)) audioInfo = AudioInfos[audioSource.clip.name];
-				else audioInfo = new AudioInfoOld();
+				if (AudioInfos.ContainsKey(audioSource.clip.name))
+					audioInfo = AudioInfos[audioSource.clip.name];
+				else
+					audioInfo = new AudioInfoOld();
 				
 				if (audioSource.gameObject.activeSelf) {
 					ActiveAudioSources[audioSource.gameObject].AddCoroutine("StopAfterDelay", StopAfterDelay(audioSource, audioInfo, delay, true, false));
@@ -727,11 +748,13 @@ public class AudioPlayer : MonoBehaviour {
 		
 		if (subContainer.sourceType == SubContainer.ContainerTypes.AudioSource) {
 			AudioSource audioSource = Play(subContainer.audioInfo, sourceObject, subContainer.delay + delay, subContainer.syncMode);
-			if (audioSource != null) audioSources.Add(audioSource);
+			if (audioSource != null)
+				audioSources.Add(audioSource);
 		}
 		else if (subContainer.sourceType == SubContainer.ContainerTypes.Sampler) {
 			AudioSource audioSource = Sampler.Play(subContainer.instrumentName, subContainer.midiNote, subContainer.velocity, sourceObject, subContainer.delay + delay, subContainer.syncMode);
-			if (audioSource != null) audioSources.Add(audioSource);
+			if (audioSource != null)
+				audioSources.Add(audioSource);
 		}
 		else if (subContainer.sourceType == SubContainer.ContainerTypes.MixContainer) {
 			for (int i = 0; i < subContainer.childrenLink.Count; i++) {
@@ -782,7 +805,8 @@ public class AudioPlayer : MonoBehaviour {
 					}
 					while (tempAudioSources.Count == 0) {
 						yield return new WaitForSeconds(0);
-						if (audioSources.Count == 0) break;
+						if (audioSources.Count == 0)
+							break;
 					}
 					foreach (AudioSource source in tempAudioSources) {
 						AudioInfoOld audioInfo = AudioInfos[source.clip.name];
@@ -809,7 +833,8 @@ public class AudioPlayer : MonoBehaviour {
 					IEnumerator coroutine = PlaySequence(audioSources, sequence[i].sources, container, sourceObject, sequence[i].delay, sequence[i].syncMode);
 					while (coroutine.MoveNext()) {
 						yield return coroutine.Current;
-						if (audioSources.Count == 0) break;
+						if (audioSources.Count == 0)
+							break;
 					}
 				}
 				
@@ -818,7 +843,8 @@ public class AudioPlayer : MonoBehaviour {
 					yield return new WaitForSeconds(0);
 					counter += Time.deltaTime;
 				}
-				if (audioSources.Count == 0) break;
+				if (audioSources.Count == 0)
+					break;
 			}
 		}
 	}
@@ -839,7 +865,8 @@ public class AudioPlayer : MonoBehaviour {
 					firstTime = false;
 				}
 				else {
-					if (audioSources.Count == 0) break;
+					if (audioSources.Count == 0)
+						break;
 					while (nextRepeatTime < AudioSettings.dspTime) {
 						nextRepeatTime += GetAdjustedDelay(repeatRate, syncMode);
 					}
@@ -881,8 +908,10 @@ public class AudioPlayer : MonoBehaviour {
 		}
 		
 		if (audioSource != null) {
-			if (audioSource.gameObject.activeSelf) audioSource.Pause();
-			if (ActiveAudioSources.ContainsKey(audioSource.gameObject)) ActiveAudioSources[audioSource.gameObject].PauseAllCoroutines();
+			if (audioSource.gameObject.activeSelf)
+				audioSource.Pause();
+			if (ActiveAudioSources.ContainsKey(audioSource.gameObject))
+				ActiveAudioSources[audioSource.gameObject].PauseAllCoroutines();
 			Instance.coroutineHolder.PauseCoroutines("PlayRepeatedly" + audioSource.GetHashCode());
 			Instance.coroutineHolder.PauseCoroutines("PlaySequence" + audioSource.GetHashCode());
 		}
@@ -898,8 +927,10 @@ public class AudioPlayer : MonoBehaviour {
 		if (audioSources != null) {
 			foreach (AudioSource audioSource in audioSources) {
 				if (audioSource != null) {
-					if (audioSource.gameObject.activeSelf) audioSource.Pause();
-					if (ActiveAudioSources.ContainsKey(audioSource.gameObject)) ActiveAudioSources[audioSource.gameObject].PauseAllCoroutines();
+					if (audioSource.gameObject.activeSelf)
+						audioSource.Pause();
+					if (ActiveAudioSources.ContainsKey(audioSource.gameObject))
+						ActiveAudioSources[audioSource.gameObject].PauseAllCoroutines();
 					Instance.coroutineHolder.PauseCoroutines("PlayRepeatedly" + audioSource.GetHashCode());
 					Instance.coroutineHolder.PauseCoroutines("PlaySequence" + audioSource.GetHashCode());
 				}
@@ -918,8 +949,10 @@ public class AudioPlayer : MonoBehaviour {
 		
 		if (audioSource != null) {
 			if (!audioSource.isPlaying) {
-				if (audioSource.gameObject.activeSelf) audioSource.Play();
-				if (ActiveAudioSources.ContainsKey(audioSource.gameObject)) ActiveAudioSources[audioSource.gameObject].ResumeAllCoroutines();
+				if (audioSource.gameObject.activeSelf)
+					audioSource.Play();
+				if (ActiveAudioSources.ContainsKey(audioSource.gameObject))
+					ActiveAudioSources[audioSource.gameObject].ResumeAllCoroutines();
 				Instance.coroutineHolder.ResumeCoroutines("PlayRepeatedly" + audioSource.GetHashCode());
 				Instance.coroutineHolder.ResumeCoroutines("PlaySequence" + audioSource.GetHashCode());
 			}
@@ -937,8 +970,10 @@ public class AudioPlayer : MonoBehaviour {
 			foreach (AudioSource audioSource in audioSources) {
 				if (audioSource != null) {
 					if (!audioSource.isPlaying) {
-						if (audioSource.gameObject.activeSelf) audioSource.Play();
-						if (ActiveAudioSources.ContainsKey(audioSource.gameObject)) ActiveAudioSources[audioSource.gameObject].ResumeAllCoroutines();
+						if (audioSource.gameObject.activeSelf)
+							audioSource.Play();
+						if (ActiveAudioSources.ContainsKey(audioSource.gameObject))
+							ActiveAudioSources[audioSource.gameObject].ResumeAllCoroutines();
 						Instance.coroutineHolder.ResumeCoroutines("PlayRepeatedly" + audioSource.GetHashCode());
 						Instance.coroutineHolder.ResumeCoroutines("PlaySequence" + audioSource.GetHashCode());
 					}
@@ -987,7 +1022,8 @@ public class AudioPlayer : MonoBehaviour {
 			float volumeDiff = targetVolume - startVolume;
 			
 			while (audioSource != null) {
-				if (enforce) yield return new WaitForEndOfFrame();
+				if (enforce)
+					yield return new WaitForEndOfFrame();
 				if (audioSource != null) {
 					if (curve != null) {
 						float adjustedValue = 0;
@@ -1111,9 +1147,12 @@ public class AudioPlayer : MonoBehaviour {
 	static void RemoveInactiveAudioSources(List<AudioSource> audioSources) {
 		List<AudioSource> toRemove = new List<AudioSource>();
 		foreach (AudioSource audioSource in audioSources) {
-			if (audioSource == null) toRemove.Add(audioSource);
-			else if (audioSource.gameObject == null) toRemove.Add(audioSource);
-			else if (!audioSource.gameObject.activeSelf) toRemove.Add(audioSource);
+			if (audioSource == null)
+				toRemove.Add(audioSource);
+			else if (audioSource.gameObject == null)
+				toRemove.Add(audioSource);
+			else if (!audioSource.gameObject.activeSelf)
+				toRemove.Add(audioSource);
 		}
 		foreach (AudioSource audioSource in toRemove) {
 			audioSources.Remove(audioSource);
@@ -1127,7 +1166,8 @@ public class AudioPlayer : MonoBehaviour {
 		gameObject = GetGameObject(sourceObject);
 		gameObject.name = "AudioSource: " + audioInfo.clip.name;
 		audioSource = gameObject.audio;
-		if (audioInfo.sendToPD) GainManagerDict[gameObject].Initialize(audioSource.clip.name + "~");
+		if (audioInfo.sendToPD)
+			GainManagerDict[gameObject].Initialize(audioSource.clip.name + "~");
 		SetAudioSource(audioSource, audioInfo, overrideClip);
 		ActiveVoices.Add(audioSource);
 		
@@ -1135,8 +1175,10 @@ public class AudioPlayer : MonoBehaviour {
 	}
 	
 	static void SetAudioSource(AudioSource audioSource, AudioInfoOld audioInfo, AudioClip overrideClip = null) {
-		if (overrideClip == null) audioSource.clip = audioInfo.clip;
-		else audioSource.clip = overrideClip;
+		if (overrideClip == null)
+			audioSource.clip = audioInfo.clip;
+		else
+			audioSource.clip = overrideClip;
 		audioSource.mute = audioInfo.mute;
 		audioSource.bypassEffects = audioInfo.bypassEffects;
 		audioSource.bypassListenerEffects = audioInfo.bypassListenerEffects;
@@ -1277,7 +1319,8 @@ public class AudioPlayer : MonoBehaviour {
 		else {
 			gameObject = new GameObject();
 		}
-		if (gameObject.GetComponent<AudioSource>() == null) gameObject.AddComponent<AudioSource>();
+		if (gameObject.GetComponent<AudioSource>() == null)
+			gameObject.AddComponent<AudioSource>();
 		GainManagerDict[gameObject] = gameObject.GetOrAddComponent<AudioGainManager>();
 		ActiveAudioSources[gameObject] = gameObject.GetOrAddComponent<CoroutineHolder>();
 		if (sourceObject != null){ gameObject.transform.parent = sourceObject.transform;}
@@ -1328,8 +1371,10 @@ public class AudioPlayer : MonoBehaviour {
 									}
 								}
 							}
-							if (applyBuses) gainManager.volume = volumeSum * (Instance.masterVolume / 100);
-							else gainManager.volume = Instance.masterVolume / 100;
+							if (applyBuses)
+								gainManager.volume = volumeSum * (Instance.masterVolume / 100);
+							else
+								gainManager.volume = Instance.masterVolume / 100;
 						}
 					}
 				}
@@ -1376,7 +1421,8 @@ public class AudioPlayer : MonoBehaviour {
 		while (!uniqueName) {
 			uniqueName = true;
 			currentName = newName;
-			if (suffix > 0) currentName += suffix.ToString();
+			if (suffix > 0)
+				currentName += suffix.ToString();
 			
 			foreach (object obj in array) {
 				if (obj is Container) {
@@ -1603,7 +1649,8 @@ public class AudioPlayer : MonoBehaviour {
 						break;
 					}
 				}
-				if (!referenced) subContainers.Remove(subContainers[i]);
+				if (!referenced)
+					subContainers.Remove(subContainers[i]);
 			}
 		}
 		
@@ -1665,7 +1712,8 @@ public class AudioPlayer : MonoBehaviour {
 				weight = subContainer.weight;
 				repeat = subContainer.repeat;
 			}
-			if (parentId != 0) container.GetSourceWithID(parentId).childrenLink.Add(id);
+			if (parentId != 0)
+				container.GetSourceWithID(parentId).childrenLink.Add(id);
 		}
 		
 		public void SetReferences(Container container) {
