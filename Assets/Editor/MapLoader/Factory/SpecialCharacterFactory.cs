@@ -30,6 +30,10 @@ public static class SpecialCharacterFactory  {
 			spikeManager.spawnMaxDelay = spawnDelay * 4;
 		} else if (arg.ToLower ().Equals ("isaspawner")){
 			go.AddComponent<InstructionSpawner>();
+		} else if (arg.ToLower ().Equals ("compilespot")){
+			Rigidbody2D rb = go.AddComponent<Rigidbody2D>();
+			rb.gravityScale = 0;
+			rb.isKinematic = true;
 		}
 	}
 }

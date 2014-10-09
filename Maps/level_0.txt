@@ -3,6 +3,7 @@ $01 boolean true
 <SpecialCharacter>
 v Spike IsASpike 1
 : Spawner IsASpawner 1
+; CompileSpot Compiles 1
 <Level> 
 +-----------------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+----------------------+ 
 |                 v       v       v       v       v       v       v       v       v       v       v       v                      | 

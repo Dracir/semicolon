@@ -5,12 +5,18 @@ using System.Collections.Generic;
 public class CodeGenerator : MonoBehaviour {
 	
 	private List<string>[] instructionLines = new List<string>[4] {
-		new List<string>(){"$as integer 0 addScore"},
-		new List<string>(){"$rs integer 0 removeScore"},
-		new List<string>(){"$at integer 0 addTime"},
-		new List<string>(){"$rt integer 0 removeTime"}
+		new List<string>(){"$as integer 0 addScore", "¶cs compile"},
+		new List<string>(){"$rs integer 0 removeScore", "¶cs compile"},
+		new List<string>(){"$at integer 0 addTime", "¶cs compile"},
+		new List<string>(){"$rt integer 0 removeTime", "¶cs compile"}
 	};
 	
+	private string[] instructionText = new string[] {
+		"AddScore_($as)¶cs",
+		"RemoveScore_($rs)¶cs",
+		"AddTime_($at)¶cs",
+		"RemoveTime_($rt)¶cs"
+	};
 //	private Dictionary<string, string> instructionLines = new Dictionary<string, string>() {
 //		{"$as", "integer 0 addScore"},
 //		{"$rs", "integer 0 removeScore"},
@@ -28,7 +34,7 @@ public class CodeGenerator : MonoBehaviour {
 	private float speedUpBy = 0.2f;
 	private float speedUpTimer = 0;
 	
-	public Transform[] nodes;
+	public InstructionSpawner[] nodes;
 	
 	public GameObject[] instructions;
 	
@@ -42,6 +48,9 @@ public class CodeGenerator : MonoBehaviour {
 	
 	void Start () {
 		generatorTimer = GetNewTime();
+		if (nodes.Length == 0){
+			nodes = GameObject.FindObjectsOfType<InstructionSpawner>();
+		}
 	}
 	
 	// Update is called once per frame
@@ -60,8 +69,8 @@ public class CodeGenerator : MonoBehaviour {
 	}
 	
 	void Spawn () {
-		if (nodes.Length <= 0 || instructions.Length <= 0){
-			Debug.LogWarning ("There's no nodes! or maybe instructions.");
+		if (nodes.Length <= 0){
+			Debug.LogWarning ("There's no nodes!");
 			return;
 		}
 		int nodeIndex = nodeRand.Range (0, nodes.Length - 1, true);
@@ -74,7 +83,7 @@ public class CodeGenerator : MonoBehaviour {
 			nodeList.RemoveAt (0);
 		}
 		
-		int instIndex = timeRand.Range (0, instructions.Length - 1, true);
+		int instIndex = timeRand.Range (0, instructionLines.Length - 1, true);
 		
 		//Instantiate(instructions[instIndex], nodes[nodeIndex].position, nodes[nodeIndex].rotation);
 		
@@ -82,7 +91,9 @@ public class CodeGenerator : MonoBehaviour {
 //		Dictionary<string,string> param = new Dictionary<string, string>();
 //		param.Add(instructionLines[instIndex]);
 		
-		InstructionFactoryRuntime.createInstruction(instruction, 1,1, gameObject, instructionLines[instIndex]);
+		Instruction newDude = InstructionFactoryRuntime.createInstruction(instructionText[instIndex], 1,1, gameObject, instructionLines[instIndex]);
+		newDude.transform.position = nodes[nodeIndex].transform.position;
+		newDude.AddComponent<InstructionCrawl>();
 		
 		generatorTimer = GetNewTime();
 	}
