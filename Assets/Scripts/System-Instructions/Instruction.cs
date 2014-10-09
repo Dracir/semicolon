@@ -224,7 +224,7 @@ public class Instruction : MonoBehaviour, IDeletable {
 	
 	
 	void OnDestroy(){
-		Extensions.DestroyChildren(transform);
+		transform.DestroyChildren();
 	}
 	
 	

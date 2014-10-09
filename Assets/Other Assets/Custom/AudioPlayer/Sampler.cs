@@ -12,7 +12,7 @@ public class Sampler : MonoBehaviour {
 	CoroutineHolder coroutineHolder;
 	
 	static Sampler instance;
-	static public Sampler Instance {
+	public static Sampler Instance {
 		get {
 			if (instance == null) {
 				instance = FindObjectOfType<Sampler>();
@@ -69,10 +69,10 @@ public class Sampler : MonoBehaviour {
 		}
 	}
 	
-	static public AudioSource Play(string instrumentName, int midiNote, float velocity, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
+	public static AudioSource Play(string instrumentName, int midiNote, float velocity, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
 		AudioSource audioSource;
 		Instrument instrument = Instruments[instrumentName];
-		AudioInfo audioInfo = AudioPlayer.AudioInfos[instrument.referenceClips[midiNote].name];
+		AudioInfoOld audioInfo = AudioPlayer.AudioInfos[instrument.referenceClips[midiNote].name];
 		AudioClip audioClip = null;
 		float initVolume = audioInfo.volume;
 		midiNote = GetAdjustedNote(midiNote, velocity, instrument);
@@ -109,13 +109,13 @@ public class Sampler : MonoBehaviour {
 		return audioSource;
 	}
 	
-	static public List<AudioSource> Play(Note note, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
+	public static List<AudioSource> Play(Note note, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
 		List<AudioSource> audioSources = new List<AudioSource>();
 		audioSources.AddRange(Play(note.instrumentName, note.midiNotes, note.velocities, sourceObject, delay, syncMode));
 		return audioSources;
 	}
 	
-	static public List<AudioSource> Play(string instrumentName, int[] midiNotes, float velocity, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
+	public static List<AudioSource> Play(string instrumentName, int[] midiNotes, float velocity, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
 		List<AudioSource> audioSources = new List<AudioSource>();
 		for (int i = 0; i < midiNotes.Length; i++) {
 			audioSources.Add(Play(instrumentName, midiNotes[i], velocity, sourceObject, delay, syncMode));
@@ -123,7 +123,7 @@ public class Sampler : MonoBehaviour {
 		return audioSources;
 	}
 	
-	static public List<AudioSource> Play(string instrumentName, int[] midiNotes, float[] velocities, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
+	public static List<AudioSource> Play(string instrumentName, int[] midiNotes, float[] velocities, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
 		List<AudioSource> audioSources = new List<AudioSource>();
 		for (int i = 0; i < midiNotes.Length; i++) {
 			audioSources.Add(Play(instrumentName, midiNotes[i], velocities[i], sourceObject, delay, syncMode));
@@ -131,40 +131,40 @@ public class Sampler : MonoBehaviour {
 		return audioSources;
 	}
 	
-	static public List<AudioSource> PlayRepeating(float repeatRate, string instrumentName, int midiNote, float velocity, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
+	public static List<AudioSource> PlayRepeating(float repeatRate, string instrumentName, int midiNote, float velocity, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
 		return AudioPlayer.PlayRepeating(repeatRate, new Note(instrumentName, midiNote, velocity), sourceObject, delay, syncMode);
 	}
 	
-	static public List<AudioSource> PlayRepeating(float repeatRate, string instrumentName, int[] midiNotes, float velocity, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
+	public static List<AudioSource> PlayRepeating(float repeatRate, string instrumentName, int[] midiNotes, float velocity, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
 		return AudioPlayer.PlayRepeating(repeatRate, new Note(instrumentName, midiNotes, velocity), sourceObject, delay, syncMode);
 	}
 	
-	static public List<AudioSource> PlayRepeating(float repeatRate, string instrumentName, int[] midiNotes, float[] velocities, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
+	public static List<AudioSource> PlayRepeating(float repeatRate, string instrumentName, int[] midiNotes, float[] velocities, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
 		return AudioPlayer.PlayRepeating(repeatRate, new Note(instrumentName, midiNotes, velocities), sourceObject, delay, syncMode);
 	}
 	
-	static public void Stop(AudioSource audioSource, float delay = 0) {
+	public static void Stop(AudioSource audioSource, float delay = 0) {
 		AudioPlayer.Stop(audioSource, delay);
 	}
 	
-	static public void Stop(List<AudioSource> audioSources, float delay = 0) {
+	public static void Stop(List<AudioSource> audioSources, float delay = 0) {
 		AudioPlayer.Stop(audioSources, delay);
 	}
 	
-	static public void StopAll(float delay = 0) {
+	public static void StopAll(float delay = 0) {
 		AudioPlayer.StopAll(delay);
 		Instance.coroutineHolder.RemoveAllCoroutines();
 	}
 	
-	static public void StopImmediate(AudioSource audioSource, float delay = 0) {
+	public static void StopImmediate(AudioSource audioSource, float delay = 0) {
 		AudioPlayer.StopImmediate(audioSource, delay);
 	}
 	
-	static public void StopImmediate(List<AudioSource> audioSources, float delay = 0) {
+	public static void StopImmediate(List<AudioSource> audioSources, float delay = 0) {
 		AudioPlayer.StopImmediate(audioSources, delay);
 	}
 	
-	static public void StopAllImmediate(float delay = 0) {
+	public static void StopAllImmediate(float delay = 0) {
 		AudioPlayer.StopAllImmediate(delay);
 		Instance.coroutineHolder.RemoveAllCoroutines();
 	}
@@ -198,7 +198,7 @@ public class Sampler : MonoBehaviour {
 		return midiNote + (Mathf.Clamp((int)(instrument.velocityCurve.Evaluate(velocity / 127) * instrument.velocityLayers), 0, instrument.velocityLayers - 1) * 128);
 	}
 
-	static public string GetUniqueName(object[] array, string newName, string oldName = "", int suffix = 0) {
+	public static string GetUniqueName(object[] array, string newName, string oldName = "", int suffix = 0) {
 		bool uniqueName = false;
 		string currentName = "";
 		
@@ -288,7 +288,6 @@ public class Instrument {
 			return changed;
 		}
 	}
-	public bool showing;
 	public bool notesShowing;
 	public bool generated;
 	public string[] noteNames = {
@@ -411,7 +410,7 @@ public class Instrument {
 			for (int i = 0; i < activeVoices.Count; i++) {
 				if (activeVoices[i] != null) {
 					if (activeVoices[i].clip != null) {
-						AudioInfo audioInfo = AudioPlayer.AudioInfos[activeVoices[i].clip.name];
+						AudioInfoOld audioInfo = AudioPlayer.AudioInfos[activeVoices[i].clip.name];
 						float initFadeOut = audioInfo.fadeOut;
 						audioInfo.fadeOut = 0.1F;
 						Sampler.Stop(activeVoices[0]);

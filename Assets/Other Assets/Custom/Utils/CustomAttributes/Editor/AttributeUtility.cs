@@ -5,14 +5,14 @@ using System.Collections.Generic;
 
 public class AttributeUtility {
 	
-	static public float indentWidth = 0;
-	static public Dictionary<string, int> toRemove = new Dictionary<string, int>();
-	static public Dictionary<string, bool> pressedDict = new Dictionary<string, bool>();
+	public static float indentWidth = 0;
+	public static Dictionary<string, int> toRemove = new Dictionary<string, int>();
+	public static Dictionary<string, bool> pressedDict = new Dictionary<string, bool>();
 	
 	static int indentationDepth = 0;
 	static int indentLevel = 0;
 	
-	static public int GetIndexFromLabel(GUIContent label){
+	public static int GetIndexFromLabel(GUIContent label){
 		string strIndex = "";
 		for (int i = label.text.Length - 1; i >= 0; i--){
 			if (label.text[i] == 't') break;
@@ -22,7 +22,7 @@ public class AttributeUtility {
 		return int.Parse(strIndex);
 	}
 	
-	static public Rect BeginIndentation(Rect position){
+	public static Rect BeginIndentation(Rect position){
 		indentationDepth += 1;
 		indentLevel = EditorGUI.indentLevel;
 		EditorGUI.indentLevel = 0;
@@ -30,7 +30,7 @@ public class AttributeUtility {
 		return (new Rect(position.x + indentWidth, position.y, position.width - indentWidth, position.height));
 	}
 	
-	static public void EndIndentation(){
+	public static void EndIndentation(){
 		indentationDepth -= 1;
 		EditorGUI.indentLevel = indentLevel;
 	}

@@ -9,6 +9,7 @@ public class AudioPlayerEditor : CustomEditorBase {
 	AudioPlayer audioPlayer;
 	AudioPlayer.Container currentContainer;
 	AudioPlayer.SubContainer currentSource;
+	SerializedProperty currentSourceProperty;
 	
 	[MenuItem("Magicolo's Tools/Create/Audio Player")]
 	static void CreateAudioPlayer() {
@@ -41,14 +42,16 @@ public class AudioPlayerEditor : CustomEditorBase {
 		ShowRTPCs();
 		ShowBuses();
 		
-		if (Sampler.Instance == null || PDPlayer.Instance == null){
+		Sampler sampler = FindObjectOfType<Sampler>();
+		PDPlayer pdPlayer = FindObjectOfType<PDPlayer>();
+		if (sampler == null || pdPlayer == null){
 			Separator();
-			if (Sampler.Instance == null){
-				if (LargeAddElementButton("Add Sampler"))
+			if (sampler == null){
+				if (LargeAddElementButton("Add Sampler".ToGUIContent()))
 					audioPlayer.gameObject.AddComponent<Sampler>();
 			}
-			if (PDPlayer.Instance == null){
-				if (LargeAddElementButton("Add PDPlayer"))
+			if (pdPlayer == null){
+				if (LargeAddElementButton("Add PDPlayer".ToGUIContent()))
 					audioPlayer.gameObject.AddComponent<PDPlayer>();
 			}
 		}
@@ -59,21 +62,25 @@ public class AudioPlayerEditor : CustomEditorBase {
 	void ShowRTPCs(){
 		if (audioPlayer.rTPCs == null) return;
 		
-		audioPlayer.showRTPCs = AddElementFoldOut(serializedObject.FindProperty("rTPCs"), audioPlayer.showRTPCs, "RTPCs", OnRTPCAdded);
+		SerializedProperty rTPCsProperty = serializedObject.FindProperty("rTPCs");
+		if (AddElementFoldOut(rTPCsProperty, "RTPCs".ToGUIContent())){
+			audioPlayer.rTPCs[audioPlayer.rTPCs.Length - 1] = new AudioPlayer.RTPC();
+			audioPlayer.rTPCs[audioPlayer.rTPCs.Length - 1].name = AudioPlayer.GetUniqueName(audioPlayer.rTPCs, "default");	
+		}
 		
-		if (audioPlayer.showRTPCs){
+		if (rTPCsProperty.isExpanded){
 			EditorGUI.indentLevel += 1;
 			
 			for (int i = 0; i < audioPlayer.rTPCs.Length; i++){
 				AudioPlayer.RTPC rtpc = audioPlayer.rTPCs[i];
-				SerializedProperty rtpcProperty = serializedObject.FindProperty("rTPCs").GetArrayElementAtIndex(i);
+				SerializedProperty rtpcProperty = rTPCsProperty.GetArrayElementAtIndex(i);
 				
 				EditorGUILayout.BeginHorizontal();
 				rtpc.showing = EditorGUILayout.Foldout(rtpc.showing, rtpc.name);
 				GUILayout.Space(30);
 				if (!rtpc.showing) rtpc.defaultValue = EditorGUILayout.Slider(rtpc.defaultValue, rtpc.minValue, rtpc.maxValue);
 				GUILayout.Space(10);
-				DeleteElementButtonWithArrows(serializedObject.FindProperty("rTPCs"), i);
+				DeleteElementButtonWithArrows(rTPCsProperty, i);
 				if (deleteBreak) break;
 				EditorGUILayout.EndHorizontal();
 				
@@ -103,29 +110,28 @@ public class AudioPlayerEditor : CustomEditorBase {
 		}
 	}
 	
-	void OnRTPCAdded(SerializedProperty newRTPC){
-		audioPlayer.rTPCs[audioPlayer.rTPCs.Length - 1] = new AudioPlayer.RTPC();
-		audioPlayer.rTPCs[audioPlayer.rTPCs.Length - 1].name = AudioPlayer.GetUniqueName(audioPlayer.rTPCs, "default");	
-	}
-	
 	void ShowBuses(){
 		if (audioPlayer.buses == null) return;
 		
-		audioPlayer.showBuses = AddElementFoldOut(serializedObject.FindProperty("buses"), audioPlayer.showBuses, "Buses", OnBusAdded);
+		SerializedProperty busesProperty = serializedObject.FindProperty("buses");
+		if (AddElementFoldOut(busesProperty, "Buses".ToGUIContent())){
+			audioPlayer.buses[audioPlayer.buses.Length - 1] = new AudioPlayer.AudioBus();
+			audioPlayer.buses[audioPlayer.buses.Length - 1].name = AudioPlayer.GetUniqueName(audioPlayer.buses, "default");
+		}
 		
-		if (audioPlayer.showBuses){
+		if (busesProperty.isExpanded){
 			EditorGUI.indentLevel += 1;
 			
 			for (int i = 0; i < audioPlayer.buses.Length; i++){
 				AudioPlayer.AudioBus bus = audioPlayer.buses[i];
-				SerializedProperty busProperty = serializedObject.FindProperty("buses").GetArrayElementAtIndex(i);
+				SerializedProperty busProperty = busesProperty.GetArrayElementAtIndex(i);
 				
 				EditorGUILayout.BeginHorizontal();
 				bus.showing = EditorGUILayout.Foldout(bus.showing, bus.name);
 				GUILayout.Space(30);
 				if (!bus.showing) bus.volume = EditorGUILayout.Slider(bus.volume, 0, 100);
 				GUILayout.Space(10);
-				DeleteElementButtonWithArrows(serializedObject.FindProperty("buses"), i);
+				DeleteElementButtonWithArrows(busesProperty, i);
 				if (deleteBreak) break;
 				EditorGUILayout.EndHorizontal();
 				
@@ -150,26 +156,27 @@ public class AudioPlayerEditor : CustomEditorBase {
 		}
 	}
 	
-	void OnBusAdded(SerializedProperty newBus){
-		audioPlayer.buses[audioPlayer.buses.Length - 1] = new AudioPlayer.AudioBus();
-		audioPlayer.buses[audioPlayer.buses.Length - 1].name = AudioPlayer.GetUniqueName(audioPlayer.buses, "default");
-	}
-	
 	void ShowContainers(){
 		if (audioPlayer.containers == null)	return;
 		
-		audioPlayer.showContainers = AddElementFoldOut(serializedObject.FindProperty("containers"), audioPlayer.showContainers, "Containers", OnContainerAdded);
+		SerializedProperty containersProperty = serializedObject.FindProperty("containers");
+		if (AddElementFoldOut(containersProperty, "Containers".ToGUIContent())){
+			audioPlayer.containers[audioPlayer.containers.Length - 1] = new AudioPlayer.Container();
+			audioPlayer.containers[audioPlayer.containers.Length - 1].name = AudioPlayer.GetUniqueName(audioPlayer.containers, "default");
+			audioPlayer.containers[audioPlayer.containers.Length - 1].subContainers = new List<AudioPlayer.SubContainer>();
+		}
 		
-		if (audioPlayer.showContainers) {
+		if (containersProperty.isExpanded) {
 			EditorGUI.indentLevel += 1;
 			
 			for (int i = 0; i < audioPlayer.containers.Length; i++) {
 				AudioPlayer.Container container = audioPlayer.containers[i];
 				currentContainer = container;
-				SerializedProperty containerProperty = serializedObject.FindProperty("containers").GetArrayElementAtIndex(i);
+				SerializedProperty containerProperty = containersProperty.GetArrayElementAtIndex(i);
 				
-				container.showing = DeleteElementFoldOutWithArrows(serializedObject.FindProperty("containers"), i, container.showing, container.name);
-				if (deleteBreak) break;
+				if (DeleteElementFoldOutWithArrows(containersProperty, i, container.name.ToGUIContent())){
+					break;
+				}
 				
 				if (container.showing) {
 					EditorGUI.indentLevel += 1;
@@ -187,44 +194,42 @@ public class AudioPlayerEditor : CustomEditorBase {
 		}
 	}
 	
-	void OnContainerAdded(SerializedProperty newContainer){
-		audioPlayer.containers[audioPlayer.containers.Length - 1] = new AudioPlayer.Container();
-		audioPlayer.containers[audioPlayer.containers.Length - 1].name = AudioPlayer.GetUniqueName(audioPlayer.containers, "default");
-		audioPlayer.containers[audioPlayer.containers.Length - 1].subContainers = new List<AudioPlayer.SubContainer>();
-	}
-	
 	void ShowSources(AudioPlayer.Container container, SerializedProperty containerProperty){
-		container.sourcesShowing = AddElementFoldOut(containerProperty.FindPropertyRelative("sources"), container.sourcesShowing, "Sources", OnSourceAdded);
+		SerializedProperty sourcesProperty = containerProperty.FindPropertyRelative("sources");
+		if (AddElementFoldOut(sourcesProperty, "Sources".ToGUIContent())){
+			currentContainer.sources[currentContainer.sources.Length - 1] = new AudioPlayer.SubContainer();
+			if (currentContainer.sources.Length > 1) currentContainer.sources[currentContainer.sources.Length - 1].Initialize(currentContainer, 0, currentContainer.sources[currentContainer.sources.Length - 2]);
+			else currentContainer.sources[currentContainer.sources.Length - 1].Initialize(currentContainer, 0);
+		}
 		
-		if (container.sourcesShowing){
+		if (sourcesProperty.isExpanded){
 			EditorGUI.indentLevel += 1;
 			
 			if (container.sources != null){
 				for (int i = 0; i < container.sources.Length; i++){
-					AudioPlayer.SubContainer source = container.sources[i];
-					currentSource = source;
-					
-					source.showing = DeleteElementFoldOut(containerProperty.FindPropertyRelative("sources"), i, source.showing, source.name);
-					if (deleteBreak){
+					currentSource = container.sources[i];
+					currentSourceProperty = sourcesProperty.GetArrayElementAtIndex(i);
+						
+					if (DeleteElementFoldOut(sourcesProperty, i, currentSource.name.ToGUIContent())){
 						container.RemoveEmptyReferences();
 						break;
 					}
 					
-					switch (source.sourceType) {
+					switch (currentSource.sourceType) {
 						case AudioPlayer.SubContainer.ContainerTypes.AudioSource:
-							ShowAudioSource(source, container, containerProperty);
+							ShowAudioSource(container, containerProperty);
 							break;
 						case AudioPlayer.SubContainer.ContainerTypes.Sampler:
-							ShowSampler(source, container, containerProperty);
+							ShowSampler(container, containerProperty);
 							break;
 						case AudioPlayer.SubContainer.ContainerTypes.MixContainer:
-							ShowMixContainer(source, container, containerProperty);
+							ShowMixContainer(container, containerProperty);
 							break;
 						case AudioPlayer.SubContainer.ContainerTypes.RandomContainer:
-							ShowRandomContainer(source, container, containerProperty);
+							ShowRandomContainer(container, containerProperty);
 							break;
 						case AudioPlayer.SubContainer.ContainerTypes.SequenceContainer:
-							ShowSequenceContainer(source, container, containerProperty);
+							ShowSequenceContainer(container, containerProperty);
 							break;
 					}
 				}
@@ -234,46 +239,48 @@ public class AudioPlayerEditor : CustomEditorBase {
 		Separator();
 	}
 	
-	void OnSourceAdded(SerializedProperty newSource){
-		currentContainer.sources[currentContainer.sources.Length - 1] = new AudioPlayer.SubContainer();
-		if (currentContainer.sources.Length > 1) currentContainer.sources[currentContainer.sources.Length - 1].Initialize(currentContainer, 0, currentContainer.sources[currentContainer.sources.Length - 2]);
-		else currentContainer.sources[currentContainer.sources.Length - 1].Initialize(currentContainer, 0);
-	}
-	
 	void ShowChildrenSources(AudioPlayer.SubContainer source, AudioPlayer.Container container, SerializedProperty containerProperty){
-		source.sourcesShowing = AddElementFoldOut(containerProperty.FindPropertyRelative("subContainers"), source.sourcesShowing, "Sources", source.childrenLink.Count, OnChildSourceAdded);
+		SerializedProperty subContainersProperty = containerProperty.FindPropertyRelative("subContainers");
+		if (AddElementFoldOut(subContainersProperty, "Sources".ToGUIContent(), source.childrenLink.Count)){
+			currentContainer.subContainers[currentContainer.subContainers.Count - 1] = new AudioPlayer.SubContainer();
+			if (currentContainer.subContainers.Count > 1) {
+				currentContainer.subContainers.Last().Initialize(currentContainer, currentSource.id, currentContainer.subContainers[currentContainer.subContainers.Count - 2]);
+			}
+			else {
+				currentContainer.subContainers.Last().Initialize(currentContainer, currentSource.id);
+			}
+		}
 		
-		if (source.sourcesShowing){
+		if (subContainersProperty.isExpanded){
 			EditorGUI.indentLevel += 1;
 			
 			if (source.childrenLink.Count != 0){
 				for (int i = 0; i < source.childrenLink.Count; i++){
-					AudioPlayer.SubContainer childSource = container.GetSourceWithID(source.childrenLink[i]);
-					currentSource = childSource;
-					int index = container.subContainers.IndexOf(childSource);
+					currentSource = container.GetSourceWithID(source.childrenLink[i]);
+					currentSourceProperty = subContainersProperty.GetArrayElementAtIndex(i);
+					int index = container.subContainers.IndexOf(currentSource);
 					
-					childSource.showing = DeleteElementFoldOut(containerProperty.FindPropertyRelative("subContainers"), index, childSource.showing, childSource.name);
-					if (deleteBreak){
-						container.GetSourceWithID(source.id).childrenLink.Remove(childSource.id);
+					if (DeleteElementFoldOut(subContainersProperty, index, currentSource.name.ToGUIContent())){
+						container.GetSourceWithID(source.id).childrenLink.Remove(currentSource.id);
 						container.RemoveEmptyReferences();
 						break;
 					}
 					
-					switch (childSource.sourceType) {
+					switch (currentSource.sourceType) {
 						case AudioPlayer.SubContainer.ContainerTypes.AudioSource:
-							ShowAudioSource(childSource, container, containerProperty);
+							ShowAudioSource(container, containerProperty);
 							break;
 						case AudioPlayer.SubContainer.ContainerTypes.Sampler:
-							ShowSampler(childSource, container, containerProperty);
+							ShowSampler(container, containerProperty);
 							break;
 						case AudioPlayer.SubContainer.ContainerTypes.MixContainer:
-							ShowMixContainer(childSource, container, containerProperty);
+							ShowMixContainer(container, containerProperty);
 							break;
 						case AudioPlayer.SubContainer.ContainerTypes.RandomContainer:
-							ShowRandomContainer(childSource, container, containerProperty);
+							ShowRandomContainer(container, containerProperty);
 							break;
 						case AudioPlayer.SubContainer.ContainerTypes.SequenceContainer:
-							ShowSequenceContainer(childSource, container, containerProperty);
+							ShowSequenceContainer(container, containerProperty);
 							break;
 					}
 				}
@@ -283,38 +290,28 @@ public class AudioPlayerEditor : CustomEditorBase {
 		Separator();
 	}
 	
-	void OnChildSourceAdded(SerializedProperty newChildSource){
-		currentContainer.subContainers[currentContainer.subContainers.Count - 1] = new AudioPlayer.SubContainer();
-		if (currentContainer.subContainers.Count > 1) {
-			currentContainer.subContainers.Last().Initialize(currentContainer, currentSource.id, currentContainer.subContainers[currentContainer.subContainers.Count - 2]);
-		}
-		else {
-			currentContainer.subContainers.Last().Initialize(currentContainer, currentSource.id);
-		}
-	}
-	
-	void ShowAudioSource(AudioPlayer.SubContainer source, AudioPlayer.Container container, SerializedProperty containerProperty){
-		if (source.audioSource == null) AdjustName("Audio Source: null", source, container);
-		else AdjustName("Audio Source: " + source.audioSource.clip.name, source, container);
+	void ShowAudioSource(AudioPlayer.Container container, SerializedProperty containerProperty){
+		if (currentSource.audioSource == null) AdjustName("Audio Source: null", currentSource, container);
+		else AdjustName("Audio Source: " + currentSource.audioSource.clip.name, currentSource, container);
 		
-		if (source.showing){
+		if (currentSourceProperty.isExpanded){
 			EditorGUI.indentLevel += 1;
-			ShowSourceParentSettings(source, container);
-			source.audioSource = (AudioSource) EditorGUILayout.ObjectField("Audio Source", source.audioSource, typeof(AudioSource), true);
-			ShowGeneralSourceSettings(source, container);
+			ShowSourceParentSettings(currentSource, container);
+			currentSource.audioSource = (AudioSource) EditorGUILayout.ObjectField("Audio Source", currentSource.audioSource, typeof(AudioSource), true);
+			ShowGeneralSourceSettings(currentSource, container);
 			
 			EditorGUI.indentLevel -= 1;
 		}
 	}
 	
-	void ShowSampler(AudioPlayer.SubContainer source, AudioPlayer.Container container, SerializedProperty containerProperty){
+	void ShowSampler(AudioPlayer.Container container, SerializedProperty containerProperty){
 		
-		if (string.IsNullOrEmpty(source.instrumentName)) AdjustName("Sampler: null", source, container);
-		else AdjustName("Sampler: " + source.instrumentName + " " + source.midiNote + "/" + source.velocity, source, container);
+		if (string.IsNullOrEmpty(currentSource.instrumentName)) AdjustName("Sampler: null", currentSource, container);
+		else AdjustName("Sampler: " + currentSource.instrumentName + " " + currentSource.midiNote + "/" + currentSource.velocity, currentSource, container);
 			
-		if (source.showing){
+		if (currentSourceProperty.isExpanded){
 			EditorGUI.indentLevel += 1;
-			ShowSourceParentSettings(source, container);
+			ShowSourceParentSettings(currentSource, container);
 			
 			string[] displayedOptions = new string[0];
 			if (Sampler.Instance != null) if (Sampler.Instance.instruments != null){
@@ -325,53 +322,53 @@ public class AudioPlayerEditor : CustomEditorBase {
 			}
 			
 			if (displayedOptions.Length > 0){
-				source.instrumentIndex = Mathf.Min(EditorGUILayout.Popup("Instrument", source.instrumentIndex, displayedOptions), Sampler.Instance.instruments.Length - 1);
-				source.instrumentName = Sampler.Instance.instruments[source.instrumentIndex].name;
-				source.midiNote = EditorGUILayout.IntSlider("Midi Note", source.midiNote, (int) Sampler.Instance.instruments[source.instrumentIndex].minNote, (int) Sampler.Instance.instruments[source.instrumentIndex].maxNote);
-				source.velocity = EditorGUILayout.Slider("Velocity", source.velocity, 0, 127);
-				ShowGeneralSourceSettings(source, container);
+				currentSource.instrumentIndex = Mathf.Min(EditorGUILayout.Popup("Instrument", currentSource.instrumentIndex, displayedOptions), Sampler.Instance.instruments.Length - 1);
+				currentSource.instrumentName = Sampler.Instance.instruments[currentSource.instrumentIndex].name;
+				currentSource.midiNote = EditorGUILayout.IntSlider("Midi Note", currentSource.midiNote, (int) Sampler.Instance.instruments[currentSource.instrumentIndex].minNote, (int) Sampler.Instance.instruments[currentSource.instrumentIndex].maxNote);
+				currentSource.velocity = EditorGUILayout.Slider("Velocity", currentSource.velocity, 0, 127);
+				ShowGeneralSourceSettings(currentSource, container);
 			}
 			else {
 				EditorGUILayout.HelpBox("Add Instruments in the Sampler.", MessageType.Info);
-				source.instrumentName = "";
+				currentSource.instrumentName = "";
 			}
 			
 			EditorGUI.indentLevel -= 1;
 		}
 	}
 	
-	void ShowMixContainer(AudioPlayer.SubContainer source, AudioPlayer.Container container, SerializedProperty containerProperty){
-		AdjustName("Mix Container", source, container);
+	void ShowMixContainer(AudioPlayer.Container container, SerializedProperty containerProperty){
+		AdjustName("Mix Container", currentSource, container);
 		
-		if (source.showing){
+		if (currentSourceProperty.isExpanded){
 			EditorGUI.indentLevel += 1;
-			ShowSourceParentSettings(source, container);
-			ShowGeneralSourceSettings(source, container);
-			ShowChildrenSources(source, container, containerProperty);
+			ShowSourceParentSettings(currentSource, container);
+			ShowGeneralSourceSettings(currentSource, container);
+			ShowChildrenSources(currentSource, container, containerProperty);
 			EditorGUI.indentLevel -= 1;
 		}
 	}
 	
-	void ShowRandomContainer(AudioPlayer.SubContainer source, AudioPlayer.Container container, SerializedProperty containerProperty){
-		AdjustName("Random Container", source, container);
+	void ShowRandomContainer(AudioPlayer.Container container, SerializedProperty containerProperty){
+		AdjustName("Random Container", currentSource, container);
 		
-		if (source.showing){
+		if (currentSourceProperty.isExpanded){
 			EditorGUI.indentLevel += 1;
-			ShowSourceParentSettings(source, container);
-			ShowGeneralSourceSettings(source, container);
-			ShowChildrenSources(source, container, containerProperty);
+			ShowSourceParentSettings(currentSource, container);
+			ShowGeneralSourceSettings(currentSource, container);
+			ShowChildrenSources(currentSource, container, containerProperty);
 			EditorGUI.indentLevel -= 1;
 		}
 	}
 	
-	void ShowSequenceContainer(AudioPlayer.SubContainer source, AudioPlayer.Container container, SerializedProperty containerProperty){
-		AdjustName("Sequence Container", source, container);
+	void ShowSequenceContainer(AudioPlayer.Container container, SerializedProperty containerProperty){
+		AdjustName("Sequence Container", currentSource, container);
 		
-		if (source.showing){
+		if (currentSourceProperty.isExpanded){
 			EditorGUI.indentLevel += 1;
-			ShowSourceParentSettings(source, container);
-			ShowGeneralSourceSettings(source, container);
-			ShowChildrenSources(source, container, containerProperty);
+			ShowSourceParentSettings(currentSource, container);
+			ShowGeneralSourceSettings(currentSource, container);
+			ShowChildrenSources(currentSource, container, containerProperty);
 			EditorGUI.indentLevel -= 1;
 		}
 	}

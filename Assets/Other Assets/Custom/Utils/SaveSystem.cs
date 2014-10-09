@@ -39,7 +39,7 @@ public class SaveSystem : MonoBehaviour {
 	static char KeyValueSeparator = '§';
 	static char ObjectSeparator = '¶';
 	static SaveSystem instance;
-	static public SaveSystem Instance {
+	public static SaveSystem Instance {
 		get { 
 			if (instance == null) {
 				instance = FindObjectOfType<SaveSystem>();
@@ -114,11 +114,11 @@ public class SaveSystem : MonoBehaviour {
 		return File.Exists(directory + fileName);
 	}
 	
-	static public bool FileExists(string path) {
+	public static bool FileExists(string path) {
 		return File.Exists(path);
 	}
 	
-	static public string[] ReadDataFromFile(string path) {
+	public static string[] ReadDataFromFile(string path) {
 		List<string> data = new List<string>();
 		string currentData = "";
 		
@@ -134,19 +134,19 @@ public class SaveSystem : MonoBehaviour {
 		return data.ToArray();
 	}
 	
-	static public void WriteDataToFile(string[] data, string path) {
+	public static void WriteDataToFile(string[] data, string path) {
 		File.WriteAllLines(path, data);
 	}
 	
-	static public void WriteDataToFile(List<string> data, string path) {
+	public static void WriteDataToFile(List<string> data, string path) {
 		File.WriteAllLines(path, data.ToArray());
 	}
 	
-	static public void WriteDataToFile(Dictionary<string, object> dataDict, string path) {
+	public static void WriteDataToFile(Dictionary<string, object> dataDict, string path) {
 		File.WriteAllLines(path, SerializeData(dataDict));
 	}
 	
-	static public string[] SerializeData(Dictionary<string, object> dataDict) {
+	public static string[] SerializeData(Dictionary<string, object> dataDict) {
 		List<string> keys = new List<string>(dataDict.Keys);
 		string[] data = new string[keys.Count];
 		
@@ -156,7 +156,7 @@ public class SaveSystem : MonoBehaviour {
 		return data;
 	}
 	
-	static public Dictionary<string, object> DeserializeData(string[] data) {
+	public static Dictionary<string, object> DeserializeData(string[] data) {
 		Dictionary<string, object> dataDict = new Dictionary<string, object>();
 		
 		for (int i = 0; i < data.Length; i++) {

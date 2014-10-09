@@ -2,12 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
-static public class Logger {
+public static class Logger {
 	static Dictionary<System.Type, int> instanceDict = new Dictionary<System.Type, int>();
 	
-	static public double RoundPrecision = 0.001;
+	public static double RoundPrecision = 0.001;
 	
-	static public void Log(params object[] toLog){
+	public static void Log(params object[] toLog){
 		string log = "";
 		
 		if (toLog != null)
@@ -23,7 +23,7 @@ static public class Logger {
 		Debug.Log(log);
 	}
 		
-	static public void LogWarning(params object[] toLog){
+	public static void LogWarning(params object[] toLog){
 		string log = "";
 		foreach (object item in toLog){
 			log += ObjectToString(item);
@@ -33,7 +33,7 @@ static public class Logger {
 		Debug.LogWarning(log);
 	}
 		
-	static public void LogError(params object[] toLog){
+	public static void LogError(params object[] toLog){
 		string log = "";
 		foreach (object item in toLog){
 			log += ObjectToString(item);
@@ -43,7 +43,7 @@ static public class Logger {
 		Debug.LogError(log);
 	}
 		
-	static public void LogSingleInstance(Object instanceToLog, params object[] toLog){
+	public static void LogSingleInstance(Object instanceToLog, params object[] toLog){
 		if (instanceDict.ContainsKey(instanceToLog.GetType())){
 			if (instanceDict[instanceToLog.GetType()] == instanceToLog.GetInstanceID()){
 				Log(toLog);
@@ -55,7 +55,7 @@ static public class Logger {
 		}
 	}
 	
-	static public string ObjectToString(object obj){
+	public static string ObjectToString(object obj){
 		string str = "";
 		
 		if (obj is System.Array){
@@ -84,7 +84,7 @@ static public class Logger {
 		return str;
 	}
 		
-	static public string VectorToString(object v){
+	public static string VectorToString(object v){
 		string str = "";
 		
 		if (v is Vector2){

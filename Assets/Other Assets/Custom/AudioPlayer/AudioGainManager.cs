@@ -60,7 +60,7 @@ public class AudioGainManager : MonoBehaviour {
 		if (sendToPD && initialized) {
 			sendCount[sendName] += 1;
 			if (sendCount[sendName] >= sendAmount[sendName]) {
-				PDPlayer.SendValue(sendName, dataToSend[sendName]);
+				PDPlayerOld.SendValue(sendName, dataToSend[sendName]);
 				dataToSend[sendName] = new float[data.Length];
 				sendCount[sendName] = 0;
 			}

@@ -11,7 +11,6 @@ using System.Collections.Generic;
 // TODO Add an optionnal AnimationCurve parameter to the SetVolume() function
 // TODO Add more RTPC parameters
 
-[AddComponentMenu("Audio/Audio Player")]
 [ExecuteInEditMode]
 public class AudioPlayer : MonoBehaviour {
 
@@ -30,7 +29,7 @@ public class AudioPlayer : MonoBehaviour {
 	public AudioBus[] buses;
 	
 	public string[] keys;
-	public AudioInfo[] values;
+	public AudioInfoOld[] values;
 	public AudioClip[] audioClips;
 	public AudioClip[] pAudioClips;
 	public CoroutineHolder coroutineHolder;
@@ -41,21 +40,21 @@ public class AudioPlayer : MonoBehaviour {
 	public bool showBuses;
 	public bool initialized;
 	
-	Dictionary<string, AudioInfo> audioDict;
+	Dictionary<string, AudioInfoOld> audioDict;
 	float pMasterVolume;
 	TempoSettings pTempoSettings;
 	
-	static public Dictionary<string, Container> Containers;
-	static public Dictionary<string, float> Buses;
-	static public Dictionary<string, float> RTPCs;
-	static public Dictionary<string, AudioInfo> AudioInfos {
+	public static Dictionary<string, Container> Containers;
+	public static Dictionary<string, float> Buses;
+	public static Dictionary<string, float> RTPCs;
+	public static Dictionary<string, AudioInfoOld> AudioInfos {
 		get {
 			return Instance.audioDict;
 		}
 	}
 	
 	static AudioPlayer instance;
-	static public AudioPlayer Instance {
+	public static AudioPlayer Instance {
 		get {
 			if (instance == null) {
 				instance = FindObjectOfType<AudioPlayer>();
@@ -84,6 +83,9 @@ public class AudioPlayer : MonoBehaviour {
 	void Awake() {
 		if (Application.isPlaying) {
 			SetReferences();
+			if (!Application.isEditor) {
+				this.DestroyChildren();
+			}
 		}
 	}
 	
@@ -95,8 +97,7 @@ public class AudioPlayer : MonoBehaviour {
 				DestroyImmediate(gameObject);
 			}
 		}
-		else
-			StartMetronome();
+		else StartMetronome();
 	}
 	
 	void Update() {
@@ -110,14 +111,13 @@ public class AudioPlayer : MonoBehaviour {
 			
 			if (audioClips != null) {
 				foreach (AudioClip audioClip in audioClips) {
-					if (audioClip != null)
-						CreateHierarchy(audioClip, audioClip.name, transform);
+					if (audioClip != null) CreateHierarchy(audioClip, audioClip.name, transform);
 				}
 				FreezeHierarchy();
 			}
 			
 			keys = new List<string>(audioDict.Keys).ToArray();
-			values = new List<AudioInfo>(audioDict.Values).ToArray();
+			values = new List<AudioInfoOld>(audioDict.Values).ToArray();
 			BuildAudioDict();
 			BuildContainerDict();
 			
@@ -134,8 +134,7 @@ public class AudioPlayer : MonoBehaviour {
 		if (!Application.isPlaying) {
 			SetReferences();
 		}
-		else
-			ToPlayCounter = 0;
+		else ToPlayCounter = 0;
 	}
 	
 	void UpdateBuses() {
@@ -168,8 +167,7 @@ public class AudioPlayer : MonoBehaviour {
 				}
 			}
 		}
-		if (updateBusVolume)
-			UpdateBusVolume();
+		if (updateBusVolume) UpdateBusVolume();
 	}
 	
 	void UpdateRTPCs() {
@@ -193,8 +191,8 @@ public class AudioPlayer : MonoBehaviour {
 					RTPCs[key] = Mathf.Clamp(RTPCs[key], rtpcInfo.minValue, rtpcInfo.maxValue);
 					foreach (AudioSource audioSource in RTPCAudioDict[key]) {
 						if (audioSource.gameObject.activeSelf) {
-							AudioInfo audioInfo = AudioInfos[audioSource.clip.name];
-							foreach (AudioInfo.RTPCParameter parameter in audioInfo.RTPCDict[key].parameters) {
+							AudioInfoOld audioInfo = AudioInfos[audioSource.clip.name];
+							foreach (AudioInfoOld.RTPCParameter parameter in audioInfo.RTPCDict[key].parameters) {
 								if (parameter.enabled) {
 									ApplyRTPC(audioSource, parameter, RTPCs[key], rtpcInfo, audioInfo);
 								}
@@ -219,13 +217,16 @@ public class AudioPlayer : MonoBehaviour {
 	}
 	
 	void SetReferences() {
+		if (Application.isPlaying) {
+			coroutineHolder = gameObject.GetOrAddComponent<CoroutineHolder>();
+		}
+		
 		containers = containers ?? new Container[0];
 		rTPCs = rTPCs ?? new RTPC[0];
 		buses = buses ?? new AudioBus[0];
 		keys = keys ?? new string[0];
-		values = values ?? new AudioInfo[0];
+		values = values ?? new AudioInfoOld[0];
 		audioClips = audioClips ?? new AudioClip[0];
-		coroutineHolder = gameObject.GetOrAddComponent<CoroutineHolder>();
 		GainManagerDict = new Dictionary<GameObject, AudioGainManager>();
 		ActiveAudioSources = new Dictionary<GameObject, CoroutineHolder>();
 		ActiveVoices = new List<AudioSource>();
@@ -236,8 +237,7 @@ public class AudioPlayer : MonoBehaviour {
 		if (!string.IsNullOrEmpty(audioClipsPath)) {
 			AudioClip[] clips;
 			clips = Resources.LoadAll<AudioClip>(audioClipsPath);
-			if (audioClips != clips && clips.Length != 0)
-				audioClips = clips;
+			if (audioClips != clips && clips.Length != 0) audioClips = clips;
 			audioClips = Sort(audioClips);
 		}
 		
@@ -252,12 +252,10 @@ public class AudioPlayer : MonoBehaviour {
 		while (ActiveVoices.Count > maxVoices) {
 			for (int i = 0; i < ActiveVoices.Count; i++) {
 				AudioSource audioSource = ActiveVoices[i];
-				if (audioSource == null)
-					continue;
-				if (!AudioInfos.ContainsKey(audioSource.clip.name))
-					continue;
+				if (audioSource == null) continue;
+				if (!AudioInfos.ContainsKey(audioSource.clip.name)) continue;
 				
-				AudioInfo audioInfo = AudioInfos[audioSource.clip.name];
+				AudioInfoOld audioInfo = AudioInfos[audioSource.clip.name];
 				if (!audioInfo.doNotKill) {
 					float initFadeOut = audioInfo.fadeOut;
 					audioInfo.fadeOut = 0.1F;
@@ -275,12 +273,9 @@ public class AudioPlayer : MonoBehaviour {
 		string gameObjectName;
 		string[] splitName = name.Split('_');
 
-		if (!string.IsNullOrEmpty(splitName[0]))
-			gameObjectName = splitName[0];
-		else if (!string.IsNullOrEmpty(name))
-			gameObjectName = name;
-		else
-			return;
+		if (!string.IsNullOrEmpty(splitName[0])) gameObjectName = splitName[0];
+		else if (!string.IsNullOrEmpty(name)) gameObjectName = name;
+		else return;
 		
 		foreach (Transform child in parent.GetChildren()) {
 			if (child.name == gameObjectName) {
@@ -299,10 +294,10 @@ public class AudioPlayer : MonoBehaviour {
 			CreateHierarchy(audioClip, name.TrimStart(gameObjectName.ToCharArray()).TrimStart('_'), newGameObject.transform);
 		}
 		else {
-			AudioInfo audioInfo = newGameObject.AddComponent<AudioInfo>();
+			AudioInfoOld audioInfo = newGameObject.AddComponent<AudioInfoOld>();
 			audioInfo.clip = audioClip;
 			if (audioDict.ContainsKey(audioClip.name)) {
-				AudioInfo sound = audioDict[audioClip.name];
+				AudioInfoOld sound = audioDict[audioClip.name];
 				
 				audioInfo.init = sound.init;
 				audioInfo.fadeIn = sound.fadeIn;
@@ -370,7 +365,7 @@ public class AudioPlayer : MonoBehaviour {
 	}
 	
 	void BuildAudioDict() {
-		audioDict = new Dictionary<string, AudioInfo>();
+		audioDict = new Dictionary<string, AudioInfoOld>();
 		if (keys != null) {
 			for (int i = 0; i < keys.Length; i++) {
 				if (keys[i] != null && values[i] != null) {
@@ -414,17 +409,14 @@ public class AudioPlayer : MonoBehaviour {
 		}
 	}
 	
-	static public AudioSource Play(AudioSource audioSource, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
-		AudioInfo audioInfo = null;
+	public static AudioSource Play(AudioSource audioSource, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
+		AudioInfoOld audioInfo = null;
 		
 		if (audioSource.clip != null) {
-			if (AudioInfos.ContainsKey(audioSource.clip.name))
-				audioInfo = AudioInfos[audioSource.clip.name];
+			if (AudioInfos.ContainsKey(audioSource.clip.name)) audioInfo = AudioInfos[audioSource.clip.name];
 		}
-		if (audioInfo != null)
-			delay = (float)(GetDelayToSync(syncMode) + GetAdjustedDelay(audioInfo.delay, audioInfo.syncMode) + GetAdjustedDelay(delay, syncMode));
-		else
-			delay = (float)(GetDelayToSync(syncMode) + GetAdjustedDelay(delay, syncMode));
+		if (audioInfo != null) delay = (float)(GetDelayToSync(syncMode) + GetAdjustedDelay(audioInfo.delay, audioInfo.syncMode) + GetAdjustedDelay(delay, syncMode));
+		else delay = (float)(GetDelayToSync(syncMode) + GetAdjustedDelay(delay, syncMode));
 		
 		if (ActiveAudioSources.ContainsKey(audioSource.gameObject)) {
 			SchedulePlay(audioSource, audioInfo, delay);
@@ -439,7 +431,7 @@ public class AudioPlayer : MonoBehaviour {
 		return audioSource;
 	}
 	
-	static public AudioSource Play(AudioClip audioClip, AudioInfo audioInfo, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
+	public static AudioSource Play(AudioClip audioClip, AudioInfoOld audioInfo, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
 		if (ToPlayCounter < Instance.maxVoices) {
 			AudioSource audioSource = GetAudioSource(audioInfo, sourceObject, audioClip);
 			
@@ -455,11 +447,10 @@ public class AudioPlayer : MonoBehaviour {
 				return Play(audioSource, delay, syncMode);
 			}
 		}
-		else
-			return null;
+		else return null;
 	}
 	
-	static public AudioSource Play(AudioInfo audioInfo, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
+	public static AudioSource Play(AudioInfoOld audioInfo, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
 		if (ToPlayCounter < Instance.maxVoices) {
 			AudioSource audioSource = GetAudioSource(audioInfo, sourceObject);
 			
@@ -475,39 +466,36 @@ public class AudioPlayer : MonoBehaviour {
 				return Play(audioSource, delay, syncMode);
 			}
 		}
-		else
-			return null;
+		else return null;
 	}
 	
-	static public List<AudioSource> Play(AudioInfo[] audioInfos, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
+	public static List<AudioSource> Play(AudioInfoOld[] audioInfos, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
 		List<AudioSource> audioSources = new List<AudioSource>();
 		for (int i = 0; i < audioInfos.Length; i++) {
 			AudioSource audioSource = Play(audioInfos[i], sourceObject, delay, syncMode);
-			if (audioSource != null)
-				audioSources.Add(audioSource);
+			if (audioSource != null) audioSources.Add(audioSource);
 		}
 		return audioSources;
 	}
 	
-	static public AudioSource Play(string soundName) {
+	public static AudioSource Play(string soundName) {
 		return Play(AudioInfos[soundName], null, 0, AudioPlayer.SyncMode.None);
 	}
 	
-	static public AudioSource Play(string soundName, GameObject sourceObject, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
+	public static AudioSource Play(string soundName, GameObject sourceObject, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
 		return Play(AudioInfos[soundName], sourceObject, delay, syncMode);
 	}
 	
-	static public List<AudioSource> Play(string[] soundNames, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
+	public static List<AudioSource> Play(string[] soundNames, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
 		List<AudioSource> audioSources = new List<AudioSource>();
 		for (int i = 0; i < soundNames.Length; i++) {
 			AudioSource audioSource = Play(soundNames[i], sourceObject, delay, syncMode);
-			if (audioSource != null)
-				audioSources.Add(audioSource);
+			if (audioSource != null) audioSources.Add(audioSource);
 		}
 		return audioSources;
 	}
 	
-	static public List<AudioSource> Play(Container container, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
+	public static List<AudioSource> Play(Container container, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
 		List<AudioSource> audioSources = new List<AudioSource>();
 		
 		if (container.containerType == Container.ContainerTypes.MixContainer) {
@@ -524,47 +512,47 @@ public class AudioPlayer : MonoBehaviour {
 		return audioSources;
 	}
 	
-	static public List<AudioSource> PlayRepeating(float repeatRate, AudioInfo audioInfo, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
+	public static List<AudioSource> PlayRepeating(float repeatRate, AudioInfoOld audioInfo, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
 		List<AudioSource> audioSources = new List<AudioSource>();
 		Instance.coroutineHolder.AddCoroutine("PlayRepeatedly" + audioSources.GetHashCode(), PlayRepeatedly(audioSources, repeatRate, audioInfo, sourceObject, delay, syncMode));
 		return audioSources;
 	}
 	
-	static public List<AudioSource> PlayRepeating(float repeatRate, AudioInfo[] audioInfos, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
+	public static List<AudioSource> PlayRepeating(float repeatRate, AudioInfoOld[] audioInfos, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
 		List<AudioSource> audioSources = new List<AudioSource>();
 		Instance.coroutineHolder.AddCoroutine("PlayRepeatedly" + audioSources.GetHashCode(), PlayRepeatedly(audioSources, repeatRate, audioInfos, sourceObject, delay, syncMode));
 		return audioSources;
 	}
 	
-	static public List<AudioSource> PlayRepeating(float repeatRate, string soundName) {
+	public static List<AudioSource> PlayRepeating(float repeatRate, string soundName) {
 		return PlayRepeating(repeatRate, AudioInfos[soundName], null, 0, SyncMode.None);
 	}
 	
-	static public List<AudioSource> PlayRepeating(float repeatRate, string soundName, GameObject sourceObject, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
+	public static List<AudioSource> PlayRepeating(float repeatRate, string soundName, GameObject sourceObject, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
 		return PlayRepeating(repeatRate, AudioInfos[soundName], sourceObject, delay, syncMode);
 	}
 	
-	static public List<AudioSource> PlayRepeating(float repeatRate, string[] soundNames, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
-		AudioInfo[] audioInfos = new AudioInfo[soundNames.Length];
+	public static List<AudioSource> PlayRepeating(float repeatRate, string[] soundNames, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
+		AudioInfoOld[] audioInfos = new AudioInfoOld[soundNames.Length];
 		for (int i = 0; i < soundNames.Length; i++) {
 			audioInfos[i] = AudioInfos[soundNames[i]];
 		}
 		return PlayRepeating(repeatRate, audioInfos, sourceObject, delay, syncMode);
 	}
 	
-	static public List<AudioSource> PlayRepeating(float repeatRate, Container container, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
+	public static List<AudioSource> PlayRepeating(float repeatRate, Container container, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
 		List<AudioSource> audioSources = new List<AudioSource>();
 		Instance.coroutineHolder.AddCoroutine("PlayRepeatedly" + audioSources.GetHashCode(), PlayRepeatedly(audioSources, repeatRate, container, sourceObject, delay, syncMode));
 		return audioSources;
 	}
 	
-	static public List<AudioSource> PlayRepeating(float repeatRate, Sampler.Note note, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
+	public static List<AudioSource> PlayRepeating(float repeatRate, Sampler.Note note, GameObject sourceObject = null, float delay = 0, AudioPlayer.SyncMode syncMode = AudioPlayer.SyncMode.None) {
 		List<AudioSource> audioSources = new List<AudioSource>();
 		Instance.coroutineHolder.AddCoroutine("PlayRepeatedly" + audioSources.GetHashCode(), PlayRepeatedly(audioSources, repeatRate, note, sourceObject, delay, syncMode));
 		return audioSources;
 	}
 	
-	static public void Pause(AudioSource audioSource, float delay = 0) {
+	public static void Pause(AudioSource audioSource, float delay = 0) {
 		if (audioSource != null) {
 			if (audioSource.gameObject.activeSelf) {
 				ActiveAudioSources[audioSource.gameObject].AddCoroutine("PauseAfterDelay", PauseAfterDelay(audioSource, delay));
@@ -572,20 +560,20 @@ public class AudioPlayer : MonoBehaviour {
 		}
 	}
 	
-	static public void Pause(List<AudioSource> audioSources, float delay = 0) {
+	public static void Pause(List<AudioSource> audioSources, float delay = 0) {
 		if (audioSources != null) {
 			Instance.coroutineHolder.AddCoroutine("PauseAfterDelay" + audioSources.GetHashCode(), PauseAfterDelay(audioSources, delay));
 		}
 	}
 	
-	static public void PauseAll(float delay = 0) {
+	public static void PauseAll(float delay = 0) {
 		foreach (GameObject GO in new List<GameObject>(ActiveAudioSources.Keys)) {
 			Pause(GO.audio, delay);
 		}
 		Instance.coroutineHolder.PauseAllCoroutinesBut("PlayMetronome");
 	}
 	
-	static public void Resume(AudioSource audioSource, float delay = 0) {
+	public static void Resume(AudioSource audioSource, float delay = 0) {
 		if (audioSource != null) {
 			if (audioSource.gameObject.activeSelf) {
 				ActiveAudioSources[audioSource.gameObject].AddCoroutine("ResumeAfterDelay", ResumeAfterDelay(audioSource, delay));
@@ -593,35 +581,33 @@ public class AudioPlayer : MonoBehaviour {
 		}
 	}
 	
-	static public void Resume(List<AudioSource> audioSources, float delay = 0) {
+	public static void Resume(List<AudioSource> audioSources, float delay = 0) {
 		if (audioSources != null) {
 			Instance.coroutineHolder.AddCoroutine("ResumeAfterDelay" + audioSources.GetHashCode(), ResumeAfterDelay(audioSources, delay));
 		}
 	}
 	
-	static public void ResumeAll(float delay = 0) {
+	public static void ResumeAll(float delay = 0) {
 		foreach (GameObject GO in new List<GameObject>(ActiveAudioSources.Keys)) {
 			Resume(GO.audio, delay);
 		}
 		Instance.coroutineHolder.ResumeAllCoroutines();
 	}
 	
-	static public void Stop(AudioSource audioSource, float delay = 0) {
+	public static void Stop(AudioSource audioSource, float delay = 0) {
 		if (audioSource != null) {
 			if (audioSource.clip != null) {
 				if (audioSource.gameObject.activeSelf) {
-					AudioInfo audioInfo;
-					if (AudioInfos.ContainsKey(audioSource.clip.name))
-						audioInfo = AudioInfos[audioSource.clip.name];
-					else
-						audioInfo = new AudioInfo();
+					AudioInfoOld audioInfo;
+					if (AudioInfos.ContainsKey(audioSource.clip.name)) audioInfo = AudioInfos[audioSource.clip.name];
+					else audioInfo = new AudioInfoOld();
 					ActiveAudioSources[audioSource.gameObject].AddCoroutine("StopAfterDelay", StopAfterDelay(audioSource, audioInfo, delay, true));
 				}
 			}
 		}
 	}
 	
-	static public void Stop(List<AudioSource> audioSources, float delay = 0) {
+	public static void Stop(List<AudioSource> audioSources, float delay = 0) {
 		if (audioSources != null) {
 			foreach (AudioSource audioSource in audioSources) {
 				Stop(audioSource, delay);
@@ -632,7 +618,7 @@ public class AudioPlayer : MonoBehaviour {
 		}
 	}
 	
-	static public void StopAll(float delay = 0) {
+	public static void StopAll(float delay = 0) {
 		foreach (GameObject GO in new List<GameObject>(ActiveAudioSources.Keys)) {
 			Stop(GO.audio, delay);
 		}
@@ -641,14 +627,12 @@ public class AudioPlayer : MonoBehaviour {
 		Instance.coroutineHolder.RemoveAllCoroutinesBut("PlayMetronome");
 	}
 	
-	static public void StopImmediate(AudioSource audioSource, float delay = 0) {
+	public static void StopImmediate(AudioSource audioSource, float delay = 0) {
 		if (audioSource != null) {
 			if (audioSource.clip != null) {
-				AudioInfo audioInfo;
-				if (AudioInfos.ContainsKey(audioSource.clip.name))
-					audioInfo = AudioInfos[audioSource.clip.name];
-				else
-					audioInfo = new AudioInfo();
+				AudioInfoOld audioInfo;
+				if (AudioInfos.ContainsKey(audioSource.clip.name)) audioInfo = AudioInfos[audioSource.clip.name];
+				else audioInfo = new AudioInfoOld();
 				
 				if (audioSource.gameObject.activeSelf) {
 					ActiveAudioSources[audioSource.gameObject].AddCoroutine("StopAfterDelay", StopAfterDelay(audioSource, audioInfo, delay, true, false));
@@ -657,7 +641,7 @@ public class AudioPlayer : MonoBehaviour {
 		}
 	}
 	
-	static public void StopImmediate(List<AudioSource> audioSources, float delay = 0) {
+	public static void StopImmediate(List<AudioSource> audioSources, float delay = 0) {
 		if (audioSources != null) {
 			foreach (AudioSource audioSource in audioSources) {
 				StopImmediate(audioSource, delay);
@@ -668,7 +652,7 @@ public class AudioPlayer : MonoBehaviour {
 		}
 	}
 	
-	static public void StopAllImmediate(float delay = 0) {
+	public static void StopAllImmediate(float delay = 0) {
 		foreach (GameObject GO in new List<GameObject>(ActiveAudioSources.Keys)) {
 			StopImmediate(GO.audio, delay);
 		}
@@ -677,7 +661,7 @@ public class AudioPlayer : MonoBehaviour {
 		Instance.coroutineHolder.RemoveAllCoroutinesBut("PlayMetronome");
 	}
 	
-	static public void SetVolume(AudioSource audioSource, float targetVolume, float time = 0) {
+	public static void SetVolume(AudioSource audioSource, float targetVolume, float time = 0) {
 		if (audioSource != null) {
 			if (ActiveAudioSources.ContainsKey(audioSource.gameObject)) {
 				ActiveAudioSources[audioSource.gameObject].RemoveCoroutines("FadeVolume");
@@ -690,7 +674,7 @@ public class AudioPlayer : MonoBehaviour {
 		}
 	}
 	
-	static public void SetVolume(List<AudioSource> audioSources, float targetVolume, float time = 0) {
+	public static void SetVolume(List<AudioSource> audioSources, float targetVolume, float time = 0) {
 		if (audioSources != null) {
 			foreach (AudioSource audioSource in audioSources) {
 				SetVolume(audioSource, targetVolume, time);
@@ -698,29 +682,29 @@ public class AudioPlayer : MonoBehaviour {
 		}
 	}
 	
-	static public void SetMasterVolume(float targetVolume, float time = 0) {
+	public static void SetMasterVolume(float targetVolume, float time = 0) {
 		Instance.coroutineHolder.RemoveCoroutines("FadeMasterVolume");
 		Instance.coroutineHolder.AddCoroutine("FadeMasterVolume", FadeMasterVolume(targetVolume, time));
 	}
 	
-	static public void StartMetronome() {
+	public static void StartMetronome() {
 		Instance.coroutineHolder.RemoveCoroutines("PlayMetronome");
 		Instance.coroutineHolder.AddCoroutine("PlayMetronome", PlayMetronome());
 	}
 	
-	static public void PauseMetronome() {
+	public static void PauseMetronome() {
 		Instance.coroutineHolder.PauseCoroutines("PlayMetronome");
 	}
 	
-	static public void ResumeMetronome() {
+	public static void ResumeMetronome() {
 		Instance.coroutineHolder.ResumeCoroutines("PlayMetronome");
 	}
 	
-	static public void StopMetronome() {
+	public static void StopMetronome() {
 		Instance.coroutineHolder.RemoveCoroutines("PlayMetronome");
 	}
 	
-	static void SchedulePlay(AudioSource audioSource, AudioInfo audioInfo, float delay = 0, bool fadeIn = true) {
+	static void SchedulePlay(AudioSource audioSource, AudioInfoOld audioInfo, float delay = 0, bool fadeIn = true) {
 		if (audioInfo == null) {
 			audioSource.enabled = true;
 			audioSource.PlayScheduled(AudioSettings.dspTime + delay);
@@ -743,13 +727,11 @@ public class AudioPlayer : MonoBehaviour {
 		
 		if (subContainer.sourceType == SubContainer.ContainerTypes.AudioSource) {
 			AudioSource audioSource = Play(subContainer.audioInfo, sourceObject, subContainer.delay + delay, subContainer.syncMode);
-			if (audioSource != null)
-				audioSources.Add(audioSource);
+			if (audioSource != null) audioSources.Add(audioSource);
 		}
 		else if (subContainer.sourceType == SubContainer.ContainerTypes.Sampler) {
 			AudioSource audioSource = Sampler.Play(subContainer.instrumentName, subContainer.midiNote, subContainer.velocity, sourceObject, subContainer.delay + delay, subContainer.syncMode);
-			if (audioSource != null)
-				audioSources.Add(audioSource);
+			if (audioSource != null) audioSources.Add(audioSource);
 		}
 		else if (subContainer.sourceType == SubContainer.ContainerTypes.MixContainer) {
 			for (int i = 0; i < subContainer.childrenLink.Count; i++) {
@@ -783,14 +765,14 @@ public class AudioPlayer : MonoBehaviour {
 					audioSource = Play(sequence[i].audioInfo, sourceObject, sequence[i].delay, sequence[i].syncMode);
 					audioSources.Add(audioSource);
 					
-					AudioInfo audioInfo = AudioInfos[audioSource.clip.name];
+					AudioInfoOld audioInfo = AudioInfos[audioSource.clip.name];
 					waitTime = (float)(audioSource.clip.length / audioSource.pitch - audioInfo.fadeIn + GetAdjustedDelay(audioInfo.delay, audioInfo.syncMode) + GetAdjustedDelay(sequence[i].delay, sequence[i].syncMode));
 				}
 				else if (sequence[i].sourceType == SubContainer.ContainerTypes.Sampler) {
 					audioSource = Sampler.Play(sequence[i].instrumentName, sequence[i].midiNote, sequence[i].velocity, sourceObject, sequence[i].delay, sequence[i].syncMode);
 					audioSources.Add(audioSource);
 					
-					AudioInfo audioInfo = AudioInfos[audioSource.clip.name];
+					AudioInfoOld audioInfo = AudioInfos[audioSource.clip.name];
 					waitTime = (float)(audioSource.clip.length / audioSource.pitch - audioInfo.fadeIn + GetAdjustedDelay(audioInfo.delay, audioInfo.syncMode) + GetAdjustedDelay(sequence[i].delay, sequence[i].syncMode));
 				}
 				else if (sequence[i].sourceType == SubContainer.ContainerTypes.MixContainer) {
@@ -800,11 +782,10 @@ public class AudioPlayer : MonoBehaviour {
 					}
 					while (tempAudioSources.Count == 0) {
 						yield return new WaitForSeconds(0);
-						if (audioSources.Count == 0)
-							break;
+						if (audioSources.Count == 0) break;
 					}
 					foreach (AudioSource source in tempAudioSources) {
-						AudioInfo audioInfo = AudioInfos[source.clip.name];
+						AudioInfoOld audioInfo = AudioInfos[source.clip.name];
 						if ((float)(source.clip.length / source.pitch - audioInfo.fadeIn + GetAdjustedDelay(audioInfo.delay, audioInfo.syncMode) + GetAdjustedDelay(sequence[i].delay, sequence[i].syncMode)) > waitTime) {
 							waitTime = (float)(source.clip.length / source.pitch - audioInfo.fadeIn + GetAdjustedDelay(audioInfo.delay, audioInfo.syncMode) + GetAdjustedDelay(sequence[i].delay, sequence[i].syncMode));
 						}
@@ -817,7 +798,7 @@ public class AudioPlayer : MonoBehaviour {
 					PlaySubContainer(tempAudioSources, GetRandomContainer(sequence[i].sources), container, sourceObject, sequence[i].delay, sequence[i].syncMode);
 					
 					foreach (AudioSource source in tempAudioSources) {
-						AudioInfo audioInfo = AudioInfos[source.clip.name];
+						AudioInfoOld audioInfo = AudioInfos[source.clip.name];
 						if ((float)(source.clip.length / source.pitch - audioInfo.fadeIn + GetAdjustedDelay(audioInfo.delay, audioInfo.syncMode) + GetAdjustedDelay(sequence[i].delay, sequence[i].syncMode)) > waitTime) {
 							waitTime = (float)(source.clip.length / source.pitch - audioInfo.fadeIn + GetAdjustedDelay(audioInfo.delay, audioInfo.syncMode) + GetAdjustedDelay(sequence[i].delay, sequence[i].syncMode));
 						}
@@ -828,8 +809,7 @@ public class AudioPlayer : MonoBehaviour {
 					IEnumerator coroutine = PlaySequence(audioSources, sequence[i].sources, container, sourceObject, sequence[i].delay, sequence[i].syncMode);
 					while (coroutine.MoveNext()) {
 						yield return coroutine.Current;
-						if (audioSources.Count == 0)
-							break;
+						if (audioSources.Count == 0) break;
 					}
 				}
 				
@@ -838,8 +818,7 @@ public class AudioPlayer : MonoBehaviour {
 					yield return new WaitForSeconds(0);
 					counter += Time.deltaTime;
 				}
-				if (audioSources.Count == 0)
-					break;
+				if (audioSources.Count == 0) break;
 			}
 		}
 	}
@@ -860,8 +839,7 @@ public class AudioPlayer : MonoBehaviour {
 					firstTime = false;
 				}
 				else {
-					if (audioSources.Count == 0)
-						break;
+					if (audioSources.Count == 0) break;
 					while (nextRepeatTime < AudioSettings.dspTime) {
 						nextRepeatTime += GetAdjustedDelay(repeatRate, syncMode);
 					}
@@ -872,11 +850,11 @@ public class AudioPlayer : MonoBehaviour {
 				if (toPlay is AudioSource) {
 					audioSources.Add(Play(toPlay as AudioSource, (float)(nextRepeatTime - AudioSettings.dspTime)));
 				}
-				else if (toPlay is AudioInfo) {
-					audioSources.Add(Play(toPlay as AudioInfo, sourceObject, (float)(nextRepeatTime - AudioSettings.dspTime)));
+				else if (toPlay is AudioInfoOld) {
+					audioSources.Add(Play(toPlay as AudioInfoOld, sourceObject, (float)(nextRepeatTime - AudioSettings.dspTime)));
 				}
-				else if (toPlay is AudioInfo[]) {
-					audioSources.AddRange(Play(toPlay as AudioInfo[], sourceObject, (float)(nextRepeatTime - AudioSettings.dspTime)));
+				else if (toPlay is AudioInfoOld[]) {
+					audioSources.AddRange(Play(toPlay as AudioInfoOld[], sourceObject, (float)(nextRepeatTime - AudioSettings.dspTime)));
 				}
 				else if (toPlay is string) {
 					audioSources.Add(Play(toPlay as string, sourceObject, (float)(nextRepeatTime - AudioSettings.dspTime)));
@@ -903,10 +881,8 @@ public class AudioPlayer : MonoBehaviour {
 		}
 		
 		if (audioSource != null) {
-			if (audioSource.gameObject.activeSelf)
-				audioSource.Pause();
-			if (ActiveAudioSources.ContainsKey(audioSource.gameObject))
-				ActiveAudioSources[audioSource.gameObject].PauseAllCoroutines();
+			if (audioSource.gameObject.activeSelf) audioSource.Pause();
+			if (ActiveAudioSources.ContainsKey(audioSource.gameObject)) ActiveAudioSources[audioSource.gameObject].PauseAllCoroutines();
 			Instance.coroutineHolder.PauseCoroutines("PlayRepeatedly" + audioSource.GetHashCode());
 			Instance.coroutineHolder.PauseCoroutines("PlaySequence" + audioSource.GetHashCode());
 		}
@@ -922,10 +898,8 @@ public class AudioPlayer : MonoBehaviour {
 		if (audioSources != null) {
 			foreach (AudioSource audioSource in audioSources) {
 				if (audioSource != null) {
-					if (audioSource.gameObject.activeSelf)
-						audioSource.Pause();
-					if (ActiveAudioSources.ContainsKey(audioSource.gameObject))
-						ActiveAudioSources[audioSource.gameObject].PauseAllCoroutines();
+					if (audioSource.gameObject.activeSelf) audioSource.Pause();
+					if (ActiveAudioSources.ContainsKey(audioSource.gameObject)) ActiveAudioSources[audioSource.gameObject].PauseAllCoroutines();
 					Instance.coroutineHolder.PauseCoroutines("PlayRepeatedly" + audioSource.GetHashCode());
 					Instance.coroutineHolder.PauseCoroutines("PlaySequence" + audioSource.GetHashCode());
 				}
@@ -944,10 +918,8 @@ public class AudioPlayer : MonoBehaviour {
 		
 		if (audioSource != null) {
 			if (!audioSource.isPlaying) {
-				if (audioSource.gameObject.activeSelf)
-					audioSource.Play();
-				if (ActiveAudioSources.ContainsKey(audioSource.gameObject))
-					ActiveAudioSources[audioSource.gameObject].ResumeAllCoroutines();
+				if (audioSource.gameObject.activeSelf) audioSource.Play();
+				if (ActiveAudioSources.ContainsKey(audioSource.gameObject)) ActiveAudioSources[audioSource.gameObject].ResumeAllCoroutines();
 				Instance.coroutineHolder.ResumeCoroutines("PlayRepeatedly" + audioSource.GetHashCode());
 				Instance.coroutineHolder.ResumeCoroutines("PlaySequence" + audioSource.GetHashCode());
 			}
@@ -965,10 +937,8 @@ public class AudioPlayer : MonoBehaviour {
 			foreach (AudioSource audioSource in audioSources) {
 				if (audioSource != null) {
 					if (!audioSource.isPlaying) {
-						if (audioSource.gameObject.activeSelf)
-							audioSource.Play();
-						if (ActiveAudioSources.ContainsKey(audioSource.gameObject))
-							ActiveAudioSources[audioSource.gameObject].ResumeAllCoroutines();
+						if (audioSource.gameObject.activeSelf) audioSource.Play();
+						if (ActiveAudioSources.ContainsKey(audioSource.gameObject)) ActiveAudioSources[audioSource.gameObject].ResumeAllCoroutines();
 						Instance.coroutineHolder.ResumeCoroutines("PlayRepeatedly" + audioSource.GetHashCode());
 						Instance.coroutineHolder.ResumeCoroutines("PlaySequence" + audioSource.GetHashCode());
 					}
@@ -979,7 +949,7 @@ public class AudioPlayer : MonoBehaviour {
 		}
 	}
 	
-	static IEnumerator StopAfterDelay(AudioSource audioSource, AudioInfo audioInfo, float delay = 0, bool enforce = false, bool fadeOut = true) {
+	static IEnumerator StopAfterDelay(AudioSource audioSource, AudioInfoOld audioInfo, float delay = 0, bool enforce = false, bool fadeOut = true) {
 		float delayCounter = 0;
 		while (delayCounter < delay) {
 			yield return new WaitForSeconds(0);
@@ -1017,8 +987,7 @@ public class AudioPlayer : MonoBehaviour {
 			float volumeDiff = targetVolume - startVolume;
 			
 			while (audioSource != null) {
-				if (enforce)
-					yield return new WaitForEndOfFrame();
+				if (enforce) yield return new WaitForEndOfFrame();
 				if (audioSource != null) {
 					if (curve != null) {
 						float adjustedValue = 0;
@@ -1142,38 +1111,32 @@ public class AudioPlayer : MonoBehaviour {
 	static void RemoveInactiveAudioSources(List<AudioSource> audioSources) {
 		List<AudioSource> toRemove = new List<AudioSource>();
 		foreach (AudioSource audioSource in audioSources) {
-			if (audioSource == null)
-				toRemove.Add(audioSource);
-			else if (audioSource.gameObject == null)
-				toRemove.Add(audioSource);
-			else if (!audioSource.gameObject.activeSelf)
-				toRemove.Add(audioSource);
+			if (audioSource == null) toRemove.Add(audioSource);
+			else if (audioSource.gameObject == null) toRemove.Add(audioSource);
+			else if (!audioSource.gameObject.activeSelf) toRemove.Add(audioSource);
 		}
 		foreach (AudioSource audioSource in toRemove) {
 			audioSources.Remove(audioSource);
 		}
 	}
 	
-	static AudioSource GetAudioSource(AudioInfo audioInfo, GameObject sourceObject = null, AudioClip overrideClip = null) {
+	static AudioSource GetAudioSource(AudioInfoOld audioInfo, GameObject sourceObject = null, AudioClip overrideClip = null) {
 		GameObject gameObject;
 		AudioSource audioSource;
 		
 		gameObject = GetGameObject(sourceObject);
 		gameObject.name = "AudioSource: " + audioInfo.clip.name;
 		audioSource = gameObject.audio;
-		if (audioInfo.sendToPD)
-			GainManagerDict[gameObject].Initialize(audioSource.clip.name + "~");
+		if (audioInfo.sendToPD) GainManagerDict[gameObject].Initialize(audioSource.clip.name + "~");
 		SetAudioSource(audioSource, audioInfo, overrideClip);
 		ActiveVoices.Add(audioSource);
 		
 		return audioSource;
 	}
 	
-	static void SetAudioSource(AudioSource audioSource, AudioInfo audioInfo, AudioClip overrideClip = null) {
-		if (overrideClip == null)
-			audioSource.clip = audioInfo.clip;
-		else
-			audioSource.clip = overrideClip;
+	static void SetAudioSource(AudioSource audioSource, AudioInfoOld audioInfo, AudioClip overrideClip = null) {
+		if (overrideClip == null) audioSource.clip = audioInfo.clip;
+		else audioSource.clip = overrideClip;
 		audioSource.mute = audioInfo.mute;
 		audioSource.bypassEffects = audioInfo.bypassEffects;
 		audioSource.bypassListenerEffects = audioInfo.bypassListenerEffects;
@@ -1267,9 +1230,9 @@ public class AudioPlayer : MonoBehaviour {
 		UpdateBusVolume();
 		
 		if (audioInfo.rTPCs != null) {
-			foreach (AudioInfo.RTPC rtpc in audioInfo.rTPCs) {
+			foreach (AudioInfoOld.RTPC rtpc in audioInfo.rTPCs) {
 				if (rtpc.parameters != null) {
-					foreach (AudioInfo.RTPCParameter parameter in rtpc.parameters) {
+					foreach (AudioInfoOld.RTPCParameter parameter in rtpc.parameters) {
 						if (parameter != null) {
 							if (parameter.enabled) {
 								if (!RTPCAudioDict[rtpc.name].Contains(audioSource)) {
@@ -1293,7 +1256,7 @@ public class AudioPlayer : MonoBehaviour {
 				RTPC rtpcInfo = RTPCDict[key];
 				RTPCs[key] = Mathf.Clamp(RTPCs[key], rtpcInfo.minValue, rtpcInfo.maxValue);
 				if (audioInfo.RTPCDict != null) {
-					foreach (AudioInfo.RTPCParameter parameter in audioInfo.RTPCDict[key].parameters) {
+					foreach (AudioInfoOld.RTPCParameter parameter in audioInfo.RTPCDict[key].parameters) {
 						if (parameter.enabled) {
 							ApplyRTPC(audioSource, parameter, RTPCs[key], rtpcInfo, audioInfo);
 						}
@@ -1314,8 +1277,7 @@ public class AudioPlayer : MonoBehaviour {
 		else {
 			gameObject = new GameObject();
 		}
-		if (gameObject.GetComponent<AudioSource>() == null)
-			gameObject.AddComponent<AudioSource>();
+		if (gameObject.GetComponent<AudioSource>() == null) gameObject.AddComponent<AudioSource>();
 		GainManagerDict[gameObject] = gameObject.GetOrAddComponent<AudioGainManager>();
 		ActiveAudioSources[gameObject] = gameObject.GetOrAddComponent<CoroutineHolder>();
 		if (sourceObject != null){ gameObject.transform.parent = sourceObject.transform;}
@@ -1351,7 +1313,7 @@ public class AudioPlayer : MonoBehaviour {
 					AudioSource audioSource = GO.audio;
 					if (audioSource.clip != null) {
 						if (AudioInfos.ContainsKey(audioSource.clip.name)) {
-							AudioInfo audioInfo = AudioInfos[audioSource.clip.name];
+							AudioInfoOld audioInfo = AudioInfos[audioSource.clip.name];
 							AudioGainManager gainManager = GainManagerDict[GO];
 							float volumeSum = 0;
 							bool applyBuses = false;
@@ -1366,10 +1328,8 @@ public class AudioPlayer : MonoBehaviour {
 									}
 								}
 							}
-							if (applyBuses)
-								gainManager.volume = volumeSum * (Instance.masterVolume / 100);
-							else
-								gainManager.volume = Instance.masterVolume / 100;
+							if (applyBuses) gainManager.volume = volumeSum * (Instance.masterVolume / 100);
+							else gainManager.volume = Instance.masterVolume / 100;
 						}
 					}
 				}
@@ -1377,7 +1337,7 @@ public class AudioPlayer : MonoBehaviour {
 		}
 	}
 	
-	static void ApplyRTPC(AudioSource audioSource, AudioInfo.RTPCParameter parameter, float rtpcValue, RTPC rtpcInfo, AudioInfo audioInfo) {
+	static void ApplyRTPC(AudioSource audioSource, AudioInfoOld.RTPCParameter parameter, float rtpcValue, RTPC rtpcInfo, AudioInfoOld audioInfo) {
 		float adjustedValue = (rtpcValue - rtpcInfo.minValue) / (rtpcInfo.maxValue - rtpcInfo.minValue);
 		float curveValue = parameter.curve.Evaluate(adjustedValue);
 		
@@ -1389,7 +1349,7 @@ public class AudioPlayer : MonoBehaviour {
 		}
 	}
 	
-	static public double GetDelayToSync(AudioPlayer.SyncMode syncMode) {
+	public static double GetDelayToSync(AudioPlayer.SyncMode syncMode) {
 		double delayToSync = 0;
 		
 		if (syncMode == AudioPlayer.SyncMode.Beat){ delayToSync = TempoSettings.NextBeatTime - AudioSettings.dspTime;}
@@ -1398,7 +1358,7 @@ public class AudioPlayer : MonoBehaviour {
 		return delayToSync;
 	}
 	
-	static public double GetAdjustedDelay(float delay, AudioPlayer.SyncMode syncMode) {
+	public static double GetAdjustedDelay(float delay, AudioPlayer.SyncMode syncMode) {
 		double adjustedDelay = 0;
 		
 		if (delay == 0){ return delay;}
@@ -1409,15 +1369,14 @@ public class AudioPlayer : MonoBehaviour {
 		return adjustedDelay;
 	}
 	
-	static public string GetUniqueName(object[] array, string newName, string oldName = "", int suffix = 0) {
+	public static string GetUniqueName(object[] array, string newName, string oldName = "", int suffix = 0) {
 		bool uniqueName = false;
 		string currentName = "";
 		
 		while (!uniqueName) {
 			uniqueName = true;
 			currentName = newName;
-			if (suffix > 0)
-				currentName += suffix.ToString();
+			if (suffix > 0) currentName += suffix.ToString();
 			
 			foreach (object obj in array) {
 				if (obj is Container) {
@@ -1451,9 +1410,9 @@ public class AudioPlayer : MonoBehaviour {
 		return currentName;
 	}
 	
-	static public AudioInfo[] Sort(AudioInfo[] audioInfos) {
+	public static AudioInfoOld[] Sort(AudioInfoOld[] audioInfos) {
 		string[] names = new string[audioInfos.Length];
-		AudioInfo[] sortedAudioInfos = new AudioInfo[audioInfos.Length];
+		AudioInfoOld[] sortedAudioInfos = new AudioInfoOld[audioInfos.Length];
 		
 		for (int i = 0; i < audioInfos.Length; i++) {
 			names[i] = audioInfos[i].clip.name;
@@ -1462,7 +1421,7 @@ public class AudioPlayer : MonoBehaviour {
 		System.Array.Sort(names);
 		
 		for (int i = 0; i < audioInfos.Length; i++) {
-			foreach (AudioInfo sound in audioInfos) {
+			foreach (AudioInfoOld sound in audioInfos) {
 				if (sound.clip.name == names[i]) {
 					sortedAudioInfos[i] = sound;
 					break;
@@ -1472,7 +1431,7 @@ public class AudioPlayer : MonoBehaviour {
 		return sortedAudioInfos;
 	}
 	
-	static public AudioClip[] Sort(AudioClip[] audioClips) {
+	public static AudioClip[] Sort(AudioClip[] audioClips) {
 		List<string> names = new List<string>();
 
 		foreach (AudioClip audioClip in audioClips) {
@@ -1498,7 +1457,7 @@ public class AudioPlayer : MonoBehaviour {
 	
 	static void SetIconReferences() {
 		#if UNITY_EDITOR
-		if (System.Array.TrueForAll(UnityEditor.EditorApplication.hierarchyWindowItemOnGUI.GetInvocationList(), invoker => invoker.Method.DeclaringType != typeof(AudioPlayer) || invoker.Method.Name != "ShowIcons")){
+		if (!UnityEditor.EditorApplication.hierarchyWindowItemOnGUI.Contains(Instance, "ShowIcons")){
 			UnityEditor.EditorApplication.hierarchyWindowItemOnGUI += ShowIcons;
 			audioPlayerIcon = audioPlayerIcon ?? UnityEditor.EditorGUIUtility.ObjectContent(null, typeof(AudioSource)).image;
 			audioInfoIcon = audioInfoIcon ?? UnityEditor.EditorGUIUtility.ObjectContent(null, typeof(AudioClip)).image;
@@ -1527,11 +1486,11 @@ public class AudioPlayer : MonoBehaviour {
 			area.x = width - 24 + gameObject.GetHierarchyDepth() * 14;
 			GUI.DrawTexture(area, samplerIcon);
 		}
-		if (gameObject.GetComponent<PDPlayer>() != null){
+		if (gameObject.GetComponent<PDPlayerOld>() != null){
 			area.x = width - 8 + gameObject.GetHierarchyDepth() * 14;
 			GUI.DrawTexture(area, pdPlayerIcon);
 		}
-		if (gameObject.GetComponent<AudioInfo>() != null){
+		if (gameObject.GetComponent<AudioInfoOld>() != null){
 			area.x = width - 8 + gameObject.GetHierarchyDepth() * 14;
 			GUI.DrawTexture(area, audioInfoIcon);
 		}
@@ -1644,8 +1603,7 @@ public class AudioPlayer : MonoBehaviour {
 						break;
 					}
 				}
-				if (!referenced)
-					subContainers.Remove(subContainers[i]);
+				if (!referenced) subContainers.Remove(subContainers[i]);
 			}
 		}
 		
@@ -1682,7 +1640,7 @@ public class AudioPlayer : MonoBehaviour {
 		[Min(0)] public float weight = 1;
 		[Min(1)] public int repeat = 1;
 		
-		public AudioInfo audioInfo;
+		public AudioInfoOld audioInfo;
 		[System.NonSerialized] public SubContainer[] sources;
 		public int id;
 		public int parentLink;
@@ -1707,8 +1665,7 @@ public class AudioPlayer : MonoBehaviour {
 				weight = subContainer.weight;
 				repeat = subContainer.repeat;
 			}
-			if (parentId != 0)
-				container.GetSourceWithID(parentId).childrenLink.Add(id);
+			if (parentId != 0) container.GetSourceWithID(parentId).childrenLink.Add(id);
 		}
 		
 		public void SetReferences(Container container) {

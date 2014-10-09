@@ -8,15 +8,19 @@ using System.Collections.Generic;
 public class SamplerEditor : CustomEditorBase {
 	
 	Sampler sampler;
+	SerializedProperty instrumentsProperty;
+	Instrument currentInstrument;
+	SerializedProperty currentInstrumentProperty;
 	
 	public override void OnInspectorGUI(){
 		sampler = (Sampler) target;
+		instrumentsProperty = serializedObject.FindProperty("instruments");
 		
 		Begin();
 		
 		EditorGUILayout.BeginHorizontal();
 		EditorGUI.BeginDisabledGroup(Application.isPlaying);
-		if (LargeAddElementButton(serializedObject.FindProperty("instruments"), "Add New Instrument")){
+		if (LargeAddElementButton(instrumentsProperty, "Add New Instrument".ToGUIContent())){
 			sampler.instruments[sampler.instruments.Length - 1] = new Instrument();
 			sampler.instruments[sampler.instruments.Length - 1].name = Sampler.GetUniqueName(sampler.instruments, "default");
 		}
@@ -30,85 +34,86 @@ public class SamplerEditor : CustomEditorBase {
 	void ShowInstruments(){
 		if (sampler.instruments != null){
 			for (int i = 0; i < sampler.instruments.Length; i++){
-				Instrument instrument = sampler.instruments[i];
-				SerializedProperty instrumentProperty = serializedObject.FindProperty("instruments").GetArrayElementAtIndex(i);
+				currentInstrument = sampler.instruments[i];
+				currentInstrumentProperty = instrumentsProperty.GetArrayElementAtIndex(i);
 				int noteCounter = 0;
 				int octaveCounter = 0;
 				
-				instrument.showing = DeleteElementFoldOutWithArrows(serializedObject.FindProperty("instruments"), i, instrument.showing, instrument.name);
-				if (deleteBreak) break;
+				if (DeleteElementFoldOutWithArrows(instrumentsProperty, i, currentInstrument.name.ToGUIContent())){
+					break;
+				}
 				
-				if (instrument.showing){
+				if (currentInstrumentProperty.isExpanded){
 					EditorGUI.indentLevel += 1;
-					instrument.minNote = Mathf.Round(instrument.minNote);
-					instrument.maxNote = Mathf.Round(instrument.maxNote);
+					currentInstrument.minNote = Mathf.Round(currentInstrument.minNote);
+					currentInstrument.maxNote = Mathf.Round(currentInstrument.maxNote);
 					
 					EditorGUI.BeginDisabledGroup(Application.isPlaying);
-					instrument.name = EditorGUILayout.TextField(instrument.name);
-					instrument.generateMode = (Instrument.GenerateModes) EditorGUILayout.EnumPopup("Generate Mode", instrument.generateMode);
+					currentInstrument.name = EditorGUILayout.TextField(currentInstrument.name);
+					currentInstrument.generateMode = (Instrument.GenerateModes) EditorGUILayout.EnumPopup("Generate Mode", currentInstrument.generateMode);
 					
-					if (instrument.generateMode == Instrument.GenerateModes.GenerateAtRuntime){
+					if (currentInstrument.generateMode == Instrument.GenerateModes.GenerateAtRuntime){
 						EditorGUI.indentLevel += 1;
-						EditorGUILayout.PropertyField(instrumentProperty.FindPropertyRelative("destroyIdle"));
-						if (instrument.destroyIdle) EditorGUILayout.PropertyField(instrumentProperty.FindPropertyRelative("idleThreshold"));
+						EditorGUILayout.PropertyField(currentInstrumentProperty.FindPropertyRelative("destroyIdle"));
+						if (currentInstrument.destroyIdle) EditorGUILayout.PropertyField(currentInstrumentProperty.FindPropertyRelative("idleThreshold"));
 						EditorGUI.indentLevel -= 1;
 					}
 					
-					EditorGUILayout.PropertyField(instrumentProperty.FindPropertyRelative("is3D"), new GUIContent("3D Clips"));
+					EditorGUILayout.PropertyField(currentInstrumentProperty.FindPropertyRelative("is3D"), new GUIContent("3D Clips"));
 					EditorGUI.EndDisabledGroup();
 					
-					EditorGUILayout.PropertyField(instrumentProperty.FindPropertyRelative("maxVoices"));
-					if (PDPlayer.Instance != null) EditorGUILayout.PropertyField(instrumentProperty.FindPropertyRelative("sendToPD"));
-					else instrumentProperty.FindPropertyRelative("sendToPD").boolValue = false;
+					EditorGUILayout.PropertyField(currentInstrumentProperty.FindPropertyRelative("maxVoices"));
+					if (PDPlayerOld.Instance != null) EditorGUILayout.PropertyField(currentInstrumentProperty.FindPropertyRelative("sendToPD"));
+					else currentInstrumentProperty.FindPropertyRelative("sendToPD").boolValue = false;
 					
-					instrument.velocitySettingsShowing = EditorGUILayout.Foldout(instrument.velocitySettingsShowing, "Velocity");
-					if (instrument.velocitySettingsShowing){
+					currentInstrument.velocitySettingsShowing = EditorGUILayout.Foldout(currentInstrument.velocitySettingsShowing, "Velocity");
+					if (currentInstrument.velocitySettingsShowing){
 						EditorGUI.indentLevel += 1;
-						EditorGUILayout.PropertyField(instrumentProperty.FindPropertyRelative("velocityAffectsVolume"), new GUIContent("Affects Volume"));
-						instrument.velocityCurve = EditorGUILayout.CurveField("Curve", instrument.velocityCurve, Color.cyan, new Rect(0, 0, 1, 1), GUILayout.Height(16));
+						EditorGUILayout.PropertyField(currentInstrumentProperty.FindPropertyRelative("velocityAffectsVolume"), new GUIContent("Affects Volume"));
+						currentInstrument.velocityCurve = EditorGUILayout.CurveField("Curve", currentInstrument.velocityCurve, Color.cyan, new Rect(0, 0, 1, 1), GUILayout.Height(16));
 						EditorGUI.BeginDisabledGroup(Application.isPlaying);
-						EditorGUILayout.PropertyField(instrumentProperty.FindPropertyRelative("velocityLayers"), new GUIContent("Layers"));
+						EditorGUILayout.PropertyField(currentInstrumentProperty.FindPropertyRelative("velocityLayers"), new GUIContent("Layers"));
 						EditorGUI.EndDisabledGroup();
 						EditorGUI.indentLevel -= 1;
 					}
 					
 					EditorGUILayout.BeginHorizontal();
-					instrument.notesShowing = EditorGUILayout.Foldout(instrument.notesShowing, string.Format("Audio Clips ({0})", instrument.maxNote - instrument.minNote));
+					currentInstrument.notesShowing = EditorGUILayout.Foldout(currentInstrument.notesShowing, string.Format("Audio Clips ({0})", currentInstrument.maxNote - currentInstrument.minNote));
 					EditorGUI.BeginDisabledGroup(Application.isPlaying);
-					if (GUILayout.Button(". Reset  .", EditorStyles.miniButton, GUILayout.Width(50))) instrument.Reset();
+					if (GUILayout.Button(". Reset  .", EditorStyles.miniButton, GUILayout.Width(50))) currentInstrument.Reset();
 					EditorGUI.EndDisabledGroup();
 					EditorGUILayout.EndHorizontal();
 					
-					if (instrument.notesShowing){
+					if (currentInstrument.notesShowing){
 						EditorGUI.indentLevel -= 1;
-						instrument.InitializeClips();
+						currentInstrument.InitializeClips();
 						
 						EditorGUI.BeginDisabledGroup(Application.isPlaying);
 						EditorGUILayout.BeginHorizontal();
 						GUILayout.Space(16);
-						EditorGUILayout.PropertyField(instrumentProperty.FindPropertyRelative("minNote"), GUIContent.none, GUILayout.Width(50));
-						EditorGUILayout.MinMaxSlider(ref instrument.minNote, ref instrument.maxNote, 0, 127);
-						EditorGUILayout.PropertyField(instrumentProperty.FindPropertyRelative("maxNote"), GUIContent.none, GUILayout.Width(50));
+						EditorGUILayout.PropertyField(currentInstrumentProperty.FindPropertyRelative("minNote"), GUIContent.none, GUILayout.Width(50));
+						EditorGUILayout.MinMaxSlider(ref currentInstrument.minNote, ref currentInstrument.maxNote, 0, 127);
+						EditorGUILayout.PropertyField(currentInstrumentProperty.FindPropertyRelative("maxNote"), GUIContent.none, GUILayout.Width(50));
 						EditorGUILayout.EndHorizontal();
 						EditorGUI.EndDisabledGroup();
 						
 						for (int j = 0; j < 128; j++){
-							if (j >= instrument.minNote && j <= instrument.maxNote){
+							if (j >= currentInstrument.minNote && j <= currentInstrument.maxNote){
 								EditorGUILayout.BeginHorizontal();
 								GUILayout.Space(16);
-								if (GUILayout.Button(instrument.noteNames[noteCounter].ToString() + octaveCounter.ToString() + " (" + j.ToString() + ")", GUILayout.MinWidth(80), GUILayout.Height(14))){
-									if (instrument.GetClipCount() != 0){
-										if (Application.isPlaying) Sampler.Play(instrument.name, j, 127, sampler.gameObject);
+								if (GUILayout.Button(currentInstrument.noteNames[noteCounter] + octaveCounter + " (" + j.ToString() + ")", GUILayout.MinWidth(80), GUILayout.Height(14))){
+									if (currentInstrument.GetClipCount() != 0){
+										if (Application.isPlaying) Sampler.Play(currentInstrument.name, j, 127, sampler.gameObject);
 									}
 								}
-								for (int k = 0; k < instrument.velocityLayers; k++){
+								for (int k = 0; k < currentInstrument.velocityLayers; k++){
 									EditorGUI.BeginDisabledGroup(Application.isPlaying);
 									if (!Application.isPlaying){
-										instrument.audioSources[j + (k * 128)] = (AudioSource) EditorGUILayout.ObjectField(instrument.audioSources[j + (k * 128)], typeof(AudioSource), true, GUILayout.Height(14));
-										instrument.audioClips[j + (k * 128)] = instrument.audioSources[j + (k * 128)] != null ? instrument.audioSources[j + (k * 128)].clip : null;
+										currentInstrument.audioSources[j + (k * 128)] = (AudioSource) EditorGUILayout.ObjectField(currentInstrument.audioSources[j + (k * 128)], typeof(AudioSource), true, GUILayout.Height(14));
+										currentInstrument.audioClips[j + (k * 128)] = currentInstrument.audioSources[j + (k * 128)] != null ? currentInstrument.audioSources[j + (k * 128)].clip : null;
 									}
 									else {
-										EditorGUILayout.ObjectField(instrument.audioClips[j + (k * 128)], typeof(AudioClip), true, GUILayout.Height(14));
+										EditorGUILayout.ObjectField(currentInstrument.audioClips[j + (k * 128)], typeof(AudioClip), true, GUILayout.Height(14));
 									}
 									EditorGUI.EndDisabledGroup();
 								}
