@@ -27,6 +27,7 @@ public class BooleanParameter : Parameter {
 		
 		this.transform.parent.GetComponent<Instruction>().refresh();
 		if(autoCompile){
+			this.GetComponentInParent<Instruction>().compile();
 			this.notifyObservers();
 		}
 	}

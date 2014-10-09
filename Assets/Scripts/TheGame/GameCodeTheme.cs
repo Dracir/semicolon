@@ -17,4 +17,8 @@ public class GameCodeTheme  {
 	public float effetTimeOnInstructionSwap;
 	
 	public Color background;
+	
+	public Effect createInstructionFlashEffect(TextCollider2D collider){
+		return new GradientEffet(collider , this.instructionFlash, this.effetTimeOnInstructionSwap);
+	}
 }
