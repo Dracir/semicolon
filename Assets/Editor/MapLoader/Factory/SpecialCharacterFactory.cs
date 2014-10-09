@@ -28,6 +28,8 @@ public static class SpecialCharacterFactory  {
 			var spikeManager = go.AddComponent<SpikeManager>();
 			spikeManager.spawnMinDelay = spawnDelay;
 			spikeManager.spawnMaxDelay = spawnDelay * 4;
+		} else if (arg.ToLower ().Equals ("isaspawner")){
+			go.AddComponent<InstructionSpawner>();
 		}
 	}
 }

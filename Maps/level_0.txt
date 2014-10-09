@@ -2,42 +2,43 @@
 $01 boolean true
 <SpecialCharacter>
 v Spike IsASpike 1
+: Spawner IsASpawner 1
 <Level> 
 +-----------------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+----------------------+ 
-:                 v       v       v       v       v       v       v       v       v       v       v       v                      : 
-:                                                                                                                                : 
-:   :                                                                                                                       ;    + 
-:                                                                                                                                : 
-:                                                                                                                                : 
-:   if_(crawlSpeed_>_0){                                                                                                         : 
-:       crawlSpeed_=_Mathf.Abs(crawlSpeed);                                                                                      : 
-:   }                                                                             if_(semicolon_==_dead){                        : 
-:                                                                                     Compile();_//end game                      : 
-:   :                                                                             }                                         ;    : 
-:                                                                                                                                : 
-:                           if_(methodSpawners.count_==_0){                                                                      : 
-:                               Compile_();_//end_game                                                                           : 
-:                           }                                                                                                    : 
-:                                                               enum_ObjectIndeces_{                                             : 
-:                                                                   delete_=_0,                                                  : 
-:   :                                                                                                                       ;    : 
-:            GetIndex(int_max,_int_index){                          space_=_1,                                                   : 
-:                int_returnIndex_=_index;                           spike_=_2                                                    : 
-:                if_(index_>_max)                               }                                                                : 
-:                     returnIndex_=_index_%_max;                                                                                 : 
-:                return_returnIndex;                                                                                             : 
-:            }                                                                                                                   : 
-:   :                                                                                                                       ;    : 
-:                             function_DetectEnd{                                                                                : 
-:        class_Spike{             for_(int_i_=_0;_i_>_functionsOnScreen.Length;_i_++){                                           : 
-:            Execute(){               if_(functionsOnScreen[i].x_<=_semicolonWall.x_||_functionsOnScreen[i].x_==_player.x)       : 
-:                FallDown();              functionsOnScreen[i].Execute();                                                        : 
-:            }                    }                                                                                              : 
-:        }                    }                                                                                                  : 
-:   :                                                                                                                       ;    : 
-:                                                                                                                                : 
-:                                                                                                                                : 
-:                                                                                                                                : 
-:                    //copyright_2014:_Richard_Rail,_Kevin_McNally-Gagnon,_Christopher_Olimpo,_Travis_Martin.     Time: 01:25    : 
-:                                                                                                                                : 
+|                 v       v       v       v       v       v       v       v       v       v       v       v                      | 
+|                                                                                                                                | 
+|   :                                                                                                                       ;    | 
+|                                                                                                                                | 
+|                                                                                                                                | 
+|   if_(crawlSpeed_>_0){                                                                                                         | 
+|       crawlSpeed_=_Mathf.Abs(crawlSpeed);                                                                                      | 
+|   }                                                                             if_(semicolon_==_dead){                        | 
+|                                                                                     Compile();_//end game                      | 
+|   :                                                                             }                                         ;    | 
+|                                                                                                                                | 
+|                           if_(methodSpawners.count_==_0){                                                                      | 
+|                               Compile_();_//end_game                                                                           | 
+|                           }                                                                                                    | 
+|                                                               enum_ObjectIndeces_{                                             | 
+|                                                                   delete_=_0,                                                  | 
+|   :                                                                                                                       ;    | 
+|            GetIndex(int_max,_int_index){                          space_=_1,                                                   | 
+|                int_returnIndex_=_index;                           spike_=_2                                                    | 
+|                if_(index_>_max)                               }                                                                | 
+|                     returnIndex_=_index_%_max;                                                                                 | 
+|                return_returnIndex;                                                                                             | 
+|            }                                                                                                                   | 
+|   :                                                                                                                       ;    | 
+|                             function_DetectEnd{                                                                                | 
+|        class_Spike{             for_(int_i_=_0;_i_>_functionsOnScreen.Length;_i_++){                                           | 
+|            Execute(){               if_(functionsOnScreen[i].x_<=_semicolonWall.x_||_functionsOnScreen[i].x_==_player.x)       | 
+|                FallDown();              functionsOnScreen[i].Execute();                                                        | 
+|            }                    }                                                                                              | 
+|        }                    }                                                                                                  | 
+|   :                                                                                                                       ;    | 
+|                                                                                                                                | 
+|                                                                                                                                | 
+|                                                                                                                                | 
+|                    //copyright_2014:_Richard_Rail,_Kevin_McNally-Gagnon,_Christopher_Olimpo,_Travis_Martin.     Time: 01:25    | 
+|                                                                                                                                | 
 +--------------------------------------------------------------------------------------------------------------------------------+ 
