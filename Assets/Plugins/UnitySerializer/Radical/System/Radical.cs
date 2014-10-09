@@ -559,13 +559,13 @@ public static class Radical
 	}
 
 	
-	public static void DestroyChildren(this Transform t)
-	{
-		foreach(var c in t.Cast<Transform>())
-		{
-			GameObject.Destroy(c.gameObject);
-		}
-	}
+//	public static void DestroyChildren(this Transform t)
+//	{
+//		foreach(var c in t.Cast<Transform>())
+//		{
+//			GameObject.Destroy(c.gameObject);
+//		}
+//	}
 	
 	public class PreferenceAccess
 	{

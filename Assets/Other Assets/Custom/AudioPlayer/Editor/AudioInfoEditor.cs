@@ -3,13 +3,13 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections;
 
-[CustomEditor(typeof(AudioInfo)), CanEditMultipleObjects]
+[CustomEditor(typeof(AudioInfoOld)), CanEditMultipleObjects]
 public class AudioInfoEditor : CustomEditorBase {
 
-	AudioInfo audioInfo;
+	AudioInfoOld audioInfo;
 	
 	public override void OnInspectorGUI(){
-		audioInfo = (AudioInfo) target;
+		audioInfo = (AudioInfoOld) target;
 		if (!audioInfo.init) audioInfo.Start();
 		else Update();
 		
@@ -25,7 +25,7 @@ public class AudioInfoEditor : CustomEditorBase {
 		EditorGUILayout.PropertyField(serializedObject.FindProperty("delay"));
 		EditorGUILayout.PropertyField(serializedObject.FindProperty("syncMode"));
 		EditorGUILayout.PropertyField(serializedObject.FindProperty("doNotKill"));
-		if (PDPlayer.Instance != null) EditorGUILayout.PropertyField(serializedObject.FindProperty("sendToPD"));
+		if (PDPlayerOld.Instance != null) EditorGUILayout.PropertyField(serializedObject.FindProperty("sendToPD"));
 		else serializedObject.FindProperty("sendToPD").boolValue = false;
 		EditorGUILayout.PropertyField(serializedObject.FindProperty("effects"), true);
 		ShowRTPCs();
@@ -45,14 +45,14 @@ public class AudioInfoEditor : CustomEditorBase {
 			}
 			else {
 				for (int i = 0; i < audioInfo.rTPCs.Length; i++){
-					AudioInfo.RTPC rtpc = audioInfo.rTPCs[i];
+					AudioInfoOld.RTPC rtpc = audioInfo.rTPCs[i];
 					
 					rtpc.showing = EditorGUILayout.Foldout(rtpc.showing, rtpc.name);
 					if (rtpc.showing){
 						EditorGUI.indentLevel += 1;
 						
 						for (int j = 0; j < rtpc.parameters.Length; j++){
-							AudioInfo.RTPCParameter parameter = rtpc.parameters[j];
+							AudioInfoOld.RTPCParameter parameter = rtpc.parameters[j];
 							
 							EditorGUILayout.BeginHorizontal();
 							parameter.showing = EditorGUILayout.Foldout(parameter.showing, parameter.name);
@@ -90,7 +90,7 @@ public class AudioInfoEditor : CustomEditorBase {
 			}
 			else {
 				for (int i = 0; i < audioInfo.buses.Length; i++){
-					AudioInfo.AudioBus bus = audioInfo.buses[i];
+					AudioInfoOld.AudioBus bus = audioInfo.buses[i];
 					SerializedProperty busProperty = serializedObject.FindProperty("buses").GetArrayElementAtIndex(i);
 					
 					EditorGUILayout.BeginHorizontal();

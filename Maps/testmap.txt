@@ -4,23 +4,35 @@ $bf boolean false
 $01 integer 1
 $02 integer 2
 $03 integer 3
+$gs integer 5 setPlayerJumpHeight
+$as integer 0 addScore
+$rs integer 0 removeScore
+$at integer 0 addTime
+$rt integer 0 removeTime
+¶01 debuglog "Hello World"
+¶02 debuglog "Banana"
+<SpecialCharacter>
+v Spikes IsASpike 1
 <Level>
-+-----------------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+----------------------+
-|                 v       v       v       v       v       v       v       v       v       v       v       v                      |
++-----------------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+----------------------+ 
+:                 v       v       v       v       v       v       v       v       v       v       v       v                      :
+|
+|
+|                //nonononnon_$01
+| sayThing()¶01                 //lalalala
 |
 |
 |
 |
-|
-|
-|
+| addTime($at);
+| remTime($rt);
 |   spikes.fall_=_$bt;
 |
+|                                 ttoto.toto_;
 |
+|   gravity.set($gs,_$01_);
 |
-|   gravity.set($01,_$01_);
-|
-|
+|  sayBanana()¶02
 |
 |  test_=_$03;
 |

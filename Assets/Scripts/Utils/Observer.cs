@@ -4,7 +4,7 @@ using System.Collections;
 [System.Serializable]
 public class Observer : MonoBehaviour{
 
-	public virtual void update(){
+	public virtual void notify(){
 
 	}
 }

@@ -50,7 +50,7 @@ public class ClampDrawer : CustomPropertyDrawerBase {
 					property.boundsValue = new Bounds(new Vector3(Mathf.Clamp(property.boundsValue.center.x, min, max), Mathf.Clamp(property.boundsValue.center.y, min, max), Mathf.Clamp(property.boundsValue.center.z, min, max)), new Vector3(Mathf.Clamp(property.boundsValue.size.x, min, max), Mathf.Clamp(property.boundsValue.size.y, min, max), Mathf.Clamp(property.boundsValue.size.z, min, max)));
 					break;
 				case "AnimationCurve":
-					property.animationCurveValue = new AnimationCurve(property.animationCurveValue.Clamp(min, Mathf.Infinity, min, Mathf.Infinity).keys);
+					property.animationCurveValue = new AnimationCurve(property.animationCurveValue.Clamp(min, max, min, max).keys);
 					break;
 			}
 		

@@ -6,8 +6,8 @@ using System.IO;
 
 public class SnapSettings : EditorWindow {
 
-	static public string fileName = "SnapSettings.asset";
-	static public string directory = Application.dataPath.Substring(0, Application.dataPath.Length - 7) + "/ProjectSettings/";
+	public static string fileName = "SnapSettings.asset";
+	public static string directory = Application.dataPath.Substring(0, Application.dataPath.Length - 7) + "/ProjectSettings/";
 	
 	static Dictionary<string, object> dataDict;
 	static Dictionary<string, object> DataDict {
@@ -93,11 +93,11 @@ public class SnapSettings : EditorWindow {
 		UpdateDataDict();
 	}
 	
-	static public void ResetToDefault() {
+	public static void ResetToDefault() {
 		CreateDefaultDataFile();
 	}
 	
-	static public void CleanUp() {
+	public static void CleanUp() {
 		foreach (string key in new List<string>(DataDict.Keys)) {
 			if (!key.StartsWith("Toggle"))
 				continue;
@@ -114,7 +114,7 @@ public class SnapSettings : EditorWindow {
 		}
 	}
 	
-	static public T GetValue<T>(string key) {
+	public static T GetValue<T>(string key) {
 		if (HasKey(key)) {
 			object value = DataDict[key];
 			if (value is T) {
@@ -124,22 +124,22 @@ public class SnapSettings : EditorWindow {
 		return default(T);
 	}
 	
-	static public object GetValue(string key) {
+	public static object GetValue(string key) {
 		return GetValue<object>(key);
 	}
 	
-	static public void SetValue<T>(string key, T value) {
+	public static void SetValue<T>(string key, T value) {
 		if (!HasKey(key) || !DataDict[key].Equals(value)) {
 			DataDict[key] = value;
 			UpdateDataDict();
 		}
 	}
 	
-	static public string[] GetAllKeys() {
+	public static string[] GetAllKeys() {
 		return new List<string>(DataDict.Keys).ToArray();
 	}
 	
-	static public object[] GetValues(params string[] keys) {
+	public static object[] GetValues(params string[] keys) {
 		List<object> values = new List<object>();
 		foreach (string key in keys) {
 			values.Add(GetValue(key));
@@ -147,37 +147,37 @@ public class SnapSettings : EditorWindow {
 		return values.ToArray();
 	}
 	
-	static public object[] GetAllValues() {
+	public static object[] GetAllValues() {
 		return new List<object>(DataDict.Values).ToArray();
 	}
 	
-	static public void RemoveKey(string key) {
+	public static void RemoveKey(string key) {
 		if (HasKey(key)) {
 			DataDict.Remove(key);
 			UpdateDataDict();
 		}
 	}
 	
-	static public void RemoveKeys(params string[] keys) {
+	public static void RemoveKeys(params string[] keys) {
 		foreach (string key in keys) {
 			RemoveKey(key);
 		}
 	}
 	
-	static public void RemoveAllKeys() {
+	public static void RemoveAllKeys() {
 		DataDict = new Dictionary<string, object>();
 		UpdateDataDict();
 	}
 	
-	static public bool HasKey(string key) {
+	public static bool HasKey(string key) {
 		return DataDict.ContainsKey(key);
 	}
 	
-	static public bool FileExists() {
+	public static bool FileExists() {
 		return File.Exists(directory + fileName);
 	}
 
-	static public bool FileExists(string path) {
+	public static bool FileExists(string path) {
 		return File.Exists(path);
 	}
 }

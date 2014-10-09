@@ -1,0 +1,27 @@
+E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\Assembly-CSharp-firstpass.dll
+E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
+E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\HOTween.dll
+E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\UnityEditor.dll
+E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\UnityEngine.dll
+E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\UnityEngine.UI.dll
+E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\Mono.Cecil.dll
+E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\nunit.framework.dll
+E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\Unity.DataContract.dll
+E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+E:\Projects\Unity\Semi Colon\semicolon\Temp\bin\Debug\HOTween.xml
+E:\Projects\Unity\Semi Colon\semicolon\obj\Debug\Assembly-CSharp-firstpass-vs.csprojResolveAssemblyReference.cache
+E:\Projects\Unity\Semi Colon\semicolon\obj\Debug\Assembly-CSharp-firstpass.dll
+E:\Projects\Unity\Semi Colon\semicolon\obj\Debug\Assembly-CSharp-firstpass.pdb
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\Assembly-CSharp-firstpass.dll
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\HOTween.dll
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\UnityEditor.dll
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\UnityEngine.dll
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\Mono.Cecil.dll
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\nunit.framework.dll
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\Unity.DataContract.dll
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+G:\Workspaces\unity\semicolon\Temp\bin\Debug\HOTween.xml
+G:\Workspaces\unity\semicolon\obj\Debug\Assembly-CSharp-firstpass-vs.csprojResolveAssemblyReference.cache
+G:\Workspaces\unity\semicolon\obj\Debug\Assembly-CSharp-firstpass.dll
+G:\Workspaces\unity\semicolon\obj\Debug\Assembly-CSharp-firstpass.pdb

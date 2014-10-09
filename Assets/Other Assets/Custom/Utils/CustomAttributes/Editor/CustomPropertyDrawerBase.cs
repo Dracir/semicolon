@@ -15,7 +15,6 @@ public class CustomPropertyDrawerBase : PropertyDrawer {
 	protected float scrollbarThreshold;
 	protected Rect currentPosition;
 	protected GUIContent currentLabel = GUIContent.none;
-	protected string[] validGetHeightTypes = {"int", "float", "double", "UInt8", "string", "Vector2f", "Vector3f", "Vector4f", "ColorRGBA", "Rectf", "AABB"};
 	
 	protected SerializedProperty arrayProperty;
 	protected delegate void AddElementCallback(SerializedProperty addedElement);
@@ -80,7 +79,7 @@ public class CustomPropertyDrawerBase : PropertyDrawer {
 	}
 	
 	public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
-		return validGetHeightTypes.Contains(property.type) ? GetDefaultUnityObjectHeight(property) : base.GetPropertyHeight(property, label);
+		return EditorGUI.GetPropertyHeight(property, label, true);
 	}
 	
 	protected bool AddElementButton(Rect position) {
@@ -240,21 +239,6 @@ public class CustomPropertyDrawerBase : PropertyDrawer {
 		AttributeUtility.toRemove[fieldInfo.DeclaringType + property.name] = indexToRemove;
 		if (deleteElementCallback != null)
 			deleteElementCallback();
-	}
-	
-	protected float GetDefaultUnityObjectHeight(SerializedProperty property){
-		float height = EditorGUIUtility.singleLineHeight;
-		if (property.type.StartsWith("Vector")){
-			if (currentPosition.width <= scrollbarThreshold && !string.IsNullOrEmpty(currentLabel.text)) height = EditorGUIUtility.singleLineHeight * 2;
-		}
-		else if (property.type == "Rectf"){
-			if (currentPosition.width <= scrollbarThreshold && !string.IsNullOrEmpty(currentLabel.text)) height = EditorGUIUtility.singleLineHeight * 3;
-			else height = EditorGUIUtility.singleLineHeight * 2;
-		}
-		else if (property.type == "AABB"){
-			height = EditorGUIUtility.singleLineHeight * 3;
-		}
-		return height;
 	}
 }
 #endif

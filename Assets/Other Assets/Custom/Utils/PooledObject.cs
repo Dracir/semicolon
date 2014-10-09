@@ -21,8 +21,8 @@ public class PooledObject : Hydrogen.Core.ObjectPoolItemBase {
 	}
 
 	public virtual IEnumerator Initialize() {
-		initialized = true;
 		yield return null;
+		initialized = true;
 	}
 	
 	public virtual IEnumerator DespawnAfterDelay(float delay) {
@@ -63,8 +63,12 @@ public class PooledObject : Hydrogen.Core.ObjectPoolItemBase {
 	}
 
 	public override void OnDespawned() {
-		if (ParentPool.HasRigidbody)
+		if (ParentPool.HasRigidbody) {
 			gameObject.rigidbody.velocity = Vector3.zero;
+		}
+		else if (ParentPool.HasRigidbody2D){
+			gameObject.rigidbody2D.velocity = Vector2.zero;
+		}
 		
 		gameObject.SetActive(false);
 		StopCoroutine("Initialize");

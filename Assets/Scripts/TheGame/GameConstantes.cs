@@ -3,13 +3,8 @@ using System.Collections;
 
 public class GameConstantes : MonoBehaviour {
 
-	public Font statementFont;
-	public Material statementMaterial;
-
-	public Color statementColor;
-	public Color booleanValueColor;
-	public Color integerValueColor;
-
+	public GameCodeTheme currentTheme;
+	
 	public static GameConstantes instance;
 
 	public GameConstantes(){
@@ -18,5 +13,9 @@ public class GameConstantes : MonoBehaviour {
 
 	void Start () {
 
+	}
+	
+	void Update(){
+		Camera.main.camera.backgroundColor = currentTheme.background;
 	}
 }

@@ -1,83 +1,106 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
-public class Spike : MonoBehaviour
-{
+public class Spike : StateMachine {
+	
 	[Min] public float fallSpeed = 3;
 	[Min] public float lifeTime = 3;
-	[HideInInspector] public int index;
 	
-	Animator animator;
-	Rigidbody2D rigid2D;
+	[Separator]
+	public SpikeManager spikeManager;
+	public int index;
+	public float lifeCounter;
+	
+	const float spawnAnimationSpeed = 5;
+	
 	TextCollider2D textCollider2D;
+	SpikeTarget target;
+	BoxCollider2D targetCollider;
+	ColorChangeEffect colorEffect;
+	MoveEffect moveEffect;
 	
-	delegate void State();
-	State CurrentState;
-	float lifeCounter = 0;
-	
-	void Awake()
-	{
-		animator = GetComponent<Animator>();
-		rigid2D = rigidbody2D;
+	public override void Awake() {
+		base.Awake();
+		
 		textCollider2D = GetComponent<TextCollider2D>();
-		CurrentState = Idle;
+		textCollider2D.Color = GameConstantes.instance.currentTheme.instructionColor;
+		textCollider2D.Font = GameConstantes.instance.currentTheme.instructionFont;
+		target = gameObject.FindChild("Target").GetComponent<SpikeTarget>();
+		target.parent = this;
+		targetCollider = target.gameObject.AddCopiedComponent(GetComponent<BoxCollider2D>());
 	}
 	
-	void OnEnable()
-	{
-		rigid2D.isKinematic = true;
-		textCollider2D.colliderIsTrigger = true;
-		textCollider2D.color.a = 0;
-		animator.Play("Spike");
-		CurrentState = Idle;
-	}
-	
-	void Update()
-	{
-		CurrentState();
-	}
-	
-	public void Fall()
-	{
-		rigid2D.isKinematic = false;
-		textCollider2D.colliderIsTrigger = false;
-		CurrentState = Falling;
-	}
-	
-	public void Despawn()
-	{
-		rigid2D.isKinematic = true;
-		textCollider2D.colliderIsTrigger = true;
-		lifeCounter = 0;
-		hObjectPool.Instance.Despawn(gameObject);
-	}
-	
-	// States
-	void Idle()
-	{
-		if (References.SpikeManager.spikes[index] != this)
-		{
-			Invoke("Fall", 2.5F);
-			CurrentState = WaitingToFall;
+	public override IEnumerator Initialize() {
+		yield return new WaitForSeconds(0);
+		initialized = true;
+		
+		if (spikeManager != null) {
+			transform.position = spikeManager.transform.position + new Vector3(0, 2, 0);
+			colorEffect = new ColorChangeEffect(textCollider2D, textCollider2D.Color, new Color(textCollider2D.Color.r, textCollider2D.Color.g, textCollider2D.Color.b, 1), 2);
+			EffectManager.AddGameEffect(colorEffect);
+			moveEffect = new MoveEffect(textCollider2D, spikeManager.transform.position, 2, true);
+			EffectManager.AddGameEffect(moveEffect);
 		}
 	}
 	
-	void WaitingToFall()
-	{
+	public virtual void Fall() {
+		textCollider2D.Color = new Color(textCollider2D.Color.r, textCollider2D.Color.g, textCollider2D.Color.b, 1);
+		transform.position = spikeManager.transform.position;
+		target.rigidbody2D.isKinematic = false;
+		targetCollider.isTrigger = false;
 		
+		if (spikeManager.waitingSpike == this) {
+			spikeManager.waitingSpike = null;
+		}
+		spikeManager.fallingSpikes.Add(this);
+		
+		if (colorEffect != null) {
+			colorEffect.isDone = true;
+		}
+		if (moveEffect != null){
+			moveEffect.isDone = true;
+		}
+		
+		CurrentState = Falling;
 	}
 	
-	void Falling()
-	{
-		rigid2D.gravityScale = fallSpeed;
+	#region States
+	public virtual void WaitingToFall() {
+	}
+	
+	public virtual void Falling() {
+		rigidbody2D.MovePosition(new Vector3(target.transform.position.x.Round(1), target.transform.position.y.Round(1.66), target.transform.position.z));
 		lifeCounter += Time.deltaTime;
-		if (lifeCounter >= lifeTime)
+		if (lifeCounter >= lifeTime) {
 			Despawn();
+		}
+	}
+	#endregion
+	
+	#region Messages
+	public override void OnSpawned() {
+		base.OnSpawned();
+		
+		lifeCounter = 0;
+		target.transform.localPosition = Vector3.zero;
+		target.rigidbody2D.isKinematic = true;
+		target.rigidbody2D.gravityScale = fallSpeed;
+		
+		targetCollider.isTrigger = true;
+		textCollider2D.Color = new Color(textCollider2D.Color.r, textCollider2D.Color.g, textCollider2D.Color.b, 0);
+		
+		CurrentState = WaitingToFall;
 	}
 	
-	
-	
-	void OnCollisionEnter2D(Collision2D collision)
-	{
-		Despawn();
+	public override void OnDespawned() {
+		base.OnDespawned();
+		
+		CancelInvoke("Fall");
+		if (spikeManager != null && spikeManager.fallingSpikes.Contains(this)) {
+			spikeManager.fallingSpikes.Remove(this);
+		}
+		target.rigidbody2D.isKinematic = true;
+		targetCollider.isTrigger = true;
 	}
+	#endregion
 }
