@@ -1,5 +1,7 @@
-<Params> 
-%01 boolean true 
+<Params>
+$01 boolean true
+<SpecialCharacter>
+v Spike IsASpike 1
 <Level> 
 +-----------------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+----------------------+ 
 :                 v       v       v       v       v       v       v       v       v       v       v       v                      : 
@@ -22,7 +24,7 @@
 :            GetIndex(int_max,_int_index){                          space_=_1,                                                   : 
 :                int_returnIndex_=_index;                           spike_=_2                                                    : 
 :                if_(index_>_max)                               }                                                                : 
-:                     returnIndex_=_index_$_max;                                                                                 : 
+:                     returnIndex_=_index_%_max;                                                                                 : 
 :                return_returnIndex;                                                                                             : 
 :            }                                                                                                                   : 
 :   :                                                                                                                       ;    : 
@@ -36,6 +38,6 @@
 :                                                                                                                                : 
 :                                                                                                                                : 
 :                                                                                                                                : 
-:                    //copyright_2014:_Richard Rail,_Kevin_McNally-Gagnon,_Christopher_Olimpo,_Travis_Martin.     Time: 01:25    : 
+:                    //copyright_2014:_Richard_Rail,_Kevin_McNally-Gagnon,_Christopher_Olimpo,_Travis_Martin.     Time: 01:25    : 
 :                                                                                                                                : 
 +--------------------------------------------------------------------------------------------------------------------------------+ 
