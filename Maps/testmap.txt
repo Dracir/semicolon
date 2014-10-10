@@ -11,7 +11,7 @@ $at integer 0 addTime
 $rt integer 0 removeTime
 $ss integer 0 showScore
 ¶01 debuglog "Hello World"
-¶02 debuglog "Kevin"
+¶02 debuglog "Kevin !"
 ¶ci compileInstruction
 <SpecialCharacter>
 v Spikes IsASpike 1
