@@ -11,6 +11,8 @@ public class BagInvoker {
 	}
 	
 	public void Invoking(string algoName, string methodName,  int nbCalls, float minTime, float maxTime){
+		if(objectsToInvoke.Count == 0) return;
+		
 		if(algoName.StartsWith("RandomAtLeastOnceInvoking")){
 			RandomAtLeastOnceInvoking(methodName,nbCalls,minTime,maxTime);
 		}else if(algoName.StartsWith("RoundRobinInvoking")){

@@ -22,6 +22,12 @@ public class Movable : MonoBehaviour {
 	
 	public const float gravity = 28f;
 	
+	protected virtual float Gravity {
+		get{
+			return gravity;
+		}
+	}
+	
 	//---------------------------------------------------\\
 	//------------------Component Vars-------------------\\
 	//---------------------------------------------------\\
@@ -206,7 +212,7 @@ public class Movable : MonoBehaviour {
 		bool checkDown = false;
 		float checkDistance = 0;
 		if (!grounded){
-			newYVelocity -= gravity * Time.deltaTime;
+			newYVelocity -= Gravity * Time.deltaTime;
 			if (newYVelocity < 0){
 				checkDown = true;
 				checkDistance = Mathf.Abs(newYVelocity * Time.deltaTime);

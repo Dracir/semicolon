@@ -10,12 +10,26 @@ public class Semicolon : Movable {
 	
 	private float jumpParamModifier = 1f;
 	
+	public float jumpLacheModifier = 1.4f;
 	public ArgumentSensor tetherObject;
 	
 	public static Semicolon instance;
 	
 	public bool igniorePlayerInput = false;
 	public bool ignioreVelocity = false;
+	
+	
+	private float onGroundTimer = 0;
+	
+	private bool hasJumped = false;
+	
+	
+	protected override float Gravity {
+		get {
+			float modifier = (hasJumped && !controller.getJump)? jumpLacheModifier : 1f;
+			return base.Gravity * modifier;
+		}
+	}
 	
 	protected override float GetMaxSpeed() {
 		if (grounded){
@@ -32,10 +46,6 @@ public class Semicolon : Movable {
 			return hopForce;
 		}
 	}
-	
-	float onGroundTimer = 0;
-	
-	bool hasJumped = false;
 	
 	protected void Awake () {
 		instance = this;
@@ -63,6 +73,7 @@ public class Semicolon : Movable {
 		if (!hasJumped && (controller.getJumpDown || controller.getUDown)){
 			Jump();
 		}
+		
 		
 		t.Translate(velocity * Time.deltaTime);
 	}
