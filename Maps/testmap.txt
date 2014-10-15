@@ -13,6 +13,7 @@ $ss integer 0 showScore
 ¶01 debuglog "Hello World"
 ¶02 debuglog "Kevin !!!"
 ¶ci compileInstruction
+¶ds dropSpikes 20 0.5 1 RoundRobinInvoking
 <SpecialCharacter>
 v Spikes IsASpike 1
 <Level>
@@ -21,7 +22,7 @@ v Spikes IsASpike 1
 |
 | score:_$ss
 |                //nonononnon_$01
-| sayThing()¶ci                 //lalalala
+| dropSpi()¶ds                 //lalalala
 |
 |
 | multiplyDivide($01,_$02);

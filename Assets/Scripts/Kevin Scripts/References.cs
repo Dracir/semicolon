@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 [ExecuteInEditMode]
 public class References : MonoBehaviour {
@@ -77,5 +78,12 @@ public class References : MonoBehaviour {
 			get { return Instance.fonts.lucidiaConsole; }
 			set { Instance.fonts.lucidiaConsole = value; }
 		}
+	}
+	
+	
+	public List<SpikeManager> spikeMenagers;
+	static public List<SpikeManager> SpikeMenagers {
+		get { return Instance.spikeMenagers; }
+		set { Instance.spikeMenagers = value; }
 	}
 }

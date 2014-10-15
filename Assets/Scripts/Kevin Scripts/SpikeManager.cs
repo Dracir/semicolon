@@ -11,6 +11,7 @@ public class SpikeManager : Spawner {
 	public Spike spawningSpike;
 	public Spike waitingSpike;
 	
+	public bool autoSpawn = false;
 	float spawnDelay;
 	MTRandom randomGenerator;
 	TextCollider2D textCollider2D;
@@ -25,11 +26,17 @@ public class SpikeManager : Spawner {
 		}
 		
 		randomGenerator = new MTRandom(Random.value.ToString());
-		spawnDelay = randomGenerator.Range(spawnMinDelay, spawnMaxDelay);
-		Invoke("SpawnSpike", spawnDelay);
+		if(autoSpawn){
+			spawnDelay = randomGenerator.Range(spawnMinDelay, spawnMaxDelay);
+			SpawnSpikeIn(spawnDelay);
+		}
 	}
 	
-	void SpawnSpike() {
+	public void SpawnSpikeIn(float time){
+		Invoke("SpawnSpike", time);
+	}
+	
+	public void SpawnSpike() {
 		if (spawningSpike != null) {
 			waitingSpike = spawningSpike;
 			waitingSpike.Invoke("Fall", 1.5F);
@@ -39,7 +46,11 @@ public class SpikeManager : Spawner {
 		spawningSpike.transform.parent = transform;
 		spawningSpike.spikeManager = this;
 		
-		spawnDelay = randomGenerator.Range(spawnMinDelay, spawnMaxDelay);
-		Invoke("SpawnSpike", spawnDelay);
+		if(autoSpawn){
+			spawnDelay = randomGenerator.Range(spawnMinDelay, spawnMaxDelay);
+			SpawnSpikeIn(spawnDelay);
+		}
 	}
+	
+	
 }

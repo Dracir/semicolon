@@ -32,6 +32,8 @@ public class LevelLoaderMain {
 		InstructionFactory.levelScore = levelScore;
 		LevelTime levelTime = this.world.AddComponent<LevelTime>();
 		InstructionFactory.levelTime = levelTime;
+		
+		References.SpikeMenagers = new System.Collections.Generic.List<SpikeManager>();
 	}
 
 

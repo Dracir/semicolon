@@ -157,6 +157,14 @@ public static class InstructionFactory  {
 			instruction.observers.Add(dl);
 		}else if(method.Equals("compileInstruction")){
 			
+		}else if(method.Equals("dropSpikes")){
+			string[] splited = arguments.Split(new char[]{' '});
+			DropSpikes ds = instruction.AddComponent<DropSpikes>();
+			ds.nbSpikesToDrop = int.Parse(splited[1]);
+			ds.timeBetweenCallMin = float.Parse(splited[2]);
+			ds.timeBetweenCallMax = float.Parse(splited[3]);
+			ds.spawningOrderAlgoName = splited[4];
+			instruction.observers.Add(ds);
 		}
 	}
 }

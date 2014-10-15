@@ -221,6 +221,8 @@ public class Instruction : GameText {
 
 	
 	public void notifyObservers(){
+		if(!Application.isPlaying) return;
+		
 		foreach (var observer in observers) {
 			observer.notify();	
 		}

@@ -4,18 +4,22 @@ using System.Collections.Generic;
 
 public class CodeGenerator : MonoBehaviour {
 	
-	private List<string>[] instructionLines = new List<string>[4] {
+	private List<string>[] instructionLines = new List<string>[] {
 		new List<string>(){"$as integer 0 addScore", "¶cs compile"},
 		new List<string>(){"$rs integer 0 removeScore", "¶cs compile"},
 		new List<string>(){"$at integer 0 addTime", "¶cs compile"},
-		new List<string>(){"$rt integer 0 removeTime", "¶cs compile"}
+		new List<string>(){"$rt integer 0 removeTime", "¶cs compile"},
+		new List<string>(){"¶ds dropSpikes 10 0.01 0.1 RoundRobinInvoking"},
+		new List<string>(){"¶ds dropSpikes 10 0.01 0.1 RandomAtLeastOnceInvoking"}
 	};
 	
 	private string[] instructionText = new string[] {
 		"AddScore_($as)¶cs",
 		"RemoveScore_($rs)¶cs",
 		"AddTime_($at)¶cs",
-		"RemoveTime_($rt)¶cs"
+		"RemoveTime_($rt)¶cs",
+		"DropSpikesLine_()¶ds",
+		"DropSpikes_()¶ds"
 	};
 //	private Dictionary<string, string> instructionLines = new Dictionary<string, string>() {
 //		{"$as", "integer 0 addScore"},
@@ -24,7 +28,7 @@ public class CodeGenerator : MonoBehaviour {
 //		{"$rt", "integer 0 removeTime"}
 //	}
 	
-	private int[] values = new int[] { 1, 2, 3, 5, 8, 13, 21, 34 };
+	//private int[] values = new int[] { 1, 2, 3, 5, 8, 13, 21, 34 };
 	
 	private float generatorTimer = 0;
 	private float maxRange = 6f;
@@ -87,7 +91,7 @@ public class CodeGenerator : MonoBehaviour {
 		
 		//Instantiate(instructions[instIndex], nodes[nodeIndex].position, nodes[nodeIndex].rotation);
 		
-		string instruction = "addTime($at, $bt);";
+		//string instruction = "addTime($at, $bt);";
 //		Dictionary<string,string> param = new Dictionary<string, string>();
 //		param.Add(instructionLines[instIndex]);
 		

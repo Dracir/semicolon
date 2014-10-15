@@ -9,6 +9,8 @@ public class Parameter : MonoBehaviour {
 	public List<Observer>		observers		= new List<Observer>();
 	
 	public void notifyObservers(){
+		if(!Application.isPlaying) return;
+		
 		foreach (var observer in observers) {
 			observer.notify();
 		}
