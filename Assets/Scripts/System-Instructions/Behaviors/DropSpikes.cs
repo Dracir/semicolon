@@ -17,6 +17,8 @@ public class DropSpikes : Observer {
 	
 	
 	public override void notify(){
+		if(linkedSpikes == null) return;
+		
 		BagInvoker bagInvoker = new BagInvoker();
 		foreach (var spikes in linkedSpikes) {
 			bagInvoker.objectsToInvoke.Add(spikes.GetComponent<MonoBehaviour>());
