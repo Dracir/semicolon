@@ -8,8 +8,13 @@ public class SpikeTarget : MonoBehaviour {
 	public virtual void OnCollisionEnter2D(Collision2D collision) {
 		IDeletable deletable = collision.gameObject.GetComponent(typeof(IDeletable)) as IDeletable;
 		if (deletable != null) {
-			deletable.Delete(parent);
+			bool deleted = deletable.Delete(parent);
+			if(deleted){
+				parent.Despawn();	
+			}
+		}else{
+			parent.Despawn();
 		}
-		parent.Despawn();
+		
 	}
 }

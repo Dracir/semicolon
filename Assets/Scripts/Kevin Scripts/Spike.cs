@@ -4,7 +4,7 @@ using UnityEngine;
 public class Spike : StateMachine {
 	
 	[Min] public float fallSpeed = 3;
-	[Min] public float lifeTime = 3;
+	[Min] public float lifeTime = 30;
 	
 	[Separator]
 	public SpikeManager spikeManager;

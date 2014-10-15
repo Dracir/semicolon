@@ -96,6 +96,7 @@ public class CodeGenerator : MonoBehaviour {
 //		param.Add(instructionLines[instIndex]);
 		
 		Instruction newDude = InstructionFactoryRuntime.createInstruction(instructionText[instIndex], 1,1, gameObject, instructionLines[instIndex]);
+		newDude.GetComponent<GameText>().invulnerable = true;
 		newDude.transform.position = nodes[nodeIndex].transform.position;
 		newDude.AddComponent<InstructionCrawl>();
 		
