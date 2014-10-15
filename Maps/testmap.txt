@@ -12,7 +12,7 @@ $rt integer 0 removeTime
 $ss integer 0 showScore
 ¶01 debuglog "Hello World"
 ¶02 debuglog "Kevin !!!"
-¶ci compileInstruction
+¶ci compile
 ¶ds dropSpikes 20 0.5 1 RoundRobinInvoking
 <SpecialCharacter>
 v Spikes IsASpike 1

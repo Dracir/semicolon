@@ -103,37 +103,37 @@ public static class InstructionFactory  {
 		return integer;
 	}
 
-	static void addIntegerMethod(IntegerParameter integer, string methode, GameObject parent){
-		if(methode.StartsWith("setPlayerJumpHeight")){
+	static void addIntegerMethod(IntegerParameter integer, string method, GameObject parent){
+		if(method.StartsWith("setPlayerJumpHeight")){
 			GravityChanger gc = parent.AddComponent<GravityChanger>();
 			gc.gravityValue = integer;
 			integer.observers.Add(gc);
 			
-		}else if(methode.StartsWith("addScore")){
+		}else if(method.StartsWith("addScore")){
 			ScoreAdder sa = integer.gameObject.AddComponent<ScoreAdder>();
 			sa.integerParameter = integer;
 			integer.observers.Add(sa);
 			
-		}else if(methode.StartsWith("removeScore")){
+		}else if(method.StartsWith("removeScore")){
 			ScoreRemover sr = integer.gameObject.AddComponent<ScoreRemover>();
 			sr.integerParameter = integer;
 			integer.observers.Add(sr);
 			
-		}else if(methode.StartsWith("addTime")){
+		}else if(method.StartsWith("addTime")){
 			TimeAdder ta = integer.gameObject.AddComponent<TimeAdder>();
 			ta.integerParameter = integer;
 			integer.observers.Add(ta);
 			
-		}else if(methode.StartsWith("removeTime")){
+		}else if(method.StartsWith("removeTime")){
 			TimeRemover tr = integer.gameObject.AddComponent<TimeRemover>();
 			tr.integerParameter = integer;
 			integer.observers.Add(tr);
 			
-		} else if(methode.StartsWith("showScore")){
+		} else if(method.StartsWith("showScore")){
 			integer.gameObject.AddComponent<ScoreShower>();
 			
 		} else {
-			Debug.LogError("MAPLOADER - ERROR : Unknown Function type for " + methode);
+			Debug.LogError("MAPLOADER - ERROR : Unknown Function type for " + method);
 		}
 	}
 
@@ -155,7 +155,7 @@ public static class InstructionFactory  {
 			DebugLog dl = instruction.AddComponent<DebugLog>();
 			dl.textToLog = debugText;
 			instruction.observers.Add(dl);
-		}else if(method.Equals("compileInstruction")){
+		}else if(method.Equals("compile")){
 			
 		}else if(method.Equals("dropSpikes")){
 			string[] splited = arguments.Split(new char[]{' '});
@@ -165,6 +165,9 @@ public static class InstructionFactory  {
 			ds.timeBetweenCallMax = float.Parse(splited[3]);
 			ds.spawningOrderAlgoName = splited[4];
 			instruction.observers.Add(ds);
+		}else{
+			Debug.LogError("MAPLOADER - ERROR : Unknown Function type for " + method);
 		}
 	}
+	
 }
