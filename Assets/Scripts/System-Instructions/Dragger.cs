@@ -25,9 +25,6 @@ public class Dragger : MonoBehaviour {
 			}
 		}
 
-
-
-
 	}
 
 	void startDrag(){

@@ -50,4 +50,12 @@ public class IntegerParameter : Parameter {
 	public override DataType getType(){ 
 		return DataType.INTEGER ;
 	}
+	
+	public override Color getColor(){ 
+		return GameConstantes.instance.currentTheme.integerValueColor;
+	}
+	
+	public override Gradient getHighLightedGradient(){ 
+		return GameConstantes.instance.currentTheme.integerValueHighlightedGradient;
+	}
 }

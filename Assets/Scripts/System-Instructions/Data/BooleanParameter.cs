@@ -47,4 +47,13 @@ public class BooleanParameter : Parameter {
 	public override DataType getType(){ 
 		return DataType.BOOLEAN ;
 	}
+	
+		
+	public override Color getColor(){ 
+		return GameConstantes.instance.currentTheme.booleanValueColor;
+	}
+	
+	public override Gradient getHighLightedGradient(){ 
+		return GameConstantes.instance.currentTheme.booleanValueHighlightedGradient;
+	}
 }
