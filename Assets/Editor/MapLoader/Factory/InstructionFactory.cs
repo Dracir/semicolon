@@ -4,21 +4,20 @@ using System.Collections.Generic;
 
 public static class InstructionFactory  {
 
-	public static LevelScore levelScore;
-	public static LevelTime levelTime;
-	
 	public static Instruction createInstruction(string line, float x, float y, GameObject parent, List<string> parameterList){
-		Dictionary<string,string> parameters = new Dictionary<string, string>();
+		Dictionary<string,ParameterReader> parameters = new Dictionary<string, ParameterReader>();
+		int index = 0;
 		foreach (var paramItem in parameterList) {
 			int indexOfFirstSpace 	= paramItem.IndexOf (' ');
 			string key 				= paramItem.Substring (0, indexOfFirstSpace);
 			string paramValue 		= paramItem.Substring (indexOfFirstSpace + 1);
-			parameters.Add (key, paramValue);
+			parameters.Add (key, new ParameterReader(key, paramValue, index));
+			index++;
 		}
 		return InstructionFactory.createInstruction(line,x,y,parent,parameters);
 	}
 	
-	public static Instruction createInstruction(string line, float x, float y, GameObject parent, Dictionary<string,string> parameters){
+	public static Instruction createInstruction(string line, float x, float y, GameObject parent, Dictionary<string,ParameterReader> parameters){
 		line = line.Replace('_',' ');
 
 		Instruction instruction = createInstructionObject(parent, line,x,y);
@@ -29,8 +28,10 @@ public static class InstructionFactory  {
 		while (indexOfArgument != -1) {
 			string argumentKey 	= line.Substring(indexOfArgument,3);
 			if(parameters.ContainsKey(argumentKey)){
-				string paramData 	= parameters[argumentKey];
-				setParameterData(instruction, indexOfChild++, paramData, parent);
+				ParameterReader paramReader = parameters[argumentKey];
+				Debug.Log("serving " + line + " : param " + paramReader.getRemainingLine());
+				setParameterData(instruction, indexOfChild++, paramReader, parent);
+				paramReader.reset();
 			}else{
 				Debug.LogError("Unknown parameter key\"" + argumentKey + "\"");
 			}
@@ -68,39 +69,26 @@ public static class InstructionFactory  {
 		return instruction;
 	}
 	
-	private static void setParameterData(Instruction instruction, int childIndex, string paramData, GameObject parent){
-		string[] param = paramData.TrimEnd(new char[]{'\n','\r'}).Split(' ');
-		string type = param[0].ToLower();
-		string value = param[1].ToLower();
+	private static void setParameterData(Instruction instruction, int childIndex, ParameterReader paramData, GameObject parent){
+		string type = paramData.readWord().ToLower();
 		
 		if(type.Equals("boolean")){
 			instruction.setParameterTo(childIndex, DataType.BOOLEAN);
 			BooleanParameter boolean = instruction.GetChild(childIndex).GetComponent<BooleanParameter>();
-			if(value.StartsWith("true")){
-				boolean.Valeur = true;
-			}else if(value.StartsWith("false")){
-				boolean.Valeur = false;
-			}else{
-				Debug.LogError("MAPLOADER - ERROR : Unknown parameter value for " + paramData);
-			}
+			boolean.Valeur = paramData.readBoolean();
 		}else if(type.Equals("integer")){
-			IntegerParameter integer = addIntegerParam(instruction, childIndex, value);
-			if(param.Length >= 3){
-				addIntegerMethod(integer,param[2], instruction.gameObject);
+			instruction.setParameterTo(childIndex, DataType.INTEGER);
+			IntegerParameter integer = instruction.GetChild(childIndex).GetComponent<IntegerParameter>();
+			integer.Valeur = paramData.readInt();
+			if(paramData.hasNextWord()){
+				addIntegerMethod(integer, paramData.readWord(), instruction.gameObject);
 			}
-			if(param.Length >= 4){
-				integer.autoCompile = param[3].StartsWith("true");
+			if(paramData.hasNextWord()){
+				integer.autoCompile = paramData.readBoolean();
 			}
 		}else{
-			Debug.LogError("MAPLOADER - ERROR : Unknown parameter type for " + paramData);
+			Debug.LogError("MAPLOADER - ERROR : Unknown parameter type for " + type);
 		}
-	}
-
-	static IntegerParameter addIntegerParam(Instruction instruction, int childIndex, string value){
-		instruction.setParameterTo(childIndex, DataType.INTEGER);
-		IntegerParameter integer = instruction.GetChild(childIndex).GetComponent<IntegerParameter>();
-		integer.Valeur = int.Parse(value);
-		return integer;
 	}
 
 	static void addIntegerMethod(IntegerParameter integer, string method, GameObject parent){
@@ -137,36 +125,38 @@ public static class InstructionFactory  {
 		}
 	}
 
-	static void addCompileSpotMethod(Instruction instruction, Dictionary<string, string> parameters){
+	static void addCompileSpotMethod(Instruction instruction, Dictionary<string, ParameterReader> parameters){
 		string key = instruction.instructionText.Substring(instruction.instructionText.IndexOf("¶"));
 		if(parameters.ContainsKey(key)){
-			string[] splited = parameters[key].Split(new char[]{' '});
-			string method = splited[0];
-			addCompileSpotMethod(instruction,method,parameters[key]);
+			ParameterReader reader = parameters[key];
+			addCompileSpotMethod(instruction, reader);
+			reader.reset();
 		} else{
 			Debug.LogError("MAPLOADER - ERROR : Unknown Key " + key);
 		}
 	}
 	
-	static void addCompileSpotMethod(Instruction instruction, string method, string arguments){
-		if(method.Equals("debuglog")){
-			string debugText = arguments.Substring(arguments.IndexOf(" "));
-			debugText = debugText.Replace("\"", " ").Trim();
+	static void addCompileSpotMethod(Instruction instruction, ParameterReader parameterReader){
+		string method = parameterReader.readWord();
+		string methodLowered = method.ToLower();
+		
+		if(methodLowered.Equals("debuglog")){
 			DebugLog dl = instruction.AddComponent<DebugLog>();
-			dl.textToLog = debugText;
+			dl.textToLog = parameterReader.readString();
 			instruction.observers.Add(dl);
-		}else if(method.Equals("compile")){
 			
-		}else if(method.Equals("dropSpikes")){
-			string[] splited = arguments.Split(new char[]{' '});
+		}else if(methodLowered.Equals("compile")){
+			
+		}else if(methodLowered.Equals("dropspikes")){
 			DropSpikes ds = instruction.AddComponent<DropSpikes>();
-			ds.nbSpikesToDrop = int.Parse(splited[1]);
-			ds.timeBetweenCallMin = float.Parse(splited[2]);
-			ds.timeBetweenCallMax = float.Parse(splited[3]);
-			ds.spawningOrderAlgoName = splited[4];
+			ds.nbSpikesToDrop = parameterReader.readInt();
+			ds.timeBetweenCallMin = parameterReader.readFloat();
+			ds.timeBetweenCallMax = parameterReader.readFloat();
+			ds.spawningOrderAlgoName = parameterReader.readWord();
 			instruction.observers.Add(ds);
+			
 		}else{
-			Debug.LogError("MAPLOADER - ERROR : Unknown Function type for " + method);
+			Debug.LogError("MAPLOADER - ERROR : Unknown Function type for compile spot " + method);
 		}
 	}
 	

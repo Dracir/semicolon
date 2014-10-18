@@ -12,22 +12,26 @@ public class FileToLevelLoader {
 	private GameObject levelCharacters;
 
 	private float levelY;
+	private int fileLine;
 
-	private Dictionary<string,string> parameters;
+	
+	private Dictionary<string,ParameterReader> parameterReaders;
 	
 	private Dictionary<string,string> specialCharacter;
 	private Dictionary<string,GameObject> specialCharacterGameObject;
 
 	public void load(string mapText, GameObject world){	
-		this.parameters 				= new Dictionary<string, string>();
+		this.parameterReaders 			= new Dictionary<string, ParameterReader>();
 		this.instructions 				= GameObjectFactory.createGameObject ("Instruction", world);
 		this.levelCharacters			= GameObjectFactory.createGameObject ("Level Character", world);
 		this.specialCharacter 			= new Dictionary<string, string>();
 		this.specialCharacterGameObject = new Dictionary<string, GameObject>();
 		this.world 						= world;
+		this.fileLine					= 0;
 
 		string[] lines = mapText.Split (new char[]{'\n'});
 		foreach (var line in lines) {
+			fileLine++;
 			if(line.StartsWith("<")){
 				changeReadingMod(line);
 			}else{
@@ -65,10 +69,10 @@ public class FileToLevelLoader {
 	}
 
 	private void readParam(string line){
-		int indexOfFirstSpace = line.IndexOf (' ');
-		string key = line.Substring (0, indexOfFirstSpace);
-		string param = line.Substring (indexOfFirstSpace + 1);
-		this.parameters.Add (key, param);
+		BufferedDataReader parser 		= new BufferedDataReader(line, "");
+		string 			key			= parser.readWord();
+		ParameterReader lineParam 	= new ParameterReader(key, parser.remainingLine, this.fileLine);
+		this.parameterReaders.Add(key, lineParam);
 	}
 
 	private void readLevelLine(string line){
@@ -101,7 +105,7 @@ public class FileToLevelLoader {
 			if(line.Contains("$") || line.Contains("¶")){
 				parent = this.instructions;
 			}
-			InstructionFactory.createInstruction(line, x, y, parent, this.parameters);
+			InstructionFactory.createInstruction(line, x, y, parent, this.parameterReaders);
 		}
 	}
 	
