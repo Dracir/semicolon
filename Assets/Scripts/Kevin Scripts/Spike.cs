@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using Magicolo.GeneralTools;
 
 public class Spike : StateMachine {
 	

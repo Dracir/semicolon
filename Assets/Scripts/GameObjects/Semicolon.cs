@@ -91,6 +91,8 @@ public class Semicolon : Movable {
 		hasJumped = true;
 	}
 	
+	
+	
 	public void UpdateTetherPosition (Vector2 position){
 		tetherObject.transform.position = position;
 	}
