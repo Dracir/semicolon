@@ -7,7 +7,7 @@ public class TimeAdder : Observer {
 	
 	public override void notify(){
 		if(LevelTime.instance != null){
-			LevelTime.instance.time += integerParameter.Valeur;
+			LevelTime.instance.TimeLeft += integerParameter.Valeur;
 		}else{
 			//Debug.LogWarning("Pas d'instance de GameTime ?!!? :O");
 		}		
