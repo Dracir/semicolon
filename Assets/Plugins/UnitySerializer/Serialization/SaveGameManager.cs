@@ -17,7 +17,7 @@ public class SaveGameManager : MonoBehaviour
 {
 	public UnityEngine.Object[] requiredObjects;
 	
-	private static SaveGameManager instance;
+	static SaveGameManager instance;
 	public static SaveGameManager Instance
 	{
 		get
@@ -32,7 +32,7 @@ public class SaveGameManager : MonoBehaviour
 				
 				if(instance==null)
 				{
-					var saveGameManager = new GameObject("Save Game Manager");
+					var saveGameManager = new GameObject("Save Manager");
 					instance = saveGameManager.AddComponent<SaveGameManager>();
 					Debug.LogWarning("Creating a save game manager dynamically, consider adding one to the scene");
 				}

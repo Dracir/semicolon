@@ -18,7 +18,7 @@ public class zTest : MonoBehaviour, ITickable {
 	}
 	
 	void Start() {
-		References.MetronomeUpdater.metronome.Subscribe(this);
+		References.Metronome.Subscribe(this);
 	}
 	
 	public void BeatEvent(int currentBeat) {
