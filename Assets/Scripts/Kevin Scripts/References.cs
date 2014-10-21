@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using Magicolo.AudioTools;
+using Magicolo.GeneralTools;
 
 [ExecuteInEditMode]
 public class References : MonoBehaviour {
@@ -22,10 +24,10 @@ public class References : MonoBehaviour {
 		set { Instance.mainCameraFollow = value; }
 	}
 
-	public MetronomeUpdater metronomeUpdater;
-	static public MetronomeUpdater MetronomeUpdater {
-		get { return Instance.metronomeUpdater; }
-		set { Instance.metronomeUpdater = value; }
+	public Metronome metronome;
+	static public Metronome Metronome {
+		get { return Instance.metronome; }
+		set { Instance.metronome = value; }
 	}
 
 	public Prefabs prefabs;

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Magicolo.GeneralTools;
 
 public class SpikeManager : Spawner {
 	
