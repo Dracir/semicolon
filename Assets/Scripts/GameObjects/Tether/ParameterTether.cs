@@ -22,7 +22,7 @@ public class ParameterTether : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other){
 		Parameter param = other.GetComponent<Parameter>();
-		if(param != null){
+		if(param != null && param.canBeChanged){
 			Effect e = GameConstantes.instance.currentTheme.createParameterHighlightEffect(param);
 			EffectManager.AddGameEffect(e);
 			this.collidedParameter = param;
@@ -31,7 +31,7 @@ public class ParameterTether : MonoBehaviour {
 	
 	void OnTriggerExit2D(Collider2D other){
 		Parameter param = other.GetComponent<Parameter>();
-		if(param != null){
+		if(param != null && param.canBeChanged){
 			if(param.Equals(this.collidedParameter)){
 				this.collidedParameter = null;
 			}
@@ -85,6 +85,8 @@ public class ParameterTether : MonoBehaviour {
 	
 	void startDrag(){
 		if(collidedParameter != null){
+			AudioPlayer.Play("Noise_Iter_Variable_0"); // Player picks up variable
+			
 			this.inDragMod = true;
 			this.parameterInDrag = collidedParameter;
 			this.parameterOldPosition = collidedParameter.transform.position;
@@ -100,14 +102,19 @@ public class ParameterTether : MonoBehaviour {
 		if(collidedParameter != null){
 			swap(collidedParameter,parameterInDrag);
 		}else{
+			AudioPlayer.Play("Voice_Impact_Down_1"); // Player lets go of variable
 			parameterInDrag.transform.SetPosition(this.parameterOldPosition);
 		}
 	}
 
 	void swap(Parameter hitedParameter, Parameter parameterDragged){
 		if(!hitedParameter.isSameType(parameterDragged)){
+			AudioPlayer.Play("Synth_Impact_Static_7"); // Player tries an invalid variable swap
 			return;
 		}
+		
+		AudioPlayer.Play("Voice_Impact_Down_1"); // Player successfuly swaps variables
+		
 		TextCollider2D textColliderHited = hitedParameter.GetComponent<TextCollider2D>();
 		TextCollider2D textColliderInDrag = parameterDragged.GetComponent<TextCollider2D>();
 		Color c1t1 = textColliderHited.Color;

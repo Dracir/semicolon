@@ -26,7 +26,13 @@ public class References : MonoBehaviour {
 
 	public Metronome metronome;
 	static public Metronome Metronome {
-		get { return Instance.metronome; }
+		get { 
+			if (Instance.metronome == null) {
+				AudioPlayer audioPlayer = FindObjectOfType<AudioPlayer>();
+				Instance.metronome = audioPlayer.GetComponent<Metronome>();
+			}
+			return Instance.metronome; 
+		}
 		set { Instance.metronome = value; }
 	}
 

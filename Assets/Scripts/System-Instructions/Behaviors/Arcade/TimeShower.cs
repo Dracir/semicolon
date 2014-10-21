@@ -25,14 +25,12 @@ public class TimeShower : Observer {
 				if(!flashEffect.isDone){
 					flashEffect.isDone = true;
 				}
-				Debug.Log("remove");
 				textCollider2d.Color = GameConstantes.instance.currentTheme.instructionColor;
 				textCollider2d.Color = Color.magenta;
 			}
 		}else{
 			if(time.TimeLeft < 10){
 				wentNegative = true;
-				Debug.Log("aaa");
 				flashEffect = GameConstantes.instance.currentTheme.createTimeGoingUnder10Gradient(textCollider2d);
 				EffectManager.AddGameEffect( flashEffect);
 			}
