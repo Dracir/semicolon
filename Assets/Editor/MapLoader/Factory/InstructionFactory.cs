@@ -29,7 +29,6 @@ public static class InstructionFactory  {
 			string argumentKey 	= line.Substring(indexOfArgument,3);
 			if(parameters.ContainsKey(argumentKey)){
 				ParameterReader paramReader = parameters[argumentKey];
-				Debug.Log("serving " + line + " : param " + paramReader.getRemainingLine());
 				setParameterData(instruction, indexOfChild++, paramReader, parent);
 				paramReader.reset();
 			}else{
@@ -119,6 +118,9 @@ public static class InstructionFactory  {
 			
 		} else if(method.StartsWith("showScore")){
 			integer.gameObject.AddComponent<ScoreShower>();
+			
+		} else if(method.StartsWith("showTime")){
+			integer.gameObject.AddComponent<TimeShower>();
 			
 		} else {
 			Debug.LogError("MAPLOADER - ERROR : Unknown Function type for " + method);

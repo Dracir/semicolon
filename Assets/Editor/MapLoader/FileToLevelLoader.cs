@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public enum ReadingMod{ PARAM, LEVEL, SPECIAL_CHARACTER}
+public enum ReadingMod{ PARAM, LEVEL, SPECIAL_CHARACTER, CONFIG}
 
 public class FileToLevelLoader {
 
@@ -42,6 +42,8 @@ public class FileToLevelLoader {
 						break;
 					case ReadingMod.SPECIAL_CHARACTER: readSpecialCharacter(line);
 						break;
+					case ReadingMod.CONFIG : readConfig(line);
+						break;
 				}
 			}
 
@@ -65,6 +67,10 @@ public class FileToLevelLoader {
 			readingMod = ReadingMod.LEVEL;
 		} else if (line.Contains("<SpecialCharacter>")) {
 			readingMod = ReadingMod.SPECIAL_CHARACTER;
+		} else if (line.Contains("<Config>")) {
+			readingMod = ReadingMod.CONFIG;
+		} else {
+			Debug.LogError("FileToLevelLoader - ERROR : Unknown readingMod " + line);
 		}
 	}
 
@@ -73,6 +79,21 @@ public class FileToLevelLoader {
 		string 			key			= parser.readWord();
 		ParameterReader lineParam 	= new ParameterReader(key, parser.remainingLine, this.fileLine);
 		this.parameterReaders.Add(key, lineParam);
+	}
+	
+	private void readConfig(string line){
+		BufferedDataReader parser = new BufferedDataReader(line, "");
+		string configName = parser.readWord();
+		if(configName.Equals("Time")){
+			LevelTime lt = world.AddComponent<LevelTime>();
+			lt.TimeLeft = parser.readInt();
+			
+		} else if(configName.StartsWith("Score")){
+			world.AddComponent<LevelScore>();
+		
+		} else {
+			Debug.LogError("FileToLevelLoader - ERROR : Unknown config " + configName);
+		}
 	}
 
 	private void readLevelLine(string line){

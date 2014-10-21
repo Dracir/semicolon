@@ -71,7 +71,6 @@ public class BufferedDataReader {
 	}
 
 	public string readDataUntil(char stopChar){
-		Debug.Log(remainingLine);
 		int index = remainingLine.IndexOf(stopChar);
 		if(index == -1){
 			return  null;
