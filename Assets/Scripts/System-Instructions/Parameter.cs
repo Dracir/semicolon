@@ -7,6 +7,7 @@ using System.Collections.Generic;
 public class Parameter : MonoBehaviour {
 
 	public List<Observer>		observers		= new List<Observer>();
+	public bool canBeChanged = true;
 	
 	public void notifyObservers(){
 		if(!Application.isPlaying) return;

@@ -23,7 +23,12 @@ public class IntegerParameter : Parameter {
 	public override void refresh(){
 		TextCollider2D tc = this.GetComponent<TextCollider2D> ();
 
-		tc.Color = GameConstantes.instance.currentTheme.integerValueColor;
+		if(canBeChanged){
+			tc.Color = GameConstantes.instance.currentTheme.integerValueColor;
+		}else{
+			tc.Color = GameConstantes.instance.currentTheme.instructionColor;
+		}
+		
 		tc.Text = "" + this.valeur;
 		this.name = "Int";
 		
