@@ -28,11 +28,6 @@ public class LevelLoaderMain {
 		Object.DestroyImmediate(GameObject.Find ("World"));
 		this.world = GameObjectFactory.createGameObject ("World");
 		
-		LevelScore levelScore = this.world.AddComponent<LevelScore>();
-		InstructionFactory.levelScore = levelScore;
-		LevelTime levelTime = this.world.AddComponent<LevelTime>();
-		InstructionFactory.levelTime = levelTime;
-		
 		References.SpikeMenagers = new System.Collections.Generic.List<SpikeManager>();
 	}
 

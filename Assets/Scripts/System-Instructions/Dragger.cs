@@ -75,8 +75,8 @@ public class Dragger : MonoBehaviour {
 		Color c2t1 = textColliderInDrag.Color;
 		Color c2t0 = new Color(c1t1.r, c1t1.g, c1t1.b, 0);
 		
-		EffectManager.AddGameEffect( new ColorChangeEffect(textColliderHited	,c1t0,c1t1, GameConstantes.instance.currentTheme.effetTimeOnInstructionSwap) );
-		EffectManager.AddGameEffect( new ColorChangeEffect(textColliderInDrag	,c2t0,c2t1, GameConstantes.instance.currentTheme.effetTimeOnInstructionSwap) );
+		EffectManager.AddGameEffect( new ColorChangeEffect(textColliderHited	,c1t0,c1t1, GameConstantes.instance.currentTheme.timeOnInstructionSwap) );
+		EffectManager.AddGameEffect( new ColorChangeEffect(textColliderInDrag	,c2t0,c2t1, GameConstantes.instance.currentTheme.timeOnInstructionSwap) );
 		
 		hitedParameter.swapWith(parameterDragged);
 	}

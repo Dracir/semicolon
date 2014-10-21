@@ -1,15 +1,19 @@
-﻿<Params>
+﻿<Config>
+Time 10
+Score
+<Params>
 $bt boolean true
 $bf boolean false
 $01 integer 1
 $02 integer 2
 $03 integer 3
-$gs integer 5 setPlayerJumpHeight
-$as integer 0 addScore
-$rs integer 0 removeScore
-$at integer 0 addTime
-$rt integer 0 removeTime
-$ss integer 0 showScore
+$gs integer 5 setPlayerJumpHeight false
+$as integer 0 addScore false
+$rs integer 0 removeScore false
+$at integer 0 addTime false
+$rt integer 0 removeTime false
+$ss integer 0 showScore false
+$st integer 0 showTime false
 ¶01 debuglog "Hello World"
 ¶02 debuglog "Kevin !!!"
 ¶ci compile
@@ -19,7 +23,7 @@ v Spikes IsASpike 1
 <Level>
 +-----------------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+----------------------+ 
 :                 v       v       v       v       v       v       v       v       v       v       v       v                      :
-|
+| time_:_$st
 | score:_$ss
 |                //nonononnon_$01
 | dropSpi()¶ds                 //lalalala
