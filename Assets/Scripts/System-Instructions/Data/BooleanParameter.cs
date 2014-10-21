@@ -21,7 +21,13 @@ public class BooleanParameter : Parameter {
 	public override void refresh(){
 		TextCollider2D tc = this.GetComponent<TextCollider2D> ();
 
-		tc.Color = GameConstantes.instance.currentTheme.booleanValueColor;
+		
+		if(canBeChanged){
+			tc.Color = GameConstantes.instance.currentTheme.booleanValueColor;
+		}else{
+			tc.Color = GameConstantes.instance.currentTheme.instructionColor;
+		}
+		
 		tc.Text = this.Valeur ? "TRUE" : "FALSE";
 		this.name = "Bool";
 		

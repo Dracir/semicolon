@@ -118,9 +118,11 @@ public static class InstructionFactory  {
 			
 		} else if(method.StartsWith("showScore")){
 			integer.gameObject.AddComponent<ScoreShower>();
+			integer.canBeChanged = false;
 			
 		} else if(method.StartsWith("showTime")){
 			integer.gameObject.AddComponent<TimeShower>();
+			integer.canBeChanged = false;
 			
 		} else {
 			Debug.LogError("MAPLOADER - ERROR : Unknown Function type for " + method);

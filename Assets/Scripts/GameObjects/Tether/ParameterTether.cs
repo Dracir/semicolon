@@ -22,7 +22,7 @@ public class ParameterTether : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other){
 		Parameter param = other.GetComponent<Parameter>();
-		if(param != null){
+		if(param != null && param.canBeChanged){
 			Effect e = GameConstantes.instance.currentTheme.createParameterHighlightEffect(param);
 			EffectManager.AddGameEffect(e);
 			this.collidedParameter = param;
@@ -31,7 +31,7 @@ public class ParameterTether : MonoBehaviour {
 	
 	void OnTriggerExit2D(Collider2D other){
 		Parameter param = other.GetComponent<Parameter>();
-		if(param != null){
+		if(param != null && param.canBeChanged){
 			if(param.Equals(this.collidedParameter)){
 				this.collidedParameter = null;
 			}
