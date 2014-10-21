@@ -15,51 +15,52 @@ public class ParameterTether : MonoBehaviour {
 	private Parameter parameterInDrag;
 	private Vector3 parameterOldPosition;
 	
-	void Start () {
+	void Start() {
 		getRenderer();
 	}
 
-	void OnTriggerEnter2D(Collider2D other){
+	void OnTriggerEnter2D(Collider2D other) {
 		Parameter param = other.GetComponent<Parameter>();
-		if(param != null){
+		if (param != null) {
 			Effect e = GameConstantes.instance.currentTheme.createParameterHighlightEffect(param);
 			EffectManager.AddGameEffect(e);
 			this.collidedParameter = param;
 		}
 	}
 	
-	void OnTriggerExit2D(Collider2D other){
+	void OnTriggerExit2D(Collider2D other) {
 		Parameter param = other.GetComponent<Parameter>();
-		if(param != null){
-			if(param.Equals(this.collidedParameter)){
+		if (param != null) {
+			if (param.Equals(this.collidedParameter)) {
 				this.collidedParameter = null;
 			}
 		}
 	}
 	
-	void OnDrawGizmos(){
+	void OnDrawGizmos() {
 		getRenderer();
 		moveTetherLine();
 	}
 	
-	void Update () {
+	void Update() {
 		moveTether();
 		moveTetherLine();
 		
 		if (inDragMod) {
-			parameterInDrag.transform.SetPosition ( this.transform.position );
-			if (!Input.GetMouseButton (0)) {
-				stopDrag ();
+			parameterInDrag.transform.SetPosition(this.transform.position);
+			if (!Input.GetMouseButton(0)) {
+				stopDrag();
 			}
-		} else {
-			if (Input.GetMouseButton (0)) {
+		}
+		else {
+			if (Input.GetMouseButton(0)) {
 				startDrag();
 			}
 		}
 	}
 	
 	
-	void moveTether(){
+	void moveTether() {
 		Vector3 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		Vector3 target = Vector3.Slerp(this.transform.position, mouse, slerpAmount);
 		Transform body = Semicolon.instance.transform;
@@ -70,9 +71,9 @@ public class ParameterTether : MonoBehaviour {
 	}
 	
 
-	void moveTetherLine(){
+	void moveTetherLine() {
 		Vector3 tetherLineEndPoint = this.transform.position;
-		if(this.collidedParameter != null && !this.inDragMod){
+		if (this.collidedParameter != null && !this.inDragMod) {
 			Vector3 vt = this.collidedParameter.transform.position;
 			tetherLineEndPoint = new Vector3(vt.x + 0.5f, vt.y - 0.5f, vt.z);
 		}
@@ -82,8 +83,10 @@ public class ParameterTether : MonoBehaviour {
 	}
 	
 	
-	void startDrag(){
-		if(collidedParameter != null){
+	void startDrag() {
+		if (collidedParameter != null) {
+			AudioPlayer.Play("Noise_Iter_Variable_0"); // Player picks up variable
+			
 			this.inDragMod = true;
 			this.parameterInDrag = collidedParameter;
 			this.parameterOldPosition = collidedParameter.transform.position;
@@ -92,21 +95,27 @@ public class ParameterTether : MonoBehaviour {
 		}
 	}
 
-	void stopDrag(){
+	void stopDrag() {
 		inDragMod = false;
 		parameterInDrag.gameObject.layer = LayerMask.NameToLayer("Parameter");
 		
-		if(collidedParameter != null){
-			swap(collidedParameter,parameterInDrag);
-		}else{
+		if (collidedParameter != null) {
+			swap(collidedParameter, parameterInDrag);
+		}
+		else {
+			AudioPlayer.Play("Voice_Impact_Down_1"); // Player lets go of variable
 			parameterInDrag.transform.SetPosition(this.parameterOldPosition);
 		}
 	}
 
-	void swap(Parameter hitedParameter, Parameter parameterDragged){
-		if(!hitedParameter.isSameType(parameterDragged)){
+	void swap(Parameter hitedParameter, Parameter parameterDragged) {
+		if (!hitedParameter.isSameType(parameterDragged)) {
+			AudioPlayer.Play("Synth_Impact_Static_7"); // Player tries an invalid variable swap
 			return;
 		}
+		
+		AudioPlayer.Play("Voice_Impact_Down_1"); // Player successfuly swaps variables
+		
 		TextCollider2D textColliderHited = hitedParameter.GetComponent<TextCollider2D>();
 		TextCollider2D textColliderInDrag = parameterDragged.GetComponent<TextCollider2D>();
 		Color c1t1 = textColliderHited.Color;
@@ -114,20 +123,20 @@ public class ParameterTether : MonoBehaviour {
 		Color c2t1 = textColliderInDrag.Color;
 		Color c2t0 = new Color(c1t1.r, c1t1.g, c1t1.b, 0);
 		
-		EffectManager.AddGameEffect( new ColorChangeEffect(textColliderHited	,c1t0,c1t1, GameConstantes.instance.currentTheme.effetTimeOnInstructionSwap) );
-		EffectManager.AddGameEffect( new ColorChangeEffect(textColliderInDrag	,c2t0,c2t1, GameConstantes.instance.currentTheme.effetTimeOnInstructionSwap) );
+		EffectManager.AddGameEffect(new ColorChangeEffect(textColliderHited, c1t0, c1t1, GameConstantes.instance.currentTheme.effetTimeOnInstructionSwap));
+		EffectManager.AddGameEffect(new ColorChangeEffect(textColliderInDrag, c2t0, c2t1, GameConstantes.instance.currentTheme.effetTimeOnInstructionSwap));
 		
 		hitedParameter.swapWith(parameterDragged);
 	}
 	
 	
 	
-	void getRenderer(){
-		if(renderer == null){
+	void getRenderer() {
+		if (renderer == null) {
 			this.renderer = GetComponent<LineRenderer>();
-			if(renderer == null){
+			if (renderer == null) {
 				this.renderer = this.AddComponent<LineRenderer>();
-				this.renderer.material = (Material) Resources.Load("Material/TetherMaterial");	
+				this.renderer.material = (Material)Resources.Load("Material/TetherMaterial");	
 			}
 		}
 	}

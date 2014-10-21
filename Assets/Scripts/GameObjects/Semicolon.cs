@@ -87,6 +87,7 @@ public class Semicolon : Movable {
 	protected override void Jump ()
 	{
 		if(igniorePlayerInput) return ; 
+		AudioPlayer.Play("Synth_Impact_Up_1"); // Player jumps
 		base.Jump ();
 		hasJumped = true;
 	}
@@ -104,6 +105,8 @@ public class Semicolon : Movable {
 		if (grounded && input != 0){
 			onGroundTimer += Time.deltaTime;
 			if (onGroundTimer > hopAfter){
+				AudioPlayer.Play("Synth_Impact_Up_1", AudioOption.Pitch(0.5F)); // Player hops
+				
 				grounded = false;
 				velocity = new Vector2(velocity.x, hopForce);
 			}
