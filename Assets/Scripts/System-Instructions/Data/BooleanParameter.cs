@@ -31,7 +31,6 @@ public class BooleanParameter : Parameter {
 		tc.Text = this.Valeur ? "TRUE" : "FALSE";
 		this.name = "Bool";
 		
-		this.transform.parent.GetComponent<Instruction>().refresh();
 		if(autoCompile){
 			this.GetComponentInParent<Instruction>().compile();
 		}

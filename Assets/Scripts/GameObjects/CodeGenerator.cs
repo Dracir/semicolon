@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class CodeGenerator : MonoBehaviour {
 	
 	private List<string>[] instructionLines = new List<string>[] {
-		new List<string>(){"$as integer 0 addScore", "¶cs compile"},
+		new List<string>(){"$as integer 1 addScore", "¶cs compile"},
 		new List<string>(){"$rs integer 0 removeScore", "¶cs compile"},
 		new List<string>(){"$at integer 0 addTime", "¶cs compile"},
 		new List<string>(){"$rt integer 0 removeTime", "¶cs compile"},
@@ -95,7 +95,9 @@ public class CodeGenerator : MonoBehaviour {
 //		Dictionary<string,string> param = new Dictionary<string, string>();
 //		param.Add(instructionLines[instIndex]);
 		
-		Instruction newDude = InstructionFactoryRuntime.createInstruction(instructionText[instIndex], 1,1, gameObject, instructionLines[instIndex]);
+		Instruction newDude = InstructionFactory.createInstruction(instructionText[instIndex], 1,1, gameObject, instructionLines[instIndex]);
+		newDude.reset();
+		newDude.reset();
 		newDude.GetComponent<GameText>().invulnerable = true;
 		newDude.transform.position = nodes[nodeIndex].transform.position;
 		newDude.AddComponent<InstructionCrawl>();

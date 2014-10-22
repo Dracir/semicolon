@@ -58,6 +58,32 @@ public class References : MonoBehaviour {
 			get { return Instance.prefabs.spike; }
 			set { Instance.prefabs.spike = value; }
 		}
+		
+		public GameObject arcadeManager;
+		static public GameObject ArcadeManager {
+			get { return Instance.prefabs.arcadeManager; }
+			set { Instance.prefabs.arcadeManager = value; }
+		}
+		public GameObject arcadeCanevas;
+		static public GameObject ArcadeCanevas {
+			get { return Instance.prefabs.arcadeCanevas; }
+			set { Instance.prefabs.arcadeCanevas = value; }
+		}
+		public GameObject audioPrefab;
+		static public GameObject AudioPrefab {
+			get { return Instance.prefabs.audioPrefab; }
+			set { Instance.prefabs.audioPrefab = value; }
+		}
+		public GameObject playerPrefab;
+		static public GameObject PlayerPrefab {
+			get { return Instance.prefabs.playerPrefab; }
+			set { Instance.prefabs.playerPrefab = value; }
+		}
+		public GameObject mainCameraPrefab;
+		static public GameObject MainCameraPrefab {
+			get { return Instance.prefabs.mainCameraPrefab; }
+			set { Instance.prefabs.mainCameraPrefab = value; }
+		}
 	}
 
 	[System.Serializable]
@@ -86,12 +112,12 @@ public class References : MonoBehaviour {
 			get { return Instance.fonts.lucidiaConsole; }
 			set { Instance.fonts.lucidiaConsole = value; }
 		}
-	}
+	}	
+
+	public List<SpikeManager> spikeManagers;
+		static public List<SpikeManager> SpikeManagers {
+			get { return Instance.spikeManagers; }
+			set { Instance.spikeManagers = value; }
+		}	
 	
-	
-	public List<SpikeManager> spikeMenagers;
-	static public List<SpikeManager> SpikeMenagers {
-		get { return Instance.spikeMenagers; }
-		set { Instance.spikeMenagers = value; }
-	}
 }

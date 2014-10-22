@@ -1,5 +1,9 @@
+<Config>
+Time 90
+Score
 <Params>
-$01 boolean true
+$ss integer 0 showScore false
+$st integer 0 showTime false
 <SpecialCharacter>
 v Spike IsASpike 1
 : Spawner IsASpawner 1
@@ -7,7 +11,7 @@ v Spike IsASpike 1
 <Level> 
 +------------------------------------------------------------------+
 |            v       v       v       v       v       v             |
-|                                                                  |
+|  score:_$ss                                          time_:_$st  |
 |  :                                                            ;  |
 |                                                                  |
 |                                                                  |

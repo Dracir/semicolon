@@ -31,5 +31,9 @@ public class LevelTime : MonoBehaviour {
 	
 	void Update(){
 		TimeLeft -= Time.deltaTime;
+		
+		if(TimeLeft <= 0 ){
+			GameObject.FindObjectOfType<ArcadeGameManager>().LoseGame();
+		}
 	}
 }

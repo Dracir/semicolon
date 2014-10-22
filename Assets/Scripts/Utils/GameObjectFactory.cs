@@ -30,4 +30,9 @@ public class GameObjectFactory  {
 
 		return newObject;
 	}
+	
+	public static GameObject createInstancePrefab(string prefabPath, string name, Transform parent){
+		GameObject prefabGameObject = (GameObject) Resources.Load(prefabPath);
+		return createCopyGameObject(prefabGameObject, name, parent);
+	}
 }

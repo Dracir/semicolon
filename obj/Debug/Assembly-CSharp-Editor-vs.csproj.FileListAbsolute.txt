@@ -44,3 +44,6 @@ G:\Workspaces\unity\semicolon\Temp\bin\Debug\HOTween.xml
 G:\Workspaces\unity\semicolon\obj\Debug\Assembly-CSharp-Editor-vs.csprojResolveAssemblyReference.cache
 G:\Workspaces\unity\semicolon\obj\Debug\Assembly-CSharp-Editor.dll
 G:\Workspaces\unity\semicolon\obj\Debug\Assembly-CSharp-Editor.pdb
+C:\Users\Admin\workspaces\unity\semicolon\obj\Debug\Assembly-CSharp-Editor-vs.csprojResolveAssemblyReference.cache
+C:\Users\Admin\workspaces\unity\semicolon\obj\Debug\Assembly-CSharp-Editor.dll
+C:\Users\Admin\workspaces\unity\semicolon\obj\Debug\Assembly-CSharp-Editor.pdb

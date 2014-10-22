@@ -32,11 +32,9 @@ public class IntegerParameter : Parameter {
 		tc.Text = "" + this.valeur;
 		this.name = "Int";
 		
-		this.transform.parent.GetComponent<Instruction>().refresh();
 		if(autoCompile){
 			this.notifyObservers();
 		}
-		
 	}
 
 	public override void swapWith(Parameter otherParameter){

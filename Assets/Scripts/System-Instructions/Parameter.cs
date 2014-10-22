@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(TextCollider2D))]
+
 [System.Serializable]
-public class Parameter : MonoBehaviour {
+public abstract class Parameter : MonoBehaviour {
 
 	public List<Observer>		observers		= new List<Observer>();
 	public bool canBeChanged = true;
@@ -23,7 +23,7 @@ public class Parameter : MonoBehaviour {
 	}
 
 	public virtual void swapWith(Parameter otherParameter){}
-	public virtual DataType getType(){ return DataType.BOOLEAN ;}
+	public abstract DataType getType() ;
 	public virtual Color getColor(){ return Color.white ;}
 	public virtual Gradient getHighLightedGradient(){ return null;}
 	

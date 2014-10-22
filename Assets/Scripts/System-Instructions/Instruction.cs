@@ -10,7 +10,7 @@ public class Instruction : GameText {
 	public List<Observer>		observers		= new List<Observer>();
 	public List<DataType>		parameterType 	= new List<DataType> ();
 
-	public string 				instructionText;
+	private string 				instructionText;
 	private bool 				isComment;
 	public bool					hasCompileSpot{get;private set;}
 	private string 				textToShow;
@@ -19,17 +19,18 @@ public class Instruction : GameText {
 	public bool resetBtn;
 
 	public void setText(string text){
+		Debug.Log(text);
 		instructionText = text;
-		reset ();
+		hasCompileSpot = this.instructionText.Contains("¶");
 	}
 	
 	public void reset(){
 		this.name = instructionText;
-		isComment = instructionText.StartsWith("//") || instructionText.StartsWith("/*");
+		/*isComment = instructionText.StartsWith("//") || instructionText.StartsWith("/*");
 		fixChildAmount();
 		checkChildTypes();
 		resetTexts ();
-		notifyObservers ();
+		notifyObservers ();*/
 	}
 	
 	public void refresh(){
@@ -76,13 +77,13 @@ public class Instruction : GameText {
 			}
 		}
 		
-		hasCompileSpot = this.instructionText.Contains("¶");
+		
 		if(hasCompileSpot){
 			addCompileSpot();
 		}
 	}
 
-	void addCompileSpot(){
+	public void addCompileSpot(){
 		GameObject go = GameObjectFactory.createGameObject("Compile Spot", this.transform);
 		go.layer =  LayerMask.NameToLayer("Parameter");
 		TextCollider2D tc2d = go.AddComponent<TextCollider2D>();
@@ -91,6 +92,7 @@ public class Instruction : GameText {
 		tc2d.ColliderIsTrigger = true;
 		tc2d.ColliderSize = Vector2.one * 2;
 		go.AddComponent<CompileSpot>();
+		this.hasCompileSpot = true;
 	}
 	
 	void checkChildTypes(){
@@ -127,14 +129,36 @@ public class Instruction : GameText {
 				case DataType.INTEGER : child.AddComponent<IntegerParameter>();
 				break;
 		}
+		child.GetComponent<Parameter>().refresh();
+	}
+	
+	public BooleanParameter addBooleanChild(){
+		GameObject go = createChild();
+		BooleanParameter parameter = go.AddComponent<BooleanParameter>();
+		return parameter;
+	}
+	
+	public IntegerParameter addIntegerChild(){
+		GameObject go = createChild();
+		IntegerParameter parameter = go.AddComponent<IntegerParameter>();
+		return parameter;
+	}
+	
+	private GameObject createChild(){
+		GameObject go = GameObjectFactory.createGameObject ("Int", this.transform);
+		go.layer =  LayerMask.NameToLayer("Parameter");
+		TextMesh textMesh = go.AddComponent<TextMesh> ();
+		TextCollider2D textCollider = go.AddComponent<TextCollider2D>();
+		textCollider.TextMesh = textMesh;
+		return go;
 	}
 
-	Parameter addChild(DataType datatype){
+	public Parameter addChild(DataType datatype){
 		GameObject go = GameObjectFactory.createGameObject ("Parameter", this.transform);
 		go.layer =  LayerMask.NameToLayer("Parameter");
 		TextMesh textMesh = go.AddComponent<TextMesh> ();
 		Parameter parameter = go.AddComponent<BooleanParameter>();
-		TextCollider2D textCollider = go.GetComponent<TextCollider2D>();
+		TextCollider2D textCollider = go.AddComponent<TextCollider2D>();
 		textCollider.TextMesh = textMesh;
 
 		return parameter;

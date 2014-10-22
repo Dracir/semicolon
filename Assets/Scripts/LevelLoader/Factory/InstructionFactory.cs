@@ -29,7 +29,7 @@ public static class InstructionFactory  {
 			string argumentKey 	= line.Substring(indexOfArgument,3);
 			if(parameters.ContainsKey(argumentKey)){
 				ParameterReader paramReader = parameters[argumentKey];
-				setParameterData(instruction, indexOfChild++, paramReader, parent);
+				addParameter(instruction, indexOfChild++, paramReader, parent);
 				paramReader.reset();
 			}else{
 				Debug.LogError("Unknown parameter key\"" + argumentKey + "\"");
@@ -38,10 +38,11 @@ public static class InstructionFactory  {
 			indexOfArgument = line.IndexOf ('$',indexOfArgument+1);
 		}
 		if(instruction.hasCompileSpot){
-			addCompileSpotMethod(instruction,parameters);
+			string compileKey = line.Substring(line.IndexOf("¶"));
+			addCompileSpotMethod(instruction, compileKey, parameters);
 		}
-		instruction.reset ();
 		
+		instruction.refresh();
 		return instruction;
 	}
 
@@ -59,25 +60,22 @@ public static class InstructionFactory  {
 		go.transform.Translate (x, y, 0);
 
 		TextCollider2D tc = go.AddComponent<TextCollider2D> ();
-		Instruction instruction = go.AddComponent<Instruction> ();
-		instruction.setText (line);
-
-		
 		tc.Font = GameConstantes.instance.currentTheme.instructionFont;
+		
+		Instruction instruction = go.AddComponent<Instruction> ();
+		instruction.setText(line);
 
 		return instruction;
 	}
 	
-	private static void setParameterData(Instruction instruction, int childIndex, ParameterReader paramData, GameObject parent){
+	private static void addParameter(Instruction instruction, int childIndex, ParameterReader paramData, GameObject parent){
 		string type = paramData.readWord().ToLower();
 		
 		if(type.Equals("boolean")){
-			instruction.setParameterTo(childIndex, DataType.BOOLEAN);
-			BooleanParameter boolean = instruction.GetChild(childIndex).GetComponent<BooleanParameter>();
+			BooleanParameter boolean = (BooleanParameter)instruction.addBooleanChild();
 			boolean.Valeur = paramData.readBoolean();
 		}else if(type.Equals("integer")){
-			instruction.setParameterTo(childIndex, DataType.INTEGER);
-			IntegerParameter integer = instruction.GetChild(childIndex).GetComponent<IntegerParameter>();
+			IntegerParameter integer = (IntegerParameter)instruction.addIntegerChild();
 			integer.Valeur = paramData.readInt();
 			if(paramData.hasNextWord()){
 				addIntegerMethod(integer, paramData.readWord(), instruction.gameObject);
@@ -129,14 +127,14 @@ public static class InstructionFactory  {
 		}
 	}
 
-	static void addCompileSpotMethod(Instruction instruction, Dictionary<string, ParameterReader> parameters){
-		string key = instruction.instructionText.Substring(instruction.instructionText.IndexOf("¶"));
-		if(parameters.ContainsKey(key)){
-			ParameterReader reader = parameters[key];
+	static void addCompileSpotMethod(Instruction instruction, string compileKey, Dictionary<string, ParameterReader> parameters){
+		instruction.addCompileSpot();
+		if(parameters.ContainsKey(compileKey)){
+			ParameterReader reader = parameters[compileKey];
 			addCompileSpotMethod(instruction, reader);
 			reader.reset();
 		} else{
-			Debug.LogError("MAPLOADER - ERROR : Unknown Key " + key);
+			Debug.LogError("MAPLOADER - ERROR : Unknown Key " + compileKey);
 		}
 	}
 	

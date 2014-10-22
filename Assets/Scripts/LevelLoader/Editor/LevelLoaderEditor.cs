@@ -14,6 +14,8 @@ public class LevelLoaderEditor : EditorWindow {
 		}
 		GUILayout.EndHorizontal ();
 
+		LevelLoaderMain.arcade = EditorGUILayout.Toggle("ArcadeGame", LevelLoaderMain.arcade);
+		
 		if (fileName.Length == 0) {
 			GUI.enabled = false;
 			GUILayout.Button("Load Level");

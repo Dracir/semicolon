@@ -48,10 +48,15 @@ public class ParameterTether : MonoBehaviour {
 		moveTetherLine();
 		
 		if (inDragMod) {
-			parameterInDrag.transform.SetPosition ( this.transform.position );
-			if (!Input.GetMouseButton (0)) {
+			if(parameterInDrag == null){
 				stopDrag ();
+			}else{
+				parameterInDrag.transform.SetPosition ( this.transform.position );
+				if (!Input.GetMouseButton (0)) {
+					stopDrag ();
+				}
 			}
+			
 		} else {
 			if (Input.GetMouseButton (0)) {
 				startDrag();
@@ -97,13 +102,14 @@ public class ParameterTether : MonoBehaviour {
 
 	void stopDrag(){
 		inDragMod = false;
-		parameterInDrag.gameObject.layer = LayerMask.NameToLayer("Parameter");
-		
-		if(collidedParameter != null){
-			swap(collidedParameter,parameterInDrag);
-		}else{
-			AudioPlayer.Play("Voice_Impact_Down_1"); // Player lets go of variable
-			parameterInDrag.transform.SetPosition(this.parameterOldPosition);
+		if(parameterInDrag != null){
+			parameterInDrag.gameObject.layer = LayerMask.NameToLayer("Parameter");	
+			if(collidedParameter != null){
+				swap(collidedParameter,parameterInDrag);
+			}else{
+				AudioPlayer.Play("Voice_Impact_Down_1"); // Player lets go of variable
+				parameterInDrag.transform.SetPosition(this.parameterOldPosition);
+			}
 		}
 	}
 

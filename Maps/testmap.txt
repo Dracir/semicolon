@@ -26,7 +26,7 @@ v Spikes IsASpike 1
 | time_:_$st
 | score:_$ss
 |                //nonononnon_$01
-| dropSpi()¶ds                 //lalalala
+| addS($as);                 //lalalala
 |
 |
 | multiplyDivide($01,_$02);
