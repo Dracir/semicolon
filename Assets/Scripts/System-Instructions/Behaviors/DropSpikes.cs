@@ -12,7 +12,7 @@ public class DropSpikes : Observer {
 	public List<SpikeManager> linkedSpikes;
 	
 	void Start () {
-		linkedSpikes = References.SpikeManagers;
+		linkedSpikes = LevelReferences.instance.spikeManagers;
 	}
 	
 	

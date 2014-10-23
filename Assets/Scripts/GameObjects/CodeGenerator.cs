@@ -5,12 +5,12 @@ using System.Collections.Generic;
 public class CodeGenerator : MonoBehaviour {
 	
 	private List<string>[] instructionLines = new List<string>[] {
-		new List<string>(){"$as integer 1 addScore", "¶cs compile"},
-		new List<string>(){"$rs integer 0 removeScore", "¶cs compile"},
-		new List<string>(){"$at integer 0 addTime", "¶cs compile"},
-		new List<string>(){"$rt integer 0 removeTime", "¶cs compile"},
-		new List<string>(){"¶ds dropSpikes 10 0.01 0.1 RoundRobinInvoking"},
-		new List<string>(){"¶ds dropSpikes 10 0.01 0.1 RandomAtLeastOnceInvoking"}
+		new List<string>(){"$as integer %v addScore", "¶cs compile"},
+		new List<string>(){"$rs integer %v removeScore", "¶cs compile"},
+		new List<string>(){"$at integer %v addTime", "¶cs compile"},
+		new List<string>(){"$rt integer %v removeTime", "¶cs compile"},
+		new List<string>(){"¶ds dropSpikes %v 0.01 0.1 RoundRobinInvoking"},
+		new List<string>(){"¶ds dropSpikes %v 0.01 0.1 RandomAtLeastOnceInvoking"}
 	};
 	
 	private string[] instructionText = new string[] {
@@ -21,14 +21,8 @@ public class CodeGenerator : MonoBehaviour {
 		"DropSpikesLine_()¶ds",
 		"DropSpikes_()¶ds"
 	};
-//	private Dictionary<string, string> instructionLines = new Dictionary<string, string>() {
-//		{"$as", "integer 0 addScore"},
-//		{"$rs", "integer 0 removeScore"},
-//		{"$at", "integer 0 addTime"},
-//		{"$rt", "integer 0 removeTime"}
-//	}
-	
-	//private int[] values = new int[] { 1, 2, 3, 5, 8, 13, 21, 34 };
+
+	private int[] values = new int[] { 1, 2, 3, 5, 8, 13, 21, 34 };
 	
 	private float generatorTimer = 0;
 	private float maxRange = 6f;
@@ -83,27 +77,23 @@ public class CodeGenerator : MonoBehaviour {
 		}
 		nodeList.Add (nodeIndex);
 		if (nodeList.Count >= nodes.Length - 1){
-			Debug.Log("Getting rid of " + nodeList[0]);
 			nodeList.RemoveAt (0);
 		}
 		
 		int instIndex = timeRand.Range (0, instructionLines.Length - 1, true);
 		
-		//Instantiate(instructions[instIndex], nodes[nodeIndex].position, nodes[nodeIndex].rotation);
+		List<string> parameters = instructionLines[instIndex].Clone<List<string>>();
+		int randomValue = values[Random.Range(0,values.Length-1)];
+		parameters[0] = parameters[0].Replace("%v", randomValue +"");
 		
-		//string instruction = "addTime($at, $bt);";
-//		Dictionary<string,string> param = new Dictionary<string, string>();
-//		param.Add(instructionLines[instIndex]);
-		
-		Instruction newDude = InstructionFactory.createInstruction(instructionText[instIndex], 1,1, gameObject, instructionLines[instIndex]);
-		newDude.reset();
-		newDude.reset();
+		Instruction newDude = InstructionFactory.createInstruction(instructionText[instIndex], 1,1, gameObject, parameters);
 		newDude.GetComponent<GameText>().invulnerable = true;
 		newDude.transform.position = nodes[nodeIndex].transform.position;
 		newDude.AddComponent<InstructionCrawl>();
 		
 		generatorTimer = GetNewTime();
 	}
+	
 	
 	
 }

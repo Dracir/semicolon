@@ -10,16 +10,18 @@ public class Instruction : GameText {
 	public List<Observer>		observers		= new List<Observer>();
 	public List<DataType>		parameterType 	= new List<DataType> ();
 
+	[SerializeField]
 	private string 				instructionText;
+	[SerializeField]
 	private bool 				isComment;
 	public bool					hasCompileSpot{get;private set;}
+	[SerializeField]
 	private string 				textToShow;
 
 	[Button(label:"Reset",methodName:"reset", NoPrefixLabel=true)]
 	public bool resetBtn;
 
 	public void setText(string text){
-		Debug.Log(text);
 		instructionText = text;
 		hasCompileSpot = this.instructionText.Contains("¶");
 	}

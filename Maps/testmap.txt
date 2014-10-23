@@ -1,5 +1,4 @@
 ﻿<Config>
-Time 10
 Score
 <Params>
 $bt boolean true

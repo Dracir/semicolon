@@ -8,6 +8,7 @@ public class FileToLevelLoader {
 
 	private ReadingMod readingMod;
 	private GameObject world;
+	private LevelReferences levelReferences;
 	private GameObject instructions;
 	private GameObject levelCharacters;
 
@@ -27,6 +28,7 @@ public class FileToLevelLoader {
 		this.specialCharacter 			= new Dictionary<string, string>();
 		this.specialCharacterGameObject = new Dictionary<string, GameObject>();
 		this.world 						= world;
+		this.levelReferences 			= world.GetComponent<LevelReferences>();
 		this.fileLine					= 0;
 
 		string[] lines = mapText.Split (new char[]{'\n'});
@@ -119,7 +121,7 @@ public class FileToLevelLoader {
 		if(this.specialCharacter.ContainsKey(line)){
 			string[] sp = this.specialCharacter[line].TrimEnd(new char[]{'\n','\r'}).Split(' ');
 			GameObject parent = addOrGetParent(sp[0]);
-			SpecialCharacterFactory.createSpecialCharacter(parent, line, this.specialCharacter[line], x, y);
+			SpecialCharacterFactory.createSpecialCharacter(this.levelReferences, parent, line, this.specialCharacter[line], x, y);
 			
 		}else{
 			GameObject parent = this.levelCharacters;
