@@ -8,7 +8,6 @@ using System.Collections.Generic;
 public class Instruction : GameText {
 
 	public List<Observer>		observers		= new List<Observer>();
-	public List<DataType>		parameterType 	= new List<DataType> ();
 
 	[SerializeField]
 	private string 				instructionText;
@@ -18,21 +17,10 @@ public class Instruction : GameText {
 	[SerializeField]
 	private string 				textToShow;
 
-	[Button(label:"Reset",methodName:"reset", NoPrefixLabel=true)]
-	public bool resetBtn;
 
 	public void setText(string text){
 		instructionText = text;
 		hasCompileSpot = this.instructionText.Contains("¶");
-	}
-	
-	public void reset(){
-		this.name = instructionText;
-		/*isComment = instructionText.StartsWith("//") || instructionText.StartsWith("/*");
-		fixChildAmount();
-		checkChildTypes();
-		resetTexts ();
-		notifyObservers ();*/
 	}
 	
 	public void refresh(){
@@ -53,37 +41,7 @@ public class Instruction : GameText {
 		}
 	}
 
-	void fixChildAmount(){
-
-		int childCount = this.GetChildCount();
-		int nbParam = this.instructionText.Split (new char[]{'$'}).Length - 1;
-		if (nbParam > childCount) {
-			var newchildren = new List<Parameter>();
-			for (int i = this.parameterType.Count; i < nbParam; i++) {
-				this.parameterType.Add(DataType.BOOLEAN);
-			}
-			for (int i = childCount; i < nbParam; i++) {
-				var newChild = addChild(this.parameterType[i]);
-				newchildren.Add(newChild);
- 			}
-			foreach (var newC in newchildren) {
-				newC.refresh();
-			}
-		} else if (nbParam < childCount) {
-			GameObject[] children = this.GetChildren();
-			for (int i = this.parameterType.Count -1; i >= nbParam; i--) {
-				this.parameterType.RemoveAt(i);
-			}
-			for (int i = nbParam; i < childCount; i++) {
-				GameObjectUtils.Destroy( children[i] );
-			}
-		}
-		
-		
-		if(hasCompileSpot){
-			addCompileSpot();
-		}
-	}
+	
 
 	public void addCompileSpot(){
 		GameObject go = GameObjectFactory.createGameObject("Compile Spot", this.transform);
@@ -97,42 +55,6 @@ public class Instruction : GameText {
 		this.hasCompileSpot = true;
 	}
 	
-	void checkChildTypes(){
-		var children = this.GetChildren();
-		int index = 0;
-		foreach(var child in children){
-			if(hasCompileSpot && index == children.Length - 1){
-				break;
-			}
-			Parameter p = child.GetComponent<Parameter>();
-			DataType dataType = this.parameterType[index];
-			if(!p.isOfType(dataType)){
-				changeDataTypeOfChild(child, dataType);
-			}
-			p = child.GetComponent<Parameter>();
-			p.refresh();
-			index++;
-			
-		}
-	}
-	
-	public void setParameterTo(int index, DataType dataType){
-		this.parameterType[index] = dataType;
-		GameObject child = this.GetChild(index);
-		changeDataTypeOfChild(child,dataType);
-	}
-
-	void changeDataTypeOfChild(GameObject child, DataType dataType){
-		child.RemoveComponent<BooleanParameter>();
-		child.RemoveComponent<IntegerParameter>();
-		switch(dataType){
-				case DataType.BOOLEAN : child.AddComponent<BooleanParameter>();
-				break;
-				case DataType.INTEGER : child.AddComponent<IntegerParameter>();
-				break;
-		}
-		child.GetComponent<Parameter>().refresh();
-	}
 	
 	public BooleanParameter addBooleanChild(){
 		GameObject go = createChild();

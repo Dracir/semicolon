@@ -1,9 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Candlelight;
 
 public class ParameterTether : MonoBehaviour {
 
-	public Color color = Color.white;
+	[SerializeField, PropertyBackingFieldAttribute(typeof(ParameterTether), "Color")]
+	private Color color = Color.white;
+	public Color Color {
+		get{return color;}
+		set{
+			this.color = value;
+			renderer.SetColors(value,value);
+		}
+	}
 	public float tetherLength = 3f;
 	public float slerpAmount = 0.2f;
 	
@@ -80,10 +89,11 @@ public class ParameterTether : MonoBehaviour {
 		Vector3 tetherLineEndPoint = this.transform.position;
 		if(this.collidedParameter != null && !this.inDragMod){
 			Vector3 vt = this.collidedParameter.transform.position;
-			tetherLineEndPoint = new Vector3(vt.x + 0.5f, vt.y - 0.5f, vt.z);
+			tetherLineEndPoint = new Vector3(vt.x + 0.5f, vt.y - 0.5f, transform.position.z);
 		}
-		
-		renderer.SetPosition(0, this.transform.parent.position);
+		Vector3 startPoint = this.transform.parent.position;
+		startPoint.z = this.transform.position.z;
+		renderer.SetPosition(0, startPoint);
 		renderer.SetPosition(1, tetherLineEndPoint);
 	}
 	

@@ -5,12 +5,11 @@ using System.Collections.Generic;
 public class CodeGenerator : MonoBehaviour {
 	
 	private List<string>[] instructionLines = new List<string>[] {
-		new List<string>(){"$as integer %v addScore", "¶cs compile"},
+		new List<string>(){"$as integer %v addScore false", "¶cs compile"},
 		new List<string>(){"$rs integer %v removeScore", "¶cs compile"},
 		new List<string>(){"$at integer %v addTime", "¶cs compile"},
 		new List<string>(){"$rt integer %v removeTime", "¶cs compile"},
-		new List<string>(){"¶ds dropSpikes %v 0.01 0.1 RoundRobinInvoking"},
-		new List<string>(){"¶ds dropSpikes %v 0.01 0.1 RandomAtLeastOnceInvoking"}
+		new List<string>(){"$in integer %v","¶ds dropSpikes %0 0.01 0.1 RandomAtLeastOnceInvoking"}
 	};
 	
 	private string[] instructionText = new string[] {
@@ -18,8 +17,7 @@ public class CodeGenerator : MonoBehaviour {
 		"RemoveScore_($rs)¶cs",
 		"AddTime_($at)¶cs",
 		"RemoveTime_($rt)¶cs",
-		"DropSpikesLine_()¶ds",
-		"DropSpikes_()¶ds"
+		"DropSpikes_($in)¶ds",
 	};
 
 	private int[] values = new int[] { 1, 2, 3, 5, 8, 13, 21, 34 };

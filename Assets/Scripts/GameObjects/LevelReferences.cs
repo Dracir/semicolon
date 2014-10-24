@@ -6,7 +6,7 @@ public class LevelReferences : MonoBehaviour {
 
 	public static LevelReferences instance;
 	
-	public List<SpikeManager> spikeManagers;
+	public List<SpikeManager> spikeManagers = new List<SpikeManager>();
 	
 	
 	void Awake(){

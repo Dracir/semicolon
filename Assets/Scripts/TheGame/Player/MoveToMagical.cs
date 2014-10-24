@@ -51,5 +51,7 @@ public class MoveToMagical : MonoBehaviour {
 		moveToActive= true;
 		this.timeToMove = timeToMove;
 		this.timeFrozen = timeFrozen;
+		t = 0;
+		flashedOnce = false;
 	}
 }
