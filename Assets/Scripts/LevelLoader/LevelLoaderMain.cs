@@ -36,6 +36,7 @@ public class LevelLoaderMain {
 		createIfShouldExistElseRemove(References.Prefabs.ArcadeCanevas, "ArcadeCanevas",arcade);
 	}
 	
+	
 	void createIfShouldExistElseRemove(GameObject prefabObject, string name, bool shouldExist){
 		GameObject go = GameObject.Find(name);
 		if(shouldExist){
