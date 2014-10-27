@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class DropSpikes : Observer {
 
 	public string spawningOrderAlgoName = "RandomAtLeastOnceInvoking";
+	public IntegerParameter nbSpikesToDropParameter;
 	public int nbSpikesToDrop;
 	public float timeBetweenCallMin;
 	public float timeBetweenCallMax;
@@ -12,7 +13,7 @@ public class DropSpikes : Observer {
 	public List<SpikeManager> linkedSpikes;
 	
 	void Start () {
-		linkedSpikes = References.SpikeManagers;
+		linkedSpikes = LevelReferences.instance.spikeManagers;
 	}
 	
 	
@@ -23,6 +24,7 @@ public class DropSpikes : Observer {
 		foreach (var spikes in linkedSpikes) {
 			bagInvoker.objectsToInvoke.Add(spikes.GetComponent<MonoBehaviour>());
 		}
-		bagInvoker.Invoking(spawningOrderAlgoName, "SpawnSpikeIn",nbSpikesToDrop,timeBetweenCallMin, timeBetweenCallMax);
+		int nbToDrop = (nbSpikesToDropParameter == null) ? nbSpikesToDrop : nbSpikesToDropParameter.Valeur;
+		bagInvoker.Invoking(spawningOrderAlgoName, "SpawnSpikeIn", nbToDrop,timeBetweenCallMin, timeBetweenCallMax);
 	}
 }

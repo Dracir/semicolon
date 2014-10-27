@@ -37,6 +37,17 @@ public class BufferedDataReader {
 		remainingLine.TrimStart(new char[]{' '});
 		return text;
 	}
+
+	public int readIndexPosition(){
+		string full = readWord();
+		string number = full.Substring(1);
+		int result = 0;
+		if(!int.TryParse(number, out result)){
+			logError("Unknown Integer value \"" + number + "\" must be a number between " + int.MinValue + " and " + int.MaxValue);
+		}
+		return result;
+	}
+	
 	
 	public float readFloat(){
 		return float.Parse(readWord());
@@ -70,6 +81,12 @@ public class BufferedDataReader {
 		return index != -1;
 	}
 
+	public bool nextWordContains(string str){
+		int index = remainingLine.IndexOf(str);
+		return index != -1;
+	}
+	
+	
 	public string readDataUntil(char stopChar){
 		int index = remainingLine.IndexOf(stopChar);
 		if(index == -1){

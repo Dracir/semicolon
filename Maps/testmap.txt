@@ -1,5 +1,4 @@
 ﻿<Config>
-Time 10
 Score
 <Params>
 $bt boolean true
@@ -17,7 +16,7 @@ $st integer 0 showTime false
 ¶01 debuglog "Hello World"
 ¶02 debuglog "Kevin !!!"
 ¶ci compile
-¶ds dropSpikes 20 0.5 1 RoundRobinInvoking
+¶ds dropSpikes %0 0.5 1 RoundRobinInvoking
 <SpecialCharacter>
 v Spikes IsASpike 1
 <Level>
@@ -26,7 +25,7 @@ v Spikes IsASpike 1
 | time_:_$st
 | score:_$ss
 |                //nonononnon_$01
-| addS($as);                 //lalalala
+| dropS($01)¶ds                 //lalalala
 |
 |
 | multiplyDivide($01,_$02);

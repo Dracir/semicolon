@@ -151,7 +151,16 @@ public static class InstructionFactory  {
 			
 		}else if(methodLowered.Equals("dropspikes")){
 			DropSpikes ds = instruction.AddComponent<DropSpikes>();
-			ds.nbSpikesToDrop = parameterReader.readInt();
+			if(parameterReader.nextWordContains("%")){
+				int childIndex = parameterReader.readIndexPosition();
+				ds.nbSpikesToDropParameter = instruction.GetChild(childIndex).GetComponent<IntegerParameter>();
+				if(ds.nbSpikesToDropParameter == null){
+					log("Instruction doesnt not contain a IntegerParameter at index " + childIndex);
+				}
+			}else{
+				ds.nbSpikesToDrop = parameterReader.readInt();
+			}
+			
 			ds.timeBetweenCallMin = parameterReader.readFloat();
 			ds.timeBetweenCallMax = parameterReader.readFloat();
 			ds.spawningOrderAlgoName = parameterReader.readWord();
@@ -160,6 +169,10 @@ public static class InstructionFactory  {
 		}else{
 			Debug.LogError("MAPLOADER - ERROR : Unknown Function type for compile spot " + method);
 		}
+	}
+	
+	private static void log(string message){
+		Debug.LogError("MAPLOADER - ERROR : " + message);
 	}
 	
 }

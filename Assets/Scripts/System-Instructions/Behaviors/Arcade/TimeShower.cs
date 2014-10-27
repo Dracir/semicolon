@@ -11,7 +11,12 @@ public class TimeShower : Observer {
 	
 	void Start () {
 		time = LevelTime.instance;
-		time.observers.Add(this);
+		if(time){
+			time.observers.Add(this);
+		}else{
+			Debug.LogError("Map doesnt have a Time config");
+		}
+		
 		textCollider2d = this.GetComponent<TextCollider2D>();
 	}
 	

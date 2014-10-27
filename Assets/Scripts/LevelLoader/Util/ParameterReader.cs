@@ -37,7 +37,11 @@ public class ParameterReader {
 		resetErrorMessage();
 		return reader.readString();
 	}
-	
+
+	public int readIndexPosition(){
+		resetErrorMessage();
+		return reader.readIndexPosition();
+	}
 	public float readFloat(){
 		resetErrorMessage();
 		return reader.readFloat();
@@ -58,6 +62,10 @@ public class ParameterReader {
 		return reader.hasNextWord();
 	}
 
+	public bool nextWordContains(string str){
+		resetErrorMessage();
+		return reader.nextWordContains(str);
+	}
 	public string readDataUntil(char stopChar){
 		resetErrorMessage();
 		return reader.readDataUntil(stopChar);

@@ -26,8 +26,7 @@ public class LevelLoaderMain {
 	private void deleteAndCreateEmptyWorld(){
 		Object.DestroyImmediate(GameObject.Find ("World"));
 		this.world = GameObjectFactory.createGameObject ("World");
-		
-		References.SpikeManagers = new System.Collections.Generic.List<SpikeManager>();
+		this.world.AddComponent<LevelReferences>();
 	}
 
 

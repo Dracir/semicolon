@@ -112,12 +112,6 @@ public class References : MonoBehaviour {
 			get { return Instance.fonts.lucidiaConsole; }
 			set { Instance.fonts.lucidiaConsole = value; }
 		}
-	}	
-
-	public List<SpikeManager> spikeManagers;
-		static public List<SpikeManager> SpikeManagers {
-			get { return Instance.spikeManagers; }
-			set { Instance.spikeManagers = value; }
-		}	
+	}
 	
 }

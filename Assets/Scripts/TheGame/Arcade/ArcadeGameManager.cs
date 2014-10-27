@@ -20,7 +20,10 @@ public class ArcadeGameManager : MonoBehaviour {
 	
 	public void LoseGame () {
 		Time.timeScale = 0;
-		LoseGameCanvas.SetActive(true);
+		if(LoseGameCanvas){
+			LoseGameCanvas.SetActive(true);
+		}
+		
 	}
 	
 	public void Restart() {

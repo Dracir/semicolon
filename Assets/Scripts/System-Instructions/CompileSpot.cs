@@ -20,6 +20,11 @@ public class CompileSpot : MonoBehaviour {
 			Vector3 v = this.transform.position;
 			Vector3 moveToVector = new Vector3(v.x + 0.5f, v.y - 1.66f/2,0f);
 			magicalMover.startMoveTo(parentInstruction, moveToVector,0.5f,1);
+			var crawl = parentInstruction.GetComponent<InstructionCrawl>();
+			if(crawl){
+				crawl.Remove();
+			}
+			
 		}else if(other.GetComponent<CompileSemiColon>() != null){
 			parentInstruction.compile();
 		}

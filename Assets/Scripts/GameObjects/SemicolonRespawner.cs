@@ -9,7 +9,6 @@ public class SemicolonRespawner : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		possibles = GameObject.FindObjectsOfType<CompileSemiColon>();
-		Debug.Log("possibles" + possibles.Length);
 	}
 	
 	// Update is called once per frame
