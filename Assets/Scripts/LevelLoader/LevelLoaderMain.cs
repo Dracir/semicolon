@@ -32,7 +32,7 @@ public class LevelLoaderMain {
 
 	void checkThings(){
 		createIfShouldExistElseRemove(References.Prefabs.ArcadeManager, "ArcadeManager",arcade);
-		createIfShouldExistElseRemove(References.Prefabs.ArcadeCanevas, "ArcadeCanevas",arcade);
+		createIfShouldExistElseRemove(References.Prefabs.ArcadeLoseScreen, "ArcadeLoseScreen",arcade);
 	}
 	
 	

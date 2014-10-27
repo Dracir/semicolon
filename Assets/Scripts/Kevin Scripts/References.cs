@@ -65,7 +65,7 @@ public class References : MonoBehaviour {
 			set { Instance.prefabs.arcadeManager = value; }
 		}
 		public GameObject arcadeCanevas;
-		static public GameObject ArcadeCanevas {
+		static public GameObject ArcadeLoseScreen {
 			get { return Instance.prefabs.arcadeCanevas; }
 			set { Instance.prefabs.arcadeCanevas = value; }
 		}

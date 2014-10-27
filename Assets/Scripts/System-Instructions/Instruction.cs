@@ -50,7 +50,7 @@ public class Instruction : GameText {
 		tc2d.Text = ";";
 		tc2d.Color = GameConstantes.instance.currentTheme.compileSpotColor;
 		tc2d.ColliderIsTrigger = true;
-		tc2d.ColliderSize = Vector2.one * 2;
+		tc2d.ColliderSize = Vector2.one * 1.5f;
 		go.AddComponent<CompileSpot>();
 		this.hasCompileSpot = true;
 	}

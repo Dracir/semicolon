@@ -161,6 +161,8 @@ public class TextCollider2D : MonoBehaviour {
 	}
 
 	void UpdateTextMesh() {
+		if(TextMesh == null) return;
+		
 		if (string.IsNullOrEmpty(Text) || FontSize == 0) {
 			foreach (BoxCollider2D boxCollider in boxColliders) {
 				boxCollider.Remove();

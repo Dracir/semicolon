@@ -8,14 +8,16 @@ public class InstructionCrawl : MonoBehaviour {
 	
 	float effectivePosition;
 	Transform t;
-	// Use this for initialization
+	
+	
 	void Start () {
-		crawlSpeed = rand.Range(3, 5);
+		crawlSpeed = rand.Range(0.5f, 1f);
 		t = transform;
 		effectivePosition = t.position.x;
 	}
 	
-	// Update is called once per frame
+	
+	
 	void Update () {
 		effectivePosition += crawlSpeed * Time.deltaTime;
 		
